@@ -1,5 +1,4 @@
 'use client'
-import FileDng from "@/components/file/FileDng";
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
 import { useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -57,13 +56,13 @@ export default function Brand() {
             </Card>
 
             <Dialog header="Create New Brand" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
-                <div className="flex flex-col">
-                    <h2 className="mb-2 font-semibold">Brand Name</h2>
+                <div className="flex flex-column">
+                    <p className="mb-2 font-semibold">Brand Name</p>
                     <InputText value={name} onChange={(e)=>setName(e.target.value)} className="w-full block" id="username" placeholder="Enter brand name" />
                 </div>
-                <div className="flex flex-col">
-                    <h2 className="my-3 font-semibold">Brand Image</h2>
-                    <FileDng fileUploadRef={fileUploadRef}/>
+                <div className="flex flex-column">
+                    <p className="my-3 font-semibold">Brand Image</p>
+                    <FileUpload className="w-full" ref={fileUploadRef}/>
                 </div>
                 <Button label="Submit" className="my-3" onClick={createBrandHandler}/>
             </Dialog>
