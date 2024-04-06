@@ -85,54 +85,54 @@ export default function RegisterSeller() {
   }
 
   return (
-    <div className="flex items-center flex-col justify-center h-screen">
-      <Card className="h-[calc(100vh-74px)] no-scrollbar" style={{overflowY: 'scroll'}}>
-        <div className="flex items-center flex-col overflow-auto">
-          <div>
+    <div className="flex align-items-center justify-content-center h-screen">
+      <Card className="h-full no-scrollbar" style={{overflowY: 'scroll'}}>
+        <div className="flex items-center flex-column overflow-auto">
+          <div className="flex justify-content-center">
             <Image alt="kocart logo" src={logo} width={150} />
           </div>
           <div>
-            <h1 className="text-3xl font-bold my-3">Seller Registration</h1>
+            <h1 className="text-3xl text-center font-bold my-3">Seller Registration</h1>
           </div>
-          <div className="min-w-[700px]">
-            <form className="flex flex-col gap-4">
+          <div>
+            <form className="flex flex-column gap-4">
               <div>
                 <h2 className="mb-3 text-lg font-bold">Personal Details</h2>
                 <hr />
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Name</label>
+                  <label className="w-10rem inline-block">Name</label>
                   <InputText className="w-full"  {...register('name')} placeholder="Jhon" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Mobile</label>
+                  <label className="w-10rem inline-block">Mobile</label>
                   <InputText className="w-full" {...register('mobile')} placeholder="017*****" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Email</label>
+                  <label className="w-10rem inline-block">Email</label>
                   <InputText className="w-full" {...register('email')} placeholder="user@domain.com" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Password</label>
+                  <label className="w-10rem inline-block">Password</label>
                   <InputText className="w-full" {...register('password')} placeholder="*****" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Confirm Password</label>
+                  <label className="w-10rem inline-block">Confirm Password</label>
                   <InputText className="w-full" {...register('confirmPassword')} placeholder="****" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Address</label>
+                  <label className="w-10rem inline-block">Address</label>
                   <InputText className="w-full" {...register('address')} placeholder="House 13/A Banani DOHS" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Address Prof</label>
+                  <label className="w-10rem inline-block">Address Prof</label>
                   <FileUpload className="w-full" ref={addressProofRef}/>
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">National Identity Card</label>
+                  <label className="w-10rem inline-block">National Identity Card</label>
                   <FileUpload className="w-full" ref={nationalIdentityCardRef} />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Business Liscenece</label>
+                  <label className="w-10rem inline-block">Business Liscenece</label>
                   <FileUpload className="w-full" ref={businessLiscenceRef} />
                 </div>
               </div>
@@ -140,19 +140,19 @@ export default function RegisterSeller() {
                 <h2 className="mb-3 text-lg font-bold">Bank Details</h2>
                 <hr />
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Account Number</label>
+                  <label className="w-10rem inline-block">Account Number</label>
                   <InputText className="w-full" {...register('account_number')} placeholder="1111111" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Account Name</label>
+                  <label className="w-10rem inline-block">Account Name</label>
                   <InputText className="w-full" {...register('account_name')} placeholder="1111111" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Bank Code</label>
+                  <label className="w-10rem inline-block">Bank Code</label>
                   <InputText className="w-full" {...register('bank_code')} placeholder="1111111" />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
-                  <label className="w-[160px] inline-block">Bank Name</label>
+                  <label className="w-10rem inline-block">Bank Name</label>
                   <InputText className="w-full" {...register('bank_name')} placeholder="1111111" />
                 </div>
               </div>
