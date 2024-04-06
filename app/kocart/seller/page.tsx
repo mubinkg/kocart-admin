@@ -38,9 +38,7 @@ export default function Seller() {
     }
 
     const actionBody = (data:any)=>(
-        <button onClick={()=>updateStatus(data._id, data.status==='active' ? 'INACTIVE':"ACTIVE")} className='bg-green-300 px-4 py-2 rounded-md' style={{background:data.status==='active'?'red':''}}>
-            {data.status === 'active'? 'Inactive': 'Active'}
-        </button>
+        <Button onClick={()=>updateStatus(data._id, data.status==='active' ? 'INACTIVE':"ACTIVE")} label={data.status === 'active'? 'Inactive': 'Active'} style={{background:data.status==='active'?'red':''}}/>
     )
 
     const items = [

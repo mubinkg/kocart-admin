@@ -13,7 +13,7 @@ import { InputText } from "primereact/inputtext";
 import { useRef, useState } from "react";
 
 export default function Brand() {
-    const { data, loading, error } = useQuery(GET_BRANDS, { variables: { limit: 100, offset: 0 } })
+    const { data, loading, error , refetch} = useQuery(GET_BRANDS, { variables: { limit: 100, offset: 0 } })
     const [createBrand, {loading:brandLoading, error:brandError}] = useMutation(CREATE_BRAND)
     const [visible, setVisible] = useState(false)
     const fileUploadRef = useRef<FileUpload>(null);
@@ -33,7 +33,11 @@ export default function Brand() {
                       }
                 })
             }
-        }catch(err){}
+            await refetch()
+            setVisible(false)
+        }catch(err){
+    
+        }
     }
 
     const items = [
