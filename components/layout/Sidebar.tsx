@@ -73,6 +73,12 @@ export default function TemplateDemo() {
             url: '/kocart/brand'
         },
         {
+            label: 'Category',
+            icon: 'pi pi-list-check',
+            template: itemRenderer,
+            url: '/kocart/category'
+        },
+        {
             label: 'Sign Out',
             icon: 'pi pi-sign-out',
             template: signOutRender,
