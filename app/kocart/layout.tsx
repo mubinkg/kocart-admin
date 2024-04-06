@@ -7,7 +7,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="grid">
+        <div className="grid grid-nogutter">
             <div className="col-2">
                 <AppSidebar />
             </div>

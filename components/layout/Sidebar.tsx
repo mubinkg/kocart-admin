@@ -81,8 +81,6 @@ export default function TemplateDemo() {
     ]
 
     return (
-        <div className="card flex min-h-screen justify-content-center shadow-lg">
-            <Menu model={items} className="w-full md:w-15rem" />
-        </div>
+        <Menu model={items} className="h-screen w-full" />
     )
 }

@@ -14,9 +14,7 @@ export default function TemplateDemo() {
     const end = <Avatar image="https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png" shape="circle" />;
 
     return (
-        <div className="card">
-            <MegaMenu orientation="horizontal" start={start} end={end} breakpoint="960px" className="px-5 py-4 surface-0 shadow-2 mb-4" />
-        </div>
+        <MegaMenu orientation="horizontal" start={start} end={end} className="px-5 py-4 shadow-1 mb-4" />
     )
 }
         
