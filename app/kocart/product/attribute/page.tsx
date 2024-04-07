@@ -15,12 +15,11 @@ import { useRef, useState } from "react";
 
 export default function ProductAttribute() {
     const [addAttributeSet, { loading: addAttributeSetLoading }] = useMutation(ADD_ATTRIBUTE_SET)
-    const {data:productAttributeSetResponse, refetch:refetchProductAttributeSet} = useQuery(GET_PRODUCT_ATTRIBUTE_LIST, {variables: {limit: 10, offset: 0}})
+    const {data:productAttributeSetResponse, refetch:refetchProductAttributeSet} = useQuery(GET_PRODUCT_ATTRIBUTE_LIST, {variables: {limit: 10, offset: 0, query: ""}})
     const [visible, setVisible] = useState(false)
     const [visibleAttributeSet, setVisibleAttributeSet] = useState(false)
     const [visibleAttributeSetList, setVisisbleAttributeSetList] = useState(false)
     const [name, setName] = useState('')
-    const [attributeSetItems, setAttributeSetItems] = useState(['one'])
     const [attributeSet, setAttributeSet] = useState('')
     const [attributeSetName, setAttributeSetName] = useState('')
     const toast = useRef<any>(null)
@@ -33,8 +32,12 @@ export default function ProductAttribute() {
         toast.current.show({ severity: 'success', summary: 'Success', detail: msg, life: 3000 });
     }
 
-    const searchAttribute = (e: any) => {
-        console.log(e.query)
+    const searchAttribute = async (e: any) => {
+        await refetchProductAttributeSet({
+            limit: 10,
+            offset: 0,
+            query: e.query
+        })
     }
 
     const handleAddAttributeSet = async () => {
@@ -78,7 +81,7 @@ export default function ProductAttribute() {
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Select Attribute Set</p>
                     <div className="flex w-full">
-                        <AutoComplete value={attributeSet} suggestions={attributeSetItems} onChange={(e) => setAttributeSet(e.target.value)} completeMethod={searchAttribute} dropdown id="username" placeholder="Select Attribute Set" loadingIcon={() => ""} className="w-11 mr-1" />
+                        <AutoComplete value={attributeSet} suggestions={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList ? productAttributeSetResponse.getProductAttributeSetList.productAttributeSetList.map((d:any)=>d.attributeSetName):[]} onChange={(e) => setAttributeSet(e.target.value)} completeMethod={searchAttribute} dropdown id="username" placeholder="Select Attribute Set" className="w-11 mr-1" />
                         <Button label="+" className="mr-1" onClick={() => setVisibleAttributeSet(true)} />
                         <Button icon="pi pi-list" onClick={() => setVisisbleAttributeSetList(true)} />
                     </div>
