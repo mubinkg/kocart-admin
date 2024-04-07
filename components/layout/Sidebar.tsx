@@ -18,6 +18,15 @@ export default function TemplateDemo() {
         </div>
     );
 
+    const subItemRenderer = (item: any) => (
+        <div className='p-menuitem-content mb-2 ml-3'>
+            <Link className="flex align-items-center p-menuitem-link" href={item?.url || "#"}>
+                <i className={item.icon} style={{ fontSize: '1rem', fontWeight: 'bolder' }}></i> 
+                <span className="mx-3 font-semibold">{item.label}</span>
+            </Link>
+        </div>
+    );
+
     const signOutRender = (item: any) => (
         <div className='p-menuitem-content mb-2' onClick={signoutHandler}>
             <span className="flex align-items-center p-menuitem-link">
@@ -77,6 +86,18 @@ export default function TemplateDemo() {
             icon: 'pi pi-list-check',
             template: itemRenderer,
             url: '/kocart/category'
+        },
+        {
+            label: 'Product',
+            icon: 'pi pi-list-check',
+            items: [
+                {
+                    label: 'Attributes',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/product/attribute'
+                }
+            ]
         },
         {
             label: 'Sign Out',
