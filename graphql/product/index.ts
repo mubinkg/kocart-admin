@@ -18,3 +18,21 @@ export const GET_PRODUCT_ATTRIBUTE_LIST = gql`query GetProductAttributeSetList($
     }
   }
 }`
+
+export const ADD_ATTRIBUTE = gql`mutation CreateProductAttribute($createProductAttributeInput: CreateProductAttributeInput!) {
+  createProductAttribute(createProductAttributeInput: $createProductAttributeInput) {
+    _id
+    attributeSet {
+      _id
+    }
+    name
+    status
+    values {
+      color
+      id
+      image
+      type
+      valueName
+    }
+  }
+}`

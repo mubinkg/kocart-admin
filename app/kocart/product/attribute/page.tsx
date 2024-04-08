@@ -1,6 +1,7 @@
 'use client'
 
-import { ADD_ATTRIBUTE_SET, GET_PRODUCT_ATTRIBUTE_LIST } from "@/graphql/product";
+import Attribute from "@/components/product/Attribute";
+import { ADD_ATTRIBUTE, ADD_ATTRIBUTE_SET, GET_PRODUCT_ATTRIBUTE_LIST } from "@/graphql/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { AutoComplete } from "primereact/autocomplete";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -14,8 +15,9 @@ import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
 
 export default function ProductAttribute() {
+    const [addAttribute] = useMutation(ADD_ATTRIBUTE)
     const [addAttributeSet, { loading: addAttributeSetLoading }] = useMutation(ADD_ATTRIBUTE_SET)
-    const {data:productAttributeSetResponse, refetch:refetchProductAttributeSet} = useQuery(GET_PRODUCT_ATTRIBUTE_LIST, {variables: {limit: 10, offset: 0, query: ""}})
+    const { data: productAttributeSetResponse, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTE_LIST, { variables: { limit: 10, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
     const [visible, setVisible] = useState(false)
     const [visibleAttributeSet, setVisibleAttributeSet] = useState(false)
     const [visibleAttributeSetList, setVisisbleAttributeSetList] = useState(false)
@@ -55,8 +57,30 @@ export default function ProductAttribute() {
             await refetchProductAttributeSet()
             setAttributeSetName('')
             setVisibleAttributeSet(false)
+            showSuccess('Attribute created successfully')
         } catch (err) {
             showError('Error on add attribute set')
+        }
+    }
+
+    const handleAddAttribute = async (value:any, reset:any)=>{
+        try{
+            const id = productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList?.length ? productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList.find((d:any)=> d?.attributeSetName === attributeSet) : ""
+            const attributeSetId = (id?._id)
+            await addAttribute({
+                variables: {
+                    "createProductAttributeInput": {
+                    "attributeSet": attributeSetId,
+                    "name": name,
+                    "values": value
+                    }
+                }
+            })
+            setVisible(false)
+            reset()
+            showSuccess('Attribute creted success')
+        }catch(err){
+            showError('Attribute create error.')
         }
     }
 
@@ -81,11 +105,15 @@ export default function ProductAttribute() {
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Select Attribute Set</p>
                     <div className="flex w-full">
-                        <AutoComplete value={attributeSet} suggestions={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList ? productAttributeSetResponse.getProductAttributeSetList.productAttributeSetList.map((d:any)=>d.attributeSetName):[]} onChange={(e) => setAttributeSet(e.target.value)} completeMethod={searchAttribute} dropdown id="username" placeholder="Select Attribute Set" className="w-11 mr-1" />
+                        <AutoComplete value={attributeSet} suggestions={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList?.length ? productAttributeSetResponse.getProductAttributeSetList.productAttributeSetList.map((d: any) => d.attributeSetName) : []} onChange={(e) => setAttributeSet(e.target.value)} completeMethod={searchAttribute} dropdown id="username" placeholder="Search and Select Attribute Set" className="w-11 mr-1" />
                         <Button label="+" className="mr-1" onClick={() => setVisibleAttributeSet(true)} />
-                        <Button icon="pi pi-list" onClick={() => setVisisbleAttributeSetList(true)} />
+                        <Button icon="pi pi-list" onClick={async () => {
+                            await refetchProductAttributeSet({ limit: 10, offset: 0, query: "" })
+                            setVisisbleAttributeSetList(true)
+                        }} />
                     </div>
                 </div>
+                <Attribute handleAddAttribute={handleAddAttribute}/>
                 <Button label="Submit" className="my-3" />
             </Dialog>
             <Dialog position="top" header="Create Product Attribute Set" visible={visibleAttributeSet} style={{ width: '50vw' }} onHide={() => setVisibleAttributeSet(false)}>
@@ -97,11 +125,11 @@ export default function ProductAttribute() {
             </Dialog>
             <Dialog position="top" header="Product Attribute Set List" visible={visibleAttributeSetList} style={{ width: '50vw' }} onHide={() => setVisisbleAttributeSetList(false)}>
                 <Card title="Attribute Set">
-                <DataTable lazy totalRecords={productAttributeSetResponse ? productAttributeSetResponse?.getProductAttributeSetList?.count : 0} onPage={(value) => console.log(value)} value={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList ? productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList: []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
-                    <Column field="_id" header="ID"></Column>
-                    <Column field="attributeSetName" header="Name"></Column>
-                    <Column field="status" header="Status"></Column>
-                </DataTable>
+                    <DataTable lazy totalRecords={productAttributeSetResponse ? productAttributeSetResponse?.getProductAttributeSetList?.count : 0} onPage={(value) => console.log(value)} value={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList ? productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
+                        <Column field="_id" header="ID"></Column>
+                        <Column field="attributeSetName" header="Name"></Column>
+                        <Column field="status" header="Status"></Column>
+                    </DataTable>
                 </Card>
             </Dialog>
         </>
