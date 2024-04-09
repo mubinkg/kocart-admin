@@ -8,7 +8,7 @@ export const ADD_ATTRIBUTE_SET = gql`mutation CreateProductAttributeSet($createP
     }
   }`
 
-export const GET_PRODUCT_ATTRIBUTE_LIST = gql`query GetProductAttributeSetList($limit: Float!, $offset: Float!, $query: String!) {
+export const GET_PRODUCT_ATTRIBUTE_SET_LIST = gql`query GetProductAttributeSetList($limit: Float!, $offset: Float!, $query: String!) {
   getProductAttributeSetList(limit: $limit, offset: $offset, query: $query) {
     count
     productAttributeSetList {
@@ -33,6 +33,22 @@ export const ADD_ATTRIBUTE = gql`mutation CreateProductAttribute($createProductA
       image
       type
       valueName
+    }
+  }
+}`
+
+export const GET_PORODUCT_ATTRIBUTE_LIST = gql`query ProductAttributes($limit: Float!, $offset: Float!, $query: String) {
+  productAttributes(limit: $limit, offset: $offset, query: $query) {
+    count
+    attributeList {
+      _id
+      name
+      status
+      attributeSet {
+        attributeSetName
+        _id
+        status
+      }
     }
   }
 }`

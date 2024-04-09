@@ -1,7 +1,7 @@
 'use client'
 
 import Attribute from "@/components/product/Attribute";
-import { ADD_ATTRIBUTE, ADD_ATTRIBUTE_SET, GET_PRODUCT_ATTRIBUTE_LIST } from "@/graphql/product";
+import { ADD_ATTRIBUTE, ADD_ATTRIBUTE_SET, GET_PORODUCT_ATTRIBUTE_LIST, GET_PRODUCT_ATTRIBUTE_SET_LIST } from "@/graphql/product";
 import { useMutation, useQuery } from "@apollo/client";
 import { AutoComplete } from "primereact/autocomplete";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -15,9 +15,10 @@ import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
 
 export default function ProductAttribute() {
+    const {data:productAttributeList} = useQuery(GET_PORODUCT_ATTRIBUTE_LIST, {variables: {query: "", limit: 100, offset: 0}})
     const [addAttribute] = useMutation(ADD_ATTRIBUTE)
     const [addAttributeSet, { loading: addAttributeSetLoading }] = useMutation(ADD_ATTRIBUTE_SET)
-    const { data: productAttributeSetResponse, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTE_LIST, { variables: { limit: 10, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
+    const { data: productAttributeSetResponse, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTE_SET_LIST, { variables: { limit: 10, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
     const [visible, setVisible] = useState(false)
     const [visibleAttributeSet, setVisibleAttributeSet] = useState(false)
     const [visibleAttributeSetList, setVisisbleAttributeSetList] = useState(false)
@@ -85,7 +86,7 @@ export default function ProductAttribute() {
     }
 
     const items = [
-        { label: 'Product Attribute' },
+        { label: 'Product' },
         { label: 'Product Attribute List' }
     ];
 
@@ -94,8 +95,19 @@ export default function ProductAttribute() {
             <Toast ref={toast} />
             <BreadCrumb model={items} className="m-4" />
             <Card className="m-4">
-                <Button label="Create New" onClick={() => setVisible(true)} />
-
+                <Button label="Create New" onClick={() => setVisible(true)} className="mb-4"/>
+                <DataTable 
+                    title="Attributes" 
+                    lazy 
+                    paginator 
+                    rows={5} 
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    totalRecords={productAttributeList?.productAttributes?.count ? productAttributeList?.productAttributes?.count : 0}
+                    value={productAttributeList?.productAttributes?.attributeList || []}
+                >
+                    <Column field="_id" header="ID"/>
+                    <Column field="name" header="Name"/>
+                </DataTable>
             </Card>
             <Dialog header="Create New Product Attribute" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                 <div className="flex flex-column">

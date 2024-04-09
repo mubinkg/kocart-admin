@@ -96,6 +96,12 @@ export default function TemplateDemo() {
                     icon: 'pi pi-align-left',
                     template: subItemRenderer,
                     url: '/kocart/product/attribute'
+                },
+                {
+                    label: 'Add Product',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/product/add-product'
                 }
             ]
         },
