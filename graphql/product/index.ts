@@ -67,3 +67,15 @@ export const CREATE_PRODUCT = gql`mutation CreateProduct($createProductInput: Cr
     _id
   }
 }`
+
+export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProductListDto: AdminProductListDto!) {
+  getAdminProductList(adminProductListDto: $adminProductListDto) {
+    count
+    products {
+      _id
+      brand
+      pro_input_image
+      pro_input_name
+    }
+  }
+}`
