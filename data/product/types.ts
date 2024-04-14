@@ -13,6 +13,7 @@ export type ProductInputType = {
     simple_special_price: number
     pro_input_description?:any
     extra_input_description?:any
+    pro_input_image?: any
 }
 
 export type OptionType = {

@@ -61,3 +61,9 @@ export const GET_SELLER = gql`query Sellers($limit: Float!, $offset: Float!, $st
     }
   }
 }`
+
+export const CREATE_PRODUCT = gql`mutation CreateProduct($createProductInput: CreateProductInput!) {
+  createProduct(createProductInput: $createProductInput) {
+    _id
+  }
+}`

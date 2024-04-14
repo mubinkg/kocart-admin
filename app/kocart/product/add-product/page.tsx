@@ -13,12 +13,13 @@ import Select from 'react-select'
 import { Editor } from 'primereact/editor';
 import { countries, items, productType, videoTypeOptions } from "@/data/product/items";
 import { OptionType, ProductInputType } from "@/data/product/types";
-import { useQuery } from "@apollo/client";
-import { GET_SELLER } from "@/graphql/product";
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
 import { Button } from "primereact/button";
 import { Chips } from 'primereact/chips';
 import { GET_BRANDS } from "@/graphql/brand/query";
 import { GET_CATEGORIES } from "@/graphql/category/query";
+import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 
 
 export default function AddProduct() {
@@ -30,6 +31,7 @@ export default function AddProduct() {
           "offset": 0
         }
       }, fetchPolicy: "no-cache"})
+    const [createProduct, {loading:createProductLoading}] = useMutation(CREATE_PRODUCT)
     const { register, setValue, watch , handleSubmit} = useForm<ProductInputType>()
     const mainImageRef = useRef<any>()
     const otherImageRef = useRef<any>()
@@ -37,8 +39,10 @@ export default function AddProduct() {
 
     const countryOptions = countries.map(c=>({label:c.name, value: c.code}))
 
-    const submitHandler = (value:any)=>{
-        console.log(value)
+    const submitHandler = async (values:ProductInputType)=>{
+        console.log(mainImageRef.current.getFiles()[0])
+        values['pro_input_image'] = mainImageRef.current.getFiles()[0]
+        useCreateProduct(values, createProduct)
     }
 
     return (
@@ -108,13 +112,13 @@ export default function AddProduct() {
                     </div>
                     <div className="w-6">
                         {
-                            watch('video_type') === 'self_hosted' ? (<div className="flex flex-column">
+                            watch('video_type') === 'SELF_HOSTED' ? (<div className="flex flex-column">
                                 <p className="my-3 font-semibold">Video <span className="text-red-500">*</span></p>
                                 <FileUpload className="w-full" ref={videoRef} />
                             </div>) : ""
                         }
                         {
-                            watch('video_type') === 'youtube' || watch('video_type') === 'vimeo' ? (<div className="flex flex-column">
+                            watch('video_type') === 'YOUTUBE' || watch('video_type') === 'VIMEO' ? (<div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Video Link <span className="text-red-500">*</span></p>
                                 <InputText {...register('video')} className="w-full block" id="username" placeholder="Paste Youtube or Vimeo video link or url here" />
                             </div>) : ""
