@@ -102,6 +102,12 @@ export default function TemplateDemo() {
                     icon: 'pi pi-align-left',
                     template: subItemRenderer,
                     url: '/kocart/product/add-product'
+                },
+                {
+                    label: 'Manage Product',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/product/product-list'
                 }
             ]
         },
