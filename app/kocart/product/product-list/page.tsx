@@ -6,6 +6,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
+import { Image } from "primereact/image";
 
 export default function ProductList() {
     const {data} = useQuery(GET_ADMIN_PRODUCT_LIST, {variables: {
@@ -17,6 +18,8 @@ export default function ProductList() {
           "offset": 0
         }
       }, fetchPolicy: "no-cache"})
+
+    const productImageRenderer = (url:any)=> <Image alt="Category Image" width="100" src={url}/>
 
     const items = [
         { label: 'Product' },
@@ -35,7 +38,7 @@ export default function ProductList() {
                     value={data?.getAdminProductList?.products || []}
                     totalRecords={data?.getAdminProductList?.count || 0}
                 >
-                    <Column field="pro_input_image" header="Image"/>
+                    <Column body={(item:any)=>productImageRenderer(item?.pro_input_image)} header="Image"/>
                     <Column field="pro_input_name" header="Name"/>
                     <Column field="brand" header="Brand"/>
                     <Column field="category_name" header="Category Name"/>
