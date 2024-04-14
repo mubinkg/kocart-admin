@@ -3,7 +3,7 @@ export type ProductInputType = {
     seller_id?: Object
     product_type?: string
     short_description?: string
-    tags?:string
+    tags:string[]
     made_in?:string
     brand?: string
     category_id?: string

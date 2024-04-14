@@ -79,7 +79,7 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Tags  <span className="text-sm">(These tags help you in search result)</span></p>
-                    <Chips className="w-full" value={watch('tags')} onChange={(e) => setValue('tags',e.value)} />
+                    <Chips className="w-full" value={watch('tags')} onChange={(e) => setValue('tags',e?.value || [])} />
                 </div>
                 <div>
                     <div className="flex justfy-content-between gap-4">
@@ -131,11 +131,11 @@ export default function AddProduct() {
                         <TabPanel header="General">
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e)=>setValue('simple_price',e.value)} />
+                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e)=>setValue('simple_price',e?.value || 0)} />
                             </div>
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Special Price</p>
-                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e)=>setValue('simple_special_price', e.value)}/>
+                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e)=>setValue('simple_special_price', e?.value || 0)}/>
                             </div>
                         </TabPanel>
                         <TabPanel header="Attributes"></TabPanel>
