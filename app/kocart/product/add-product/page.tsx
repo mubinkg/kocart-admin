@@ -60,7 +60,7 @@ export default function AddProduct() {
                             options={
                                 sellerList?.sellers?.sellers?.length ? sellerList.sellers.sellers.map((s:any)=>({label: s.account_name,  value: s._id})):""
                             } 
-                            onChange={(option:OptionType)=>{setValue('seller_id', option.value)}}
+                            onChange={(option:any)=>{setValue('seller_id', option.value)}}
                             isClearable
                         />
                     </div>
@@ -68,7 +68,7 @@ export default function AddProduct() {
                         <p className="mb-2 font-semibold">Product Type<span className="text-red-500">*</span></p>
                         <Select 
                             options={productType}
-                            onChange={(option:OptionType)=>setValue('product_type', option.value)}
+                            onChange={(option:any)=>setValue('product_type', option.value)}
                             isClearable
                         />
                     </div>
@@ -85,15 +85,15 @@ export default function AddProduct() {
                     <div className="flex justfy-content-between gap-4">
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Made In</p>
-                            <Select options={countryOptions} onChange={(value:OptionType)=>setValue('made_in', value.value)} />
+                            <Select options={countryOptions} onChange={(value:any)=>setValue('made_in', value.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Brand</p>
-                            <Select options={brandList?.brands?.brands?.length?brandList?.brands?.brands.map((d:any)=>({label:d.name, value: d._id})):[]} onChange={(option:OptionType)=>setValue('brand', option.value)} />
+                            <Select options={brandList?.brands?.brands?.length?brandList?.brands?.brands.map((d:any)=>({label:d.name, value: d._id})):[]} onChange={(option:any)=>setValue('brand', option.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Select Category<span className="text-red-500">*</span></p>
-                            <Select options={categoryList?.getAdminCategories?.categories?.length?categoryList?.getAdminCategories?.categories.map((d:any)=>({label: d.name, value: d._id})) :[]} onChange={(option:OptionType)=>setValue('category_id', option.value)} />
+                            <Select options={categoryList?.getAdminCategories?.categories?.length?categoryList?.getAdminCategories?.categories.map((d:any)=>({label: d.name, value: d._id})) :[]} onChange={(option:any)=>setValue('category_id', option.value)} />
                         </div>
                     </div>
                 </div>
