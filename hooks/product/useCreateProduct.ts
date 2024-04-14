@@ -39,7 +39,7 @@ export async function useCreateProduct(values:ProductInputType, callback:any){
           "minimum_order_quantity": null,
           "other_imagesInput": null,
           "pro_input_description": null,
-          "pro_input_image": null,
+          "pro_input_image": values.pro_input_image,
           "pro_input_video": null,
           "pro_input_zip": null,
           "status": null,
