@@ -52,3 +52,12 @@ export const GET_PORODUCT_ATTRIBUTE_LIST = gql`query ProductAttributes($limit: F
     }
   }
 }`
+
+export const GET_SELLER = gql`query Sellers($limit: Float!, $offset: Float!, $status: String) {
+  sellers(limit: $limit, offset: $offset, status: $status) {
+    sellers {
+      _id
+      account_name
+    }
+  }
+}`

@@ -11,74 +11,85 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
+import { countries, items, productType, videoTypeOptions } from "@/data/product/items";
+import { OptionType, ProductInputType } from "@/data/product/types";
+import { useQuery } from "@apollo/client";
+import { GET_SELLER } from "@/graphql/product";
+import { Button } from "primereact/button";
+import { Chips } from 'primereact/chips';
+import { GET_BRANDS } from "@/graphql/brand/query";
+import { GET_CATEGORIES } from "@/graphql/category/query";
 
 
 export default function AddProduct() {
-    const { register, setValue, watch } = useForm()
+    const {data:sellerList} = useQuery(GET_SELLER, {variables: {limit: 1000, offset:0,status: "active"}, fetchPolicy: "no-cache"})
+    const {data:brandList} = useQuery(GET_BRANDS, {variables: {limit: 1000, offset: 0}, fetchPolicy: "no-cache"})
+    const {data:categoryList} = useQuery(GET_CATEGORIES, {variables: {
+        "getCategoriesInput": {
+          "limit": 1000,
+          "offset": 0
+        }
+      }, fetchPolicy: "no-cache"})
+    const { register, setValue, watch , handleSubmit} = useForm<ProductInputType>()
     const mainImageRef = useRef<any>()
     const otherImageRef = useRef<any>()
-    const items = [
-        { label: 'Product' },
-        { label: 'Add Product' }
-    ];
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' }
-    ]
-    const videoTypeOptions = [
-        {
-            label: 'None', value: 'none'
-        },
-        {
-            label: 'Self Hosted', value: 'self_hosted'
-        },
-        {
-            label: 'Yoututbe', value: 'youtube'
-        },
-        {
-            label: 'Vimeo', value: 'vimeo'
-        }
-    ]
+    const videoRef = useRef<any>()
+
+    const countryOptions = countries.map(c=>({label:c.name, value: c.code}))
+
+    const submitHandler = (value:any)=>{
+        console.log(value)
+    }
+
     return (
         <div>
             <BreadCrumb className="m-4" model={items} />
             <Card className="m-4">
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                    <InputText {...register('name')} className="w-full block" id="username" placeholder="Attribute Name" />
+                    <InputText {...register('pro_input_name')} className="w-full block" id="username" placeholder="Attribute Name" />
                 </div>
                 <div className="flex justfy-content-between gap-4">
                     <div className="flex flex-column w-6">
                         <p className="mb-2 font-semibold">Seller<span className="text-red-500">*</span></p>
-                        <Select options={options} />
+                        <Select 
+                            options={
+                                sellerList?.sellers?.sellers?.length ? sellerList.sellers.sellers.map((s:any)=>({label: s.account_name,  value: s._id})):""
+                            } 
+                            onChange={(option:OptionType)=>{setValue('seller_id', option.value)}}
+                            isClearable
+                        />
                     </div>
                     <div className="flex flex-column w-6">
                         <p className="mb-2 font-semibold">Product Type<span className="text-red-500">*</span></p>
-                        <Select options={options} />
+                        <Select 
+                            options={productType}
+                            onChange={(option:OptionType)=>setValue('product_type', option.value)}
+                            isClearable
+                        />
                     </div>
                 </div>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                    <InputTextarea rows={3} cols={4} {...register('name')} className="w-full block" id="username" placeholder="Attribute Name" />
+                    <p className="mb-2 font-semibold">Short Description<span className="text-red-500">*</span></p>
+                    <InputTextarea rows={3} cols={4} {...register('short_description')} className="w-full block" id="username" placeholder="Attribute Name" />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Tags  <span className="text-sm">(These tags help you in search result)</span></p>
-                    <Select isMulti />
+                    <Chips className="w-full" value={watch('tags')} onChange={(e) => setValue('tags',e.value)} />
                 </div>
                 <div>
                     <div className="flex justfy-content-between gap-4">
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Made In</p>
-                            <Select options={options} />
+                            <Select options={countryOptions} onChange={(value:OptionType)=>setValue('made_in', value.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Brand</p>
-                            <Select options={options} />
+                            <Select options={brandList?.brands?.brands?.length?brandList?.brands?.brands.map((d:any)=>({label:d.name, value: d._id})):[]} onChange={(option:OptionType)=>setValue('brand', option.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Select Category<span className="text-red-500">*</span></p>
-                            <Select options={options} />
+                            <Select options={categoryList?.getAdminCategories?.categories?.length?categoryList?.getAdminCategories?.categories.map((d:any)=>({label: d.name, value: d._id})) :[]} onChange={(option:OptionType)=>setValue('category_id', option.value)} />
                         </div>
                     </div>
                 </div>
@@ -93,19 +104,19 @@ export default function AddProduct() {
                 <div className="flex gap-5">
                     <div className="flex flex-column w-6">
                         <p className="my-3 font-semibold">Video Type</p>
-                        <Select options={videoTypeOptions} onChange={(value: any) => setValue('videoType', value?.value)} />
+                        <Select options={videoTypeOptions} onChange={(value: any) => setValue('video_type', value?.value)} />
                     </div>
                     <div className="w-6">
                         {
-                            watch('videoType') === 'self_hosted' ? (<div className="flex flex-column">
+                            watch('video_type') === 'self_hosted' ? (<div className="flex flex-column">
                                 <p className="my-3 font-semibold">Video <span className="text-red-500">*</span></p>
-                                <FileUpload className="w-full" ref={otherImageRef} />
+                                <FileUpload className="w-full" ref={videoRef} />
                             </div>) : ""
                         }
                         {
-                            watch('videoType') === 'youtube' || watch('videoType') === 'vimeo' ? (<div className="flex flex-column">
+                            watch('video_type') === 'youtube' || watch('video_type') === 'vimeo' ? (<div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Video Link <span className="text-red-500">*</span></p>
-                                <InputText {...register('name')} className="w-full block" id="username" placeholder="Paste Youtube or Vimeo video link or url here" />
+                                <InputText {...register('video')} className="w-full block" id="username" placeholder="Paste Youtube or Vimeo video link or url here" />
                             </div>) : ""
                         }
                     </div>
@@ -115,12 +126,12 @@ export default function AddProduct() {
                     <TabView>
                         <TabPanel header="General">
                             <div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full block" />
+                                <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
+                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e)=>setValue('simple_price',e.value)} />
                             </div>
                             <div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full block" />
+                                <p className="mb-2 font-semibold">Special Price</p>
+                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e)=>setValue('simple_special_price', e.value)}/>
                             </div>
                         </TabPanel>
                         <TabPanel header="Attributes"></TabPanel>
@@ -128,12 +139,13 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column">
                     <p className="my-3 font-semibold">Description</p>
-                    <Editor value={watch('text')} onTextChange={(e) => setValue('text', e.htmlValue)} style={{ height: '320px' }} />
+                    <Editor value={watch('pro_input_description')} onTextChange={(e) => setValue('pro_input_description', e.htmlValue)} style={{ height: '320px' }} />
                 </div>
                 <div className="flex flex-column">
                     <p className="my-3 font-semibold">Extra Description</p>
-                    <Editor value={watch('text')} onTextChange={(e) => setValue('text', e.htmlValue)} style={{ height: '320px' }} />
+                    <Editor value={watch('extra_input_description')} onTextChange={(e) => setValue('pro_input_description', e.htmlValue)} style={{ height: '320px' }} />
                 </div>
+                <Button className="mt-4" onClick={handleSubmit(submitHandler)}>Submit</Button>
             </Card>
         </div>
     )
