@@ -74,7 +74,7 @@ export default function ProductList() {
                             <div className="w-6">
                                 <h3>{product?.pro_input_name}</h3>
                                 <p>{product?.product_type}</p>
-                                <p>{product?.brand.name}</p>
+                                <p>{product?.brand?.name}</p>
                                 <hr/>
                                 <h4>Category : {product?.category?.name}</h4>
                                 <Rating value={0} cancel={false}/>
