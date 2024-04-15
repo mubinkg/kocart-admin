@@ -14,7 +14,7 @@ import { useState } from "react";
 
 export default function ProductList() {
     const [visible, setVisible] = useState(false)
-    const [product, setProduct] = useState({})
+    const [product, setProduct] = useState<any>({})
     const { data } = useQuery(GET_ADMIN_PRODUCT_LIST, {
         variables: {
             "adminProductListDto": {
