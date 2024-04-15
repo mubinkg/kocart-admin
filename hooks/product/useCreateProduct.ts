@@ -4,9 +4,9 @@ export async function useCreateProduct(values:ProductInputType, callback:any){
     const data = {
         "createProductInput": {
           "pro_input_name": values.pro_input_name,
-          "seller_id": values.seller_id,
+          "seller": values.seller_id,
           "short_description":values.short_description,
-          "category_id": values.category_id,
+          "category": values.category_id,
           "product_type":values.product_type,
           "brand": values.brand,
           "tags": values.tags.join(','),

@@ -73,9 +73,16 @@ export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProduc
     count
     products {
       _id
-      brand
       pro_input_image
       pro_input_name
+      brand {
+        _id
+        name
+      }
+      category {
+        _id
+        name
+      }
     }
   }
 }`

@@ -20,29 +20,38 @@ import { Chips } from 'primereact/chips';
 import { GET_BRANDS } from "@/graphql/brand/query";
 import { GET_CATEGORIES } from "@/graphql/category/query";
 import { useCreateProduct } from "@/hooks/product/useCreateProduct";
+import { useRouter } from "next/navigation";
 
 
 export default function AddProduct() {
-    const {data:sellerList} = useQuery(GET_SELLER, {variables: {limit: 1000, offset:0,status: "active"}, fetchPolicy: "no-cache"})
-    const {data:brandList} = useQuery(GET_BRANDS, {variables: {limit: 1000, offset: 0}, fetchPolicy: "no-cache"})
-    const {data:categoryList} = useQuery(GET_CATEGORIES, {variables: {
-        "getCategoriesInput": {
-          "limit": 1000,
-          "offset": 0
-        }
-      }, fetchPolicy: "no-cache"})
-    const [createProduct, {loading:createProductLoading}] = useMutation(CREATE_PRODUCT)
-    const { register, setValue, watch , handleSubmit} = useForm<ProductInputType>()
+    const router = useRouter()
+    const { data: sellerList } = useQuery(GET_SELLER, { variables: { limit: 1000, offset: 0, status: "active" }, fetchPolicy: "no-cache" })
+    const { data: brandList } = useQuery(GET_BRANDS, { variables: { limit: 1000, offset: 0 }, fetchPolicy: "no-cache" })
+    const { data: categoryList } = useQuery(GET_CATEGORIES, {
+        variables: {
+            "getCategoriesInput": {
+                "limit": 1000,
+                "offset": 0
+            }
+        }, fetchPolicy: "no-cache"
+    })
+    const [createProduct, { loading: createProductLoading }] = useMutation(CREATE_PRODUCT)
+    const { register, setValue, watch, handleSubmit } = useForm<ProductInputType>()
     const mainImageRef = useRef<any>()
     const otherImageRef = useRef<any>()
     const videoRef = useRef<any>()
 
-    const countryOptions = countries.map(c=>({label:c.name, value: c.code}))
+    const countryOptions = countries.map(c => ({ label: c.name, value: c.code }))
 
-    const submitHandler = async (values:ProductInputType)=>{
-        console.log(mainImageRef.current.getFiles()[0])
-        values['pro_input_image'] = mainImageRef.current.getFiles()[0]
-        useCreateProduct(values, createProduct)
+    const submitHandler = async (values: ProductInputType) => {
+        try {
+            console.log(mainImageRef.current.getFiles()[0])
+            values['pro_input_image'] = mainImageRef.current.getFiles()[0]
+            await useCreateProduct(values, createProduct)
+            router.push('/kocart/product/product-list')
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -56,19 +65,19 @@ export default function AddProduct() {
                 <div className="flex justfy-content-between gap-4">
                     <div className="flex flex-column w-6">
                         <p className="mb-2 font-semibold">Seller<span className="text-red-500">*</span></p>
-                        <Select 
+                        <Select
                             options={
-                                sellerList?.sellers?.sellers?.length ? sellerList.sellers.sellers.map((s:any)=>({label: s.account_name,  value: s._id})):""
-                            } 
-                            onChange={(option:any)=>{setValue('seller_id', option.value)}}
+                                sellerList?.sellers?.sellers?.length ? sellerList.sellers.sellers.map((s: any) => ({ label: s.account_name, value: s._id })) : ""
+                            }
+                            onChange={(option: any) => { setValue('seller_id', option?.value) }}
                             isClearable
                         />
                     </div>
                     <div className="flex flex-column w-6">
                         <p className="mb-2 font-semibold">Product Type<span className="text-red-500">*</span></p>
-                        <Select 
+                        <Select
                             options={productType}
-                            onChange={(option:any)=>setValue('product_type', option.value)}
+                            onChange={(option: any) => setValue('product_type', option.value)}
                             isClearable
                         />
                     </div>
@@ -79,21 +88,21 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Tags  <span className="text-sm">(These tags help you in search result)</span></p>
-                    <Chips className="w-full" value={watch('tags')} onChange={(e) => setValue('tags',e?.value || [])} />
+                    <Chips className="w-full" value={watch('tags')} onChange={(e) => setValue('tags', e?.value || [])} />
                 </div>
                 <div>
                     <div className="flex justfy-content-between gap-4">
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Made In</p>
-                            <Select options={countryOptions} onChange={(value:any)=>setValue('made_in', value.value)} />
+                            <Select options={countryOptions} onChange={(value: any) => setValue('made_in', value.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Brand</p>
-                            <Select options={brandList?.brands?.brands?.length?brandList?.brands?.brands.map((d:any)=>({label:d.name, value: d._id})):[]} onChange={(option:any)=>setValue('brand', option.value)} />
+                            <Select options={brandList?.brands?.brands?.length ? brandList?.brands?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('brand', option.value)} />
                         </div>
                         <div className="flex flex-column w-3">
                             <p className="mb-2 font-semibold">Select Category<span className="text-red-500">*</span></p>
-                            <Select options={categoryList?.getAdminCategories?.categories?.length?categoryList?.getAdminCategories?.categories.map((d:any)=>({label: d.name, value: d._id})) :[]} onChange={(option:any)=>setValue('category_id', option.value)} />
+                            <Select options={categoryList?.getAdminCategories?.categories?.length ? categoryList?.getAdminCategories?.categories.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('category_id', option.value)} />
                         </div>
                     </div>
                 </div>
@@ -131,11 +140,11 @@ export default function AddProduct() {
                         <TabPanel header="General">
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e)=>setValue('simple_price',e?.value || 0)} />
+                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
                             </div>
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Special Price</p>
-                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e)=>setValue('simple_special_price', e?.value || 0)}/>
+                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
                             </div>
                         </TabPanel>
                         <TabPanel header="Attributes"></TabPanel>
@@ -149,7 +158,11 @@ export default function AddProduct() {
                     <p className="my-3 font-semibold">Extra Description</p>
                     <Editor value={watch('extra_input_description')} onTextChange={(e) => setValue('pro_input_description', e.htmlValue)} style={{ height: '320px' }} />
                 </div>
-                <Button className="mt-4" onClick={handleSubmit(submitHandler)}>Submit</Button>
+                <Button hidden={createProductLoading} className="mt-4" onClick={handleSubmit(submitHandler)}>
+                    {
+                        createProductLoading ? "Loading...": "Submit"
+                    }
+                </Button>
             </Card>
         </div>
     )

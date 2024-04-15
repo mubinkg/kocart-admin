@@ -33,15 +33,15 @@ export default function ProductList() {
                 <DataTable
                     lazy
                     paginator
-                    rows={5}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
+                    rows={1000}
+                    rowsPerPageOptions={[1000, 2500, 5000]}
                     value={data?.getAdminProductList?.products || []}
                     totalRecords={data?.getAdminProductList?.count || 0}
                 >
                     <Column body={(item:any)=>productImageRenderer(item?.pro_input_image)} header="Image"/>
                     <Column field="pro_input_name" header="Name"/>
-                    <Column field="brand" header="Brand"/>
-                    <Column field="category_name" header="Category Name"/>
+                    <Column field="brand.name" header="Brand"/>
+                    <Column field="category.name" header="Category Name"/>
                     <Column field="rating" header="Rating"/>
                     <Column field="action" header="Action"/>
                 </DataTable>
