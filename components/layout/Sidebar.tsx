@@ -88,6 +88,18 @@ export default function TemplateDemo() {
             url: '/kocart/category'
         },
         {
+            label: 'Order',
+            icon: 'pi pi-list-check',
+            items: [
+                {
+                    label: 'Order List',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/order/order-list'
+                },
+            ]
+        },
+        {
             label: 'Product',
             icon: 'pi pi-list-check',
             items: [
