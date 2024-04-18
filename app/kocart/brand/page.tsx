@@ -52,7 +52,7 @@ export default function Brand() {
             <BreadCrumb model={items} className="m-4" />
             <Card className="m-4">
                 <Button label="Add New" className="mb-4" onClick={() => setVisible(true)} />
-                <DataTable lazy totalRecords={data ? data?.brands?.total : 0} onPage={(value) => console.log(value)} value={data?.brands?.brands ? data?.brands?.brands : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
+                <DataTable lazy totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0} onPage={(value) => console.log(value)} value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
                     <Column field="_id" header="ID"></Column>
                     <Column field="name" header="Name"></Column>
                     <Column body={brandImageRenderer} header="Image"></Column>
