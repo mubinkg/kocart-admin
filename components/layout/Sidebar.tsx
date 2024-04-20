@@ -124,6 +124,12 @@ export default function TemplateDemo() {
             ]
         },
         {
+            label: 'Sliders',
+            icon: 'pi pi-list-check',
+            template: itemRenderer,
+            url: '/kocart/slider'
+        },
+        {
             label: 'Sign Out',
             icon: 'pi pi-sign-out',
             template: signOutRender,
