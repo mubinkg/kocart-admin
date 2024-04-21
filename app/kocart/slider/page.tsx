@@ -1,5 +1,7 @@
 'use client'
 
+import { SLIDER_TYPE } from "@/graphql/slider";
+import { useQuery } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
@@ -10,8 +12,10 @@ import Select from 'react-select'
 
 
 export default function Page() {
+    const {data: slitedTypeList} = useQuery(SLIDER_TYPE)
     const sliderImageRef = useRef(null)
     const [sliderType, setSliderType] = useState('')
+    const [sliderId, setSliderId] = useState<any>('')
     const [visible, setVisible] = useState(false)
     const [url, setUrl] = useState('')
     const [category, setCategory] = useState('')
@@ -46,10 +50,15 @@ export default function Page() {
                 <Card>
                     <div className="flex flex-column">
                         <p className="my-3 font-semibold">Slider Type <span style={{ color: "red" }}>*</span></p>
-                        <Select options={sliderTypeOptions} onChange={(val: any) => setSliderType(val.value)} />
+                        <Select 
+                            options={slitedTypeList?.sliderType?.length ?slitedTypeList?.sliderType?.map((d:any)=>({label: d.type, value: d._id, type_id: d.type_id})):[] } 
+                            onChange={(val: any) => {
+                                setSliderId(val?.type_id)
+                                setSliderType(val.value)
+                            }} />
                     </div>
                     {
-                        sliderType === 'URL' ? (
+                        sliderId === 2 ? (
                             <div className="flex flex-column">
                                 <p className="my-3 font-semibold">Url <span style={{ color: "red" }}>*</span></p>
                                 <InputText value={url} onChange={(e)=>setUrl(e.target.value)} className="w-full" ref={sliderImageRef} />
@@ -57,7 +66,7 @@ export default function Page() {
                         ) : ""
                     }
                     {
-                        sliderType === 'CATEGORY' ? (
+                        sliderId === 4 ? (
                             <div className="flex flex-column">
                                 <p className="my-3 font-semibold">Category <span style={{ color: "red" }}>*</span></p>
                                 <Select className="w-full" ref={sliderImageRef} />
@@ -65,7 +74,7 @@ export default function Page() {
                         ) : ""
                     }
                     {
-                        sliderType === 'PRODUCT' ? (
+                        sliderId === 3 ? (
                             <div className="flex flex-column">
                                 <p className="my-3 font-semibold">Product <span style={{ color: "red" }}>*</span></p>
                                 <Select className="w-full" ref={sliderImageRef} />
