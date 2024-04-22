@@ -21,3 +21,27 @@ export const SLIDER_CATEGORY = gql`query SliderCategory($query: String!) {
     name
   }
 }`
+
+export const CREATE_SLIDER = gql`mutation CreateSlider($createSliderInput: CreateSliderInput!) {
+  createSlider(createSliderInput: $createSliderInput) {
+    _id
+  }
+}`
+
+export const GET_SLIDER_LIST = gql`query AdminSliderList($limit: Float!, $offset: Float!) {
+  adminSliderList(limit: $limit, offset: $offset) {
+    count
+    sliders {
+      _id
+      category
+      image
+      link
+      product
+      slider_type {
+        _id
+        type
+        type_id
+      }
+    }
+  }
+}`

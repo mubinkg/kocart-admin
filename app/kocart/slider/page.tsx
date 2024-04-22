@@ -1,7 +1,7 @@
 'use client'
 
-import { SLIDER_CATEGORY, SLIDER_PRODUCT, SLIDER_TYPE } from "@/graphql/slider";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { CREATE_SLIDER, GET_SLIDER_LIST, SLIDER_CATEGORY, SLIDER_PRODUCT, SLIDER_TYPE } from "@/graphql/slider";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
@@ -10,13 +10,18 @@ import { InputText } from "primereact/inputtext";
 import { useRef, useState } from "react";
 import AsyncSelect from 'react-select/async'
 import Select from 'react-select'
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import { Image } from "primereact/image";
 
 
 export default function Page() {
+    const {data:sliderList, refetch} = useQuery(GET_SLIDER_LIST, {variables: {limit: 1000, offset: 0}})
+    const [createSlider, {loading: sliderCreateLoading}] = useMutation(CREATE_SLIDER)
     const {data: slitedTypeList} = useQuery(SLIDER_TYPE)
     const [getSliderProduct] = useLazyQuery(SLIDER_PRODUCT)
     const [getSliderCategory] = useLazyQuery(SLIDER_CATEGORY)
-    const sliderImageRef = useRef(null)
+    const sliderImageRef = useRef<any>(null)
     const [sliderType, setSliderType] = useState('')
     const [sliderId, setSliderId] = useState<any>('')
     const [visible, setVisible] = useState(false)
@@ -34,15 +39,36 @@ export default function Page() {
         callback(data?.data?.sliderCategory?.map((d:any)=>({label: d?.name, value: d?._id})) ||[])
     }
 
-    const createCategoryHandler = ()=>{
-        
+    const createCategoryHandler = async ()=>{
+        await createSlider({variables: {
+            "createSliderInput": {
+              "slider_type": sliderType,
+              "link": url,
+              "image": sliderImageRef?.current?.getFiles()[0],
+              "product": product,
+              "category": category
+            }
+          }})
+        await refetch()
+        setVisible(false)
     }
+
+    const brandImageRenderer = (item: any) => <Image src={item?.image} alt="Brand Image" width="200"/>
 
     return (
         <div>
             <h1 className="ml-4 font-light">Slider Image For Add-on Offers and other benefits</h1>
             <Card className="m-4 p-2">
-                <Button label="Add New" onClick={()=>setVisible(true)}/>
+                <Button className="mb-4" label="Add New" onClick={()=>setVisible(true)}/>
+                <DataTable lazy totalRecords={sliderList?.adminSliderList?.count ? sliderList?.adminSliderList?.count : 0} onPage={(value) => console.log(value)} value={sliderList?.adminSliderList?.sliders ? sliderList?.adminSliderList?.sliders : []} paginator rows={1000} rowsPerPageOptions={[1000, 2000, 2500, 5000]}>
+                    <Column field="_id" header="ID"></Column>
+                    <Column field="slider_type.type" header="Type"></Column>
+                    <Column field="slider_type.type_id" header="Type ID"></Column>
+                    <Column field="product" header="Product"></Column>
+                    <Column field="category" header="Category"></Column>
+                    <Column field="link" header="Slider Link"></Column>
+                    <Column body={brandImageRenderer} header="Image"></Column>
+                </DataTable>
             </Card>
             <Dialog header='Add new slider image' visible={visible} onHide={() => setVisible(false)}>
                 <Card>
@@ -90,7 +116,7 @@ export default function Page() {
                         <p className="my-3 font-semibold">Slider Image <span style={{ color: "red" }}>*</span></p>
                         <FileUpload className="w-full" ref={sliderImageRef} />
                     </div>
-                    <Button label="Submit" className="mt-3" onClick={createCategoryHandler}/>
+                    <Button label={sliderCreateLoading ? "Loading...": "Submit"} className="mt-3" onClick={createCategoryHandler}/>
                 </Card>
             </Dialog>
         </div>
