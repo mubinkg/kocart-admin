@@ -1,18 +1,21 @@
 'use client'
 
-import { SLIDER_TYPE } from "@/graphql/slider";
-import { useQuery } from "@apollo/client";
+import { SLIDER_CATEGORY, SLIDER_PRODUCT, SLIDER_TYPE } from "@/graphql/slider";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { InputText } from "primereact/inputtext";
 import { useRef, useState } from "react";
+import AsyncSelect from 'react-select/async'
 import Select from 'react-select'
 
 
 export default function Page() {
     const {data: slitedTypeList} = useQuery(SLIDER_TYPE)
+    const [getSliderProduct] = useLazyQuery(SLIDER_PRODUCT)
+    const [getSliderCategory] = useLazyQuery(SLIDER_CATEGORY)
     const sliderImageRef = useRef(null)
     const [sliderType, setSliderType] = useState('')
     const [sliderId, setSliderId] = useState<any>('')
@@ -21,24 +24,19 @@ export default function Page() {
     const [category, setCategory] = useState('')
     const [product, setProduct] = useState('')
 
-    const sliderTypeOptions = [
-        {
-            label: "Defalut",
-            value: "DEFAULT"
-        },
-        {
-            label: "Url",
-            value: "URL"
-        },
-        {
-            label: "Category",
-            value: "CATEGORY"
-        },
-        {
-            label: "Product",
-            value: "PRODUCT"
-        }
-    ]
+    const loadProductOptions:any = async (val:string, callback:any)=>{
+        const data = await getSliderProduct({variables: {query: val}})
+        callback(data?.data?.sliderProduct?.map((d:any)=>({label: d?.pro_input_name, value: d?._id})) || [])
+    }
+
+    const loadCategoryOptions:any = async (val:string, callback:any)=>{
+        const data = await getSliderCategory({variables: {query:val}})
+        callback(data?.data?.sliderCategory?.map((d:any)=>({label: d?.name, value: d?._id})) ||[])
+    }
+
+    const createCategoryHandler = ()=>{
+        
+    }
 
     return (
         <div>
@@ -69,7 +67,11 @@ export default function Page() {
                         sliderId === 4 ? (
                             <div className="flex flex-column">
                                 <p className="my-3 font-semibold">Category <span style={{ color: "red" }}>*</span></p>
-                                <Select className="w-full" ref={sliderImageRef} />
+                                <AsyncSelect 
+                                    className="w-full" 
+                                    loadOptions={loadCategoryOptions}
+                                    onChange={(value:any)=>setCategory(value.value)}
+                                />
                             </div>
                         ) : ""
                     }
@@ -77,7 +79,10 @@ export default function Page() {
                         sliderId === 3 ? (
                             <div className="flex flex-column">
                                 <p className="my-3 font-semibold">Product <span style={{ color: "red" }}>*</span></p>
-                                <Select className="w-full" ref={sliderImageRef} />
+                                <AsyncSelect 
+                                    loadOptions={loadProductOptions}
+                                    onChange={(value:any)=>setProduct(value.value)}
+                                />
                             </div>
                         ) : ""
                     }
@@ -85,7 +90,7 @@ export default function Page() {
                         <p className="my-3 font-semibold">Slider Image <span style={{ color: "red" }}>*</span></p>
                         <FileUpload className="w-full" ref={sliderImageRef} />
                     </div>
-                    <Button label="Submit" className="mt-3"/>
+                    <Button label="Submit" className="mt-3" onClick={createCategoryHandler}/>
                 </Card>
             </Dialog>
         </div>
