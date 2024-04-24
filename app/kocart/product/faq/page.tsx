@@ -18,7 +18,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 export default function Page() {
     const { data: faqList, refetch } = useQuery(ADMIN_FAQ_LIST, { variables: { limit: 1000, offset: 0 } })
     const [getSliderProduct] = useLazyQuery(SLIDER_PRODUCT)
-    const [createAdminFaq] = useMutation(CREATE_ADMIN_FAQ)
+    const [createAdminFaq, {loading}] = useMutation(CREATE_ADMIN_FAQ)
     const [visible, setVisible] = useState(false)
     const [product, setProduct] = useState('')
     const [question, setQuestion] = useState('')
@@ -29,16 +29,21 @@ export default function Page() {
         callback(data?.data?.sliderProduct?.map((d: any) => ({ label: d?.pro_input_name, value: d?._id })) || [])
     }
 
-    const createFaqHandler = async ()=>{
-        try{
-        await createAdminFaq({variables: {
-            "faqAdminInput": {
-              "ans": ans,
-              "product": product,
-              "question": question
-            }
-          }})
-        }catch(err){
+    const createFaqHandler = async () => {
+        try {
+            await createAdminFaq({
+                variables: {
+                    "faqAdminInput": {
+                        "ans": ans,
+                        "product": product,
+                        "question": question
+                    }
+                }
+            })
+            await refetch()
+            setVisible(false)
+
+        } catch (err) {
             console.log(err)
         }
 
@@ -51,7 +56,7 @@ export default function Page() {
 
     return (
         <div>
-            <BreadCrumb model={items} className='m-4'/>
+            <BreadCrumb model={items} className='m-4' />
             <Card className="m-4 p-2">
                 <Button className="mb-4" label="Add New" onClick={() => setVisible(true)} />
                 <DataTable lazy totalRecords={faqList?.adminFaqList?.count ? faqList?.adminFaqList?.count : 0} onPage={(value) => console.log(value)} value={faqList?.adminFaqList?.faqs ? faqList?.adminFaqList?.faqs : []} paginator rows={1000} rowsPerPageOptions={[1000, 2000, 2500, 5000]}>
@@ -78,7 +83,7 @@ export default function Page() {
                         <p className="my-3 font-semibold">Answer <span style={{ color: "red" }}>*</span></p>
                         <InputText value={ans} onChange={(e) => setAns(e.target.value)} className="w-full" placeholder="Write answer" />
                     </div>
-                    <Button onClick={createFaqHandler} label={"Submit"} className="mt-3"/>
+                    <Button disabled={loading} onClick={createFaqHandler} label={loading ? "Loading...": "Submit"} className="mt-3" />
                 </Card>
             </Dialog>
         </div>
