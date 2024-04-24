@@ -11,6 +11,7 @@ const local_url = "http://localhost:3001/graphql"
 const link = createUploadLink({
   uri: prod_url,
 })
+
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('access_token');
@@ -18,10 +19,11 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     }
   }
 });
+
 const client = new ApolloClient({
   link: authLink.concat(link),
   cache: new InMemoryCache(),

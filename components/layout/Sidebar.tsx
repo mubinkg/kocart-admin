@@ -121,6 +121,13 @@ export default function TemplateDemo() {
                     template: subItemRenderer,
                     url: '/kocart/product/product-list'
                 }
+                ,
+                {
+                    label: 'Product FAQ',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/product/faq'
+                }
             ]
         },
         {
