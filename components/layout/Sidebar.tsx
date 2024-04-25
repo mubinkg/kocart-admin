@@ -145,6 +145,12 @@ export default function TemplateDemo() {
                     icon: 'pi pi-align-left',
                     template: subItemRenderer,
                     url: '/kocart/customers'
+                },
+                {
+                    label: 'Addresses',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/address'
                 }
             ]
         },
