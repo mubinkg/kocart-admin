@@ -137,6 +137,18 @@ export default function TemplateDemo() {
             url: '/kocart/slider'
         },
         {
+            label: 'Customers',
+            icon: 'pi pi-list-check',
+            items: [
+                {
+                    label: 'View Customers',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/customers'
+                }
+            ]
+        },
+        {
             label: 'Sign Out',
             icon: 'pi pi-sign-out',
             template: signOutRender,
