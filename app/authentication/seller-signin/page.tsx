@@ -33,7 +33,7 @@ export default function Home() {
       )
 
       localStorage.setItem('access_token', data?.data?.data?.signinSeller?.access_token)
-      localStorage.setItem('user',  data?.data?.data?.signinSeller?.user)
+      localStorage.setItem('user',  data?.data?.data?.signinSeller?.seller)
       setLoading(false)
       router.push('/kocart/dashboard')
     } catch (err:any) {
