@@ -1,9 +1,11 @@
 'use client'
 
+import OutlineItem from "@/components/dashboard/OutlineItem";
 import PieChart from "@/components/dashboard/PieChart";
 import { Card } from "primereact/card";
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
+import OrderList from "../order/order-list/page";
 
 export default function Dashboard() {
     const [chartData, setChartData] = useState({});
@@ -15,7 +17,7 @@ export default function Dashboard() {
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
         const data = {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','Aug','Sep','Oct','Nov','Dec'],
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [
                 {
                     label: 'Dataset 1',
@@ -23,7 +25,7 @@ export default function Dashboard() {
                     borderColor: documentStyle.getPropertyValue('--blue-500'),
                     yAxisID: 'y',
                     tension: 0.4,
-                    data: [65, 59, 80, 81, 56, 55, 50,60,70,40,50,90]
+                    data: [65, 59, 80, 81, 56, 55, 50, 60, 70, 40, 50, 90, 0]
                 },
             ]
         };
@@ -89,13 +91,13 @@ export default function Dashboard() {
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Products</h3>
-                        <h2 className="text-right">4568</h2>
+                        <h2 className="text-right">897</h2>
                     </Card>
                 </div>
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Rating</h3>
-                        <h2 className="text-right">4568</h2>
+                        <h2 className="text-right">4/208</h2>
                     </Card>
                 </div>
                 <div className="col-3">
@@ -112,9 +114,19 @@ export default function Dashboard() {
                     </Card>
                 </div>
                 <div className="col-6">
-                    <PieChart/>
+                    <PieChart />
                 </div>
             </div>
+            <h3>Order Outline</h3>
+            <div className="grid grid-gutter">
+                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={1103} title="Received" icon={""}/>
+            </div>
+            <OrderList/>
         </div>
     )
 }
