@@ -25,7 +25,7 @@ export default function Home() {
   const signInHandler = async () => {
     try {
       setLoading(true)
-      const data = await axios.post((prod_url),
+      const data = await axios.post((local_url),
         {
             password: password,
             phone: phone
@@ -33,7 +33,7 @@ export default function Home() {
       )
 
       localStorage.setItem('access_token', data?.data?.data?.signinSeller?.access_token)
-      localStorage.setItem('user',  data?.data?.data?.signinSeller?.seller)
+      localStorage.setItem('user',  JSON.stringify(data?.data?.data?.signinSeller?.seller||""))
       setLoading(false)
       router.push('/kocart/dashboard')
     } catch (err:any) {
