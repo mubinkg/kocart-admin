@@ -6,7 +6,7 @@ export async function useCreateProduct(values:ProductInputType, callback:any){
           "pro_input_name": values.pro_input_name,
           "seller": values.seller_id,
           "short_description":values.short_description,
-          "category": values.category_id,
+          "category": values.category,
           "product_type":values.product_type,
           "brand": values.brand,
           "tags": values.tags.join(','),
