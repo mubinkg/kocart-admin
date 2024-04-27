@@ -16,6 +16,21 @@ export const productType:OptionType[] = [
     }
 ]
 
+export const indicatorOptions:OptionType[] = [
+    {
+        label: "None",
+        value: 'NONE',
+    },
+    {
+        label: "Halal",
+        value: 'HALAL',
+    },
+    {
+        label: "Non Halal",
+        value: 'NON_HALAL',
+    }
+]
+
 export const countries = [ 
     {name: 'Afghanistan', code: 'AF'}, 
     {name: 'Åland Islands', code: 'AX'}, 
