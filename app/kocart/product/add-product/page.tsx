@@ -118,53 +118,53 @@ export default function AddProduct() {
                             <Select options={brandList?.brands?.brands?.length ? brandList?.brands?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('brand', option.value)} />
                         </div>
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Total Allowed Quantity</p>
-                                <InputNumber placeholder="Total Allowed Quantity"  style={{height: "37px"}} value={watch('total_allowed_quantity')} onChange={(e) => setValue('total_allowed_quantity', e?.value || 0)} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Total Allowed Quantity</p>
+                                    <InputNumber placeholder="Total Allowed Quantity" style={{ height: "37px" }} value={watch('total_allowed_quantity')} onChange={(e) => setValue('total_allowed_quantity', e?.value || 0)} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Minimum Order Quantity</p>
-                                <InputNumber placeholder="Minimum Order Quantity"  style={{height: "37px"}} value={watch('minimum_order_quantity')} onChange={(e) => setValue('minimum_order_quantity', e?.value || 0)} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Minimum Order Quantity</p>
+                                    <InputNumber placeholder="Minimum Order Quantity" style={{ height: "37px" }} value={watch('minimum_order_quantity')} onChange={(e) => setValue('minimum_order_quantity', e?.value || 0)} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Quantity Step Size</p>
-                                <InputNumber placeholder="Quantity Step Size"  style={{height: "37px"}} value={watch('quantity_step_size')} onChange={(e) => setValue('quantity_step_size', e?.value || 0)} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Quantity Step Size</p>
+                                    <InputNumber placeholder="Quantity Step Size" style={{ height: "37px" }} value={watch('quantity_step_size')} onChange={(e) => setValue('quantity_step_size', e?.value || 0)} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Warranty Period</p>
-                                <InputText placeholder="Warranty period"  style={{height: "37px"}} value={watch('warranty_period')} onChange={(e) => setValue('warranty_period', e.target.value || "")} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Warranty Period</p>
+                                    <InputText placeholder="Warranty period" style={{ height: "37px" }} value={watch('warranty_period')} onChange={(e) => setValue('warranty_period', e.target.value || "")} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Guarantee Period</p>
-                                <InputText placeholder="Warranty period"  style={{height: "37px"}} value={watch('guarantee_period')} onChange={(e) => setValue('guarantee_period', e.target.value || "")} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Guarantee Period</p>
+                                    <InputText placeholder="Warranty period" style={{ height: "37px" }} value={watch('guarantee_period')} onChange={(e) => setValue('guarantee_period', e.target.value || "")} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Is Returnable</p>
-                                <InputSwitch checked={watch('is_returnable')?true:false} placeholder="Warranty period"   onChange={(e) => setValue('is_returnable', e.value)} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Is Returnable</p>
+                                    <InputSwitch checked={watch('is_returnable') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('is_returnable', e.value)} />
+                                </div>) : ""
                         }
                         {
-                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
-                            (<div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Is Cancelable</p>
-                                <InputSwitch checked={watch('is_cancelable')?true:false} placeholder="Warranty period"  onChange={(e) => setValue('is_cancelable', e.value)} />
-                            </div>) : ""
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ?
+                                (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Is Cancelable</p>
+                                    <InputSwitch checked={watch('is_cancelable') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('is_cancelable', e.value)} />
+                                </div>) : ""
                         }
                         <div className="flex flex-column w-3 pr-3">
                             <p className="mb-2 font-semibold">Select Category<span className="text-red-500">*</span></p>
@@ -205,13 +205,26 @@ export default function AddProduct() {
                     <TabView>
                         <TabPanel header="General">
                             <div className="flex flex-column">
+                                <p className="mb-2 font-semibold">Type Of Product :<span className="text-red-500">*</span></p>
+                                <Select
+                                    options={productType}
+                                    onChange={(option: any) => setValue('product_type', option.value)}
+                                    isClearable
+                                />
+                            </div>
+                            <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full block" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                <InputNumber className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
                             </div>
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Special Price</p>
-                                <InputNumber value={watch('simple_special_price')} className="w-full block" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
+                                <InputNumber value={watch('simple_special_price')} className="w-full" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
                             </div>
+                            <div className="flex flex-column w-3 pr-3">
+                                <p className="mb-2 font-semibold">Is Download allowed?</p>
+                                <InputSwitch checked={watch('download_allowed') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('download_allowed', e.value)} />
+                            </div>
+                            <Button label="Save Settings" className="mt-4"/>
                         </TabPanel>
                         <TabPanel header="Attributes"></TabPanel>
                     </TabView>

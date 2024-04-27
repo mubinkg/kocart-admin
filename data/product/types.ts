@@ -22,6 +22,7 @@ export type ProductInputType = {
     guarantee_period?: string,
     is_returnable?:boolean,
     is_cancelable?: boolean
+    download_allowed?:boolean
 }
 
 export type OptionType = {
