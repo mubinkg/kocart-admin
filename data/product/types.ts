@@ -23,6 +23,7 @@ export type ProductInputType = {
     is_returnable?:boolean,
     is_cancelable?: boolean
     download_allowed?:boolean
+    type_of_product: string
 }
 
 export type OptionType = {

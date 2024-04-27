@@ -16,6 +16,28 @@ export const productType:OptionType[] = [
     }
 ]
 
+export const typeOfProductOptions:OptionType[] = [
+    {
+        label: 'Select Type',
+        value: 'none'
+    },
+    {
+        label: 'Simple Product',
+        value: 'simple'
+    },
+    {
+        label: 'Variable Product',
+        value: 'variable'
+    }
+]
+
+export const typeOfDgitalProductOptions:OptionType[] = [
+    {
+        label: 'Digtal Prodct',
+        value: 'digital'
+    },
+]
+
 export const indicatorOptions:OptionType[] = [
     {
         label: "None",

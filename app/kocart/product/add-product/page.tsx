@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
-import { countries, indicatorOptions, items, productType, videoTypeOptions } from "@/data/product/items";
+import { countries, indicatorOptions, items, productType, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
 import { OptionType, ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
@@ -42,7 +42,8 @@ export default function AddProduct() {
     const [createProduct, { loading: createProductLoading }] = useMutation(CREATE_PRODUCT)
     const { register, setValue, watch, handleSubmit } = useForm<ProductInputType>({
         defaultValues: {
-            product_type: "PHYSICAL_PRODUCT"
+            product_type: "PHYSICAL_PRODUCT",
+            type_of_product: 'none'
         }
     })
     const mainImageRef = useRef<any>()
@@ -88,7 +89,10 @@ export default function AddProduct() {
                         <p className="mb-2 font-semibold">Product Type<span className="text-red-500">*</span></p>
                         <Select
                             options={productType}
-                            onChange={(option: any) => setValue('product_type', option.value)}
+                            onChange={(option: any) => {
+                                setValue('product_type', option.value)
+                                option.value === 'DIGITAL_PRODUCT' ? setValue('type_of_product', 'digital') : setValue('type_of_product', 'simple')
+                            }}
                             isClearable
                         />
                     </div>
@@ -207,24 +211,50 @@ export default function AddProduct() {
                             <div className="flex flex-column">
                                 <p className="mb-2 font-semibold">Type Of Product :<span className="text-red-500">*</span></p>
                                 <Select
-                                    options={productType}
-                                    onChange={(option: any) => setValue('product_type', option.value)}
+                                    options={
+                                        watch('product_type') === 'DIGITAL_PRODUCT' ? typeOfDgitalProductOptions : typeOfProductOptions
+                                    }
+                                    onChange={(option: any) => setValue('type_of_product', option.value)}
                                     isClearable
                                 />
                             </div>
-                            <div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
-                                <InputNumber className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                            </div>
-                            <div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Special Price</p>
-                                <InputNumber value={watch('simple_special_price')} className="w-full" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
-                            </div>
-                            <div className="flex flex-column w-3 pr-3">
-                                <p className="mb-2 font-semibold">Is Download allowed?</p>
-                                <InputSwitch checked={watch('download_allowed') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('download_allowed', e.value)} />
-                            </div>
-                            <Button label="Save Settings" className="mt-4"/>
+                            {
+                                watch('type_of_product') !== 'variable' ? (<><div className="flex flex-column">
+                                    <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
+                                    <InputNumber className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                </div>
+                                    <div className="flex flex-column">
+                                        <p className="mb-2 font-semibold">Special Price</p>
+                                        <InputNumber value={watch('simple_special_price')} className="w-full" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
+                                    </div></>) : ""
+                            }
+                            {
+                                watch('product_type') === 'DIGITAL_PRODUCT' ? (<div className="flex flex-column w-3 pr-3">
+                                    <p className="mb-2 font-semibold">Is Download allowed?</p>
+                                    <InputSwitch checked={watch('download_allowed') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('download_allowed', e.value)} />
+                                </div>) : ""
+                            }
+                            {
+                                watch('product_type') === 'PHYSICAL_PRODUCT' && watch('type_of_product') === 'simple' ? (<div className="grid grid-gutter">
+                                    <div className="col-3">
+                                        <p className="mb-2 font-semibold">Weight (kg)<span className="text-red-500">*</span></p>
+                                        <InputNumber placeholder="Weight" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                    </div>
+                                    <div className="col-3">
+                                        <p className="mb-2 font-semibold">Height (cms)<span className="text-red-500">*</span></p>
+                                        <InputNumber placeholder="Height" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                    </div>
+                                    <div className="col-3">
+                                        <p className="mb-2 font-semibold">Breadth (cms)<span className="text-red-500">*</span></p>
+                                        <InputNumber placeholder="Breadth" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                    </div>
+                                    <div className="col-3">
+                                        <p className="mb-2 font-semibold">Length (kg)<span className="text-red-500">*</span></p>
+                                        <InputNumber placeholder="Length" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                                    </div>
+                                </div>) : ""
+                            }
+                            <Button label="Save Settings" className="mt-4" />
                         </TabPanel>
                         <TabPanel header="Attributes"></TabPanel>
                     </TabView>
