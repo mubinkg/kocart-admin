@@ -2,6 +2,7 @@
 
 import Attribute from "@/components/product/Attribute";
 import { ADD_ATTRIBUTE, ADD_ATTRIBUTE_SET, GET_PORODUCT_ATTRIBUTE_LIST, GET_PRODUCT_ATTRIBUTE_SET_LIST } from "@/graphql/product";
+import { getIsAdmin } from "@/util/storageUtils";
 import { useMutation, useQuery } from "@apollo/client";
 import { AutoComplete } from "primereact/autocomplete";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -14,7 +15,7 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import { useRef, useState } from "react";
 
-export default function ProductAttribute() {
+export default function ProductAttributeSet() {
     const {data:productAttributeList} = useQuery(GET_PORODUCT_ATTRIBUTE_LIST, {variables: {query: "", limit: 100, offset: 0}})
     const [addAttribute] = useMutation(ADD_ATTRIBUTE)
     const [addAttributeSet, { loading: addAttributeSetLoading }] = useMutation(ADD_ATTRIBUTE_SET)
@@ -87,7 +88,7 @@ export default function ProductAttribute() {
 
     const items = [
         { label: 'Product' },
-        { label: 'Product Attribute List' }
+        { label: 'Product Attribute Set List' }
     ];
 
     return (
@@ -95,7 +96,9 @@ export default function ProductAttribute() {
             <Toast ref={toast} />
             <BreadCrumb model={items} className="m-4" />
             <Card className="m-4">
-                <Button label="Create New" onClick={() => setVisible(true)} className="mb-4"/>
+                {
+                    getIsAdmin() ? (<Button label="Create New" onClick={() => setVisible(true)} className="mb-4"/>): ""
+                }
                 <DataTable 
                     title="Attributes" 
                     lazy 
@@ -135,8 +138,8 @@ export default function ProductAttribute() {
                 </div>
                 <Button label={addAttributeSetLoading ? 'Loading...' : "Add Now"} className="my-3" onClick={handleAddAttributeSet} hidden={addAttributeSetLoading} />
             </Dialog>
-            <Dialog position="top" header="Product Attribute Set List" visible={visibleAttributeSetList} style={{ width: '50vw' }} onHide={() => setVisisbleAttributeSetList(false)}>
-                <Card title="Attribute Set">
+            <Dialog position="top" header="Product Attribute List" visible={visibleAttributeSetList} style={{ width: '50vw' }} onHide={() => setVisisbleAttributeSetList(false)}>
+                <Card title="Attributes">
                     <DataTable lazy totalRecords={productAttributeSetResponse ? productAttributeSetResponse?.getProductAttributeSetList?.count : 0} onPage={(value) => console.log(value)} value={productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList ? productAttributeSetResponse?.getProductAttributeSetList?.productAttributeSetList : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
                         <Column field="_id" header="ID"></Column>
                         <Column field="attributeSetName" header="Name"></Column>

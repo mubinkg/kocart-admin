@@ -1,6 +1,9 @@
 export function getUser(){
-    const user = localStorage.getItem('user')
-    return JSON.parse(user ? user : '')
+    if (typeof window !== "undefined") {
+        const user = localStorage.getItem("user") || ""
+        return JSON.parse(user)
+    }
+    return null
 }
 
 export function getIsAdmin(){

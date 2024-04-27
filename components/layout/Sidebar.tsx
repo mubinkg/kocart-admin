@@ -120,7 +120,7 @@ export default function TemplateDemo() {
             label: 'Attribute Sets',
             icon: 'pi pi-align-left',
             template: subItemRenderer,
-            url: '/kocart/product/attribute'
+            url: '/kocart/product/attribute-set'
         })
     }
 
