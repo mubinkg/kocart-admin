@@ -136,7 +136,7 @@ export default function TemplateDemo() {
             label: 'Attribute Values',
             icon: 'pi pi-align-left',
             template: subItemRenderer,
-            url: '/kocart/product/attribute'
+            url: '/kocart/product/attribute-value'
         })
     }
 

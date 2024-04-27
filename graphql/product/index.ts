@@ -88,3 +88,17 @@ export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProduc
     }
   }
 }`
+
+export const GET_PRODUCT_ATTRIBUTES_VALUE = gql`query ProductAttributes($limit: Float!, $offset: Float!, $query: String) {
+  productAttributes(limit: $limit, offset: $offset, query: $query) {
+    count
+    attributeList {
+      _id
+      values {
+        valueName
+      }
+      status
+      name
+    }
+  }
+}`
