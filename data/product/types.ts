@@ -19,7 +19,9 @@ export type ProductInputType = {
     minimum_order_quantity?: number,
     quantity_step_size?: number,
     warranty_period?:string,
-    guarantee_period?: string
+    guarantee_period?: string,
+    is_returnable?:boolean,
+    is_cancelable?: boolean
 }
 
 export type OptionType = {

@@ -22,6 +22,8 @@ import { GET_CATEGORIES } from "@/graphql/category/query";
 import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { useRouter } from "next/navigation";
 import { getIsAdmin } from "@/util/storageUtils";
+import { InputSwitch } from 'primereact/inputswitch';
+
 
 
 export default function AddProduct() {
@@ -148,6 +150,20 @@ export default function AddProduct() {
                             (<div className="flex flex-column w-3 pr-3">
                                 <p className="mb-2 font-semibold">Guarantee Period</p>
                                 <InputText placeholder="Warranty period"  style={{height: "37px"}} value={watch('guarantee_period')} onChange={(e) => setValue('guarantee_period', e.target.value || "")} />
+                            </div>) : ""
+                        }
+                        {
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
+                            (<div className="flex flex-column w-3 pr-3">
+                                <p className="mb-2 font-semibold">Is Returnable</p>
+                                <InputSwitch checked={watch('is_returnable')?true:false} placeholder="Warranty period"   onChange={(e) => setValue('is_returnable', e.value)} />
+                            </div>) : ""
+                        }
+                        {
+                            watch('product_type') === 'PHYSICAL_PRODUCT' ? 
+                            (<div className="flex flex-column w-3 pr-3">
+                                <p className="mb-2 font-semibold">Is Cancelable</p>
+                                <InputSwitch checked={watch('is_cancelable')?true:false} placeholder="Warranty period"  onChange={(e) => setValue('is_cancelable', e.value)} />
                             </div>) : ""
                         }
                         <div className="flex flex-column w-3 pr-3">
