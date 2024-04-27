@@ -91,6 +91,8 @@ export default function ProductAttributeSet() {
         { label: 'Product Attribute Set List' }
     ];
 
+    const statusBody = (status:string)=>(<span className={`${status === 'ACTIVE' ? 'bg-green-500':'bg-red-500'} px-2 py-1 text-white-alpha-90 border-round-sm`}>{status?.toLocaleLowerCase()}</span>)
+
     return (
         <>
             <Toast ref={toast} />
@@ -109,7 +111,9 @@ export default function ProductAttributeSet() {
                     value={productAttributeList?.productAttributes?.attributeList || []}
                 >
                     <Column field="_id" header="ID"/>
+                    <Column field="attributeSet.attributeSetName" header="Attribute Set"/>
                     <Column field="name" header="Name"/>
+                    <Column body={(item:any)=>statusBody(item?.status||"")} header="Status"/>
                 </DataTable>
             </Card>
             <Dialog header="Create New Product Attribute" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
