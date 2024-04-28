@@ -38,6 +38,21 @@ export const typeOfDgitalProductOptions:OptionType[] = [
     },
 ]
 
+export const stockTypeOptions:OptionType[] = [
+    {
+        label: "Select Stock Type",
+        value: 'none'
+    },
+    {
+        label: "Product Lavel (Stock Will Be Managed Generally)",
+        value: 'product'
+    },
+    {
+        label: "Variable Lavel (Stock Will Be Managed Variant Wise)",
+        value: 'variable'
+    }
+]
+
 export const stockStatusOptions:OptionType[] = [
     {
         label: "In Stock",

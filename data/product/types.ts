@@ -27,7 +27,8 @@ export type ProductInputType = {
     stock_management: boolean,
     sku?: string
     totalStock?: number,
-    stockStatus: string
+    stockStatus: string,
+    stockType?: string
 }
 
 export type OptionType = {

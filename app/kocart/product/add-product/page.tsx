@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
-import { countries, indicatorOptions, items, productType, stockStatusOptions, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
+import { countries, indicatorOptions, items, productType, stockStatusOptions, stockTypeOptions, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
 import { OptionType, ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
@@ -46,7 +46,8 @@ export default function AddProduct() {
         defaultValues: {
             product_type: "PHYSICAL_PRODUCT",
             type_of_product: 'none',
-            stock_management: false
+            stock_management: false,
+            stockType: 'none'
         }
     })
     const mainImageRef = useRef<any>()
@@ -269,24 +270,38 @@ export default function AddProduct() {
                             {
                                 watch('stock_management') ? (
                                     <div>
+                                        <h2>Choose Stock Management</h2>
                                         <div className="flex flex-column">
-                                            <p className="mb-2 font-semibold">Sku</p>
-                                            <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
-                                        </div>
-                                        <div className="flex flex-column">
-                                            <p className="mb-2 font-semibold">Total Stock</p>
-                                            <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
-                                        </div>
-                                        <div className="flex flex-column">
-                                            <p className="mb-2 font-semibold">Total Stock</p>
+                                            <p className="mb-2 font-semibold">Type:</p>
                                             <Select
                                                 options={
-                                                    stockStatusOptions
+                                                    stockTypeOptions
                                                 }
-                                                onChange={(option: any) => setValue('type_of_product', option.value)}
+                                                defaultValue={stockTypeOptions[0]}
+                                                onChange={(option: any) => setValue('stockType', option.value)}
                                                 isClearable
                                             />
                                         </div>
+                                        {
+                                            watch('stockType') === 'product' ? (<><div className="flex flex-column">
+                                                <p className="mb-2 font-semibold">Sku</p>
+                                                <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
+                                            </div>
+                                                <div className="flex flex-column">
+                                                    <p className="mb-2 font-semibold">Total Stock</p>
+                                                    <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
+                                                </div>
+                                                <div className="flex flex-column">
+                                                    <p className="mb-2 font-semibold">Stock Status</p>
+                                                    <Select
+                                                        options={
+                                                            stockStatusOptions
+                                                        }
+                                                        onChange={(option: any) => setValue('type_of_product', option.value)}
+                                                        isClearable
+                                                    />
+                                                </div></>) : ""
+                                        }
                                     </div>
                                 ) : ""
                             }
