@@ -38,6 +38,17 @@ export const typeOfDgitalProductOptions:OptionType[] = [
     },
 ]
 
+export const stockStatusOptions:OptionType[] = [
+    {
+        label: "In Stock",
+        value: 'IN_STOCK'
+    },
+    {
+        label: "Out Of Stock",
+        value: 'OUT_OF_STOCK'
+    }
+]
+
 export const indicatorOptions:OptionType[] = [
     {
         label: "None",

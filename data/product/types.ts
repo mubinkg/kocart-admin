@@ -23,7 +23,11 @@ export type ProductInputType = {
     is_returnable?:boolean,
     is_cancelable?: boolean
     download_allowed?:boolean
-    type_of_product: string
+    type_of_product: string,
+    stock_management: boolean,
+    sku?: string
+    totalStock?: number,
+    stockStatus: string
 }
 
 export type OptionType = {

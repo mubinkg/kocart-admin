@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
-import { countries, indicatorOptions, items, productType, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
+import { countries, indicatorOptions, items, productType, stockStatusOptions, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
 import { OptionType, ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
@@ -23,6 +23,8 @@ import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { useRouter } from "next/navigation";
 import { getIsAdmin } from "@/util/storageUtils";
 import { InputSwitch } from 'primereact/inputswitch';
+import { TriStateCheckbox } from 'primereact/tristatecheckbox';
+import { Checkbox } from "primereact/checkbox";
 
 
 
@@ -43,7 +45,8 @@ export default function AddProduct() {
     const { register, setValue, watch, handleSubmit } = useForm<ProductInputType>({
         defaultValues: {
             product_type: "PHYSICAL_PRODUCT",
-            type_of_product: 'none'
+            type_of_product: 'none',
+            stock_management: false
         }
     })
     const mainImageRef = useRef<any>()
@@ -252,11 +255,46 @@ export default function AddProduct() {
                                         <p className="mb-2 font-semibold">Length (kg)<span className="text-red-500">*</span></p>
                                         <InputNumber placeholder="Length" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
                                     </div>
+
                                 </div>) : ""
+                            }
+                            {
+                                watch('product_type') === 'PHYSICAL_PRODUCT' ? (
+                                    <div className="flex align-items-center gap-3 mt-3">
+                                        <Checkbox checked={watch('stock_management')} onChange={(e) => setValue('stock_management', e.checked ? true : false)} />
+                                        <p>Enable Stock Management</p>
+                                    </div>
+                                ) : ""
+                            }
+                            {
+                                watch('stock_management') ? (
+                                    <div>
+                                        <div className="flex flex-column">
+                                            <p className="mb-2 font-semibold">Sku</p>
+                                            <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
+                                        </div>
+                                        <div className="flex flex-column">
+                                            <p className="mb-2 font-semibold">Total Stock</p>
+                                            <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
+                                        </div>
+                                        <div className="flex flex-column">
+                                            <p className="mb-2 font-semibold">Total Stock</p>
+                                            <Select
+                                                options={
+                                                    stockStatusOptions
+                                                }
+                                                onChange={(option: any) => setValue('type_of_product', option.value)}
+                                                isClearable
+                                            />
+                                        </div>
+                                    </div>
+                                ) : ""
                             }
                             <Button label="Save Settings" className="mt-4" />
                         </TabPanel>
-                        <TabPanel header="Attributes"></TabPanel>
+                        <TabPanel header="Attributes">
+
+                        </TabPanel>
                     </TabView>
                 </div>
                 <div className="flex flex-column">
