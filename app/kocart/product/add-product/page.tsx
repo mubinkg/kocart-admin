@@ -309,7 +309,7 @@ export default function AddProduct() {
                             <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
                         </TabPanel>
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
-
+                            
                         </TabPanel>
                     </TabView>
                 </div>
