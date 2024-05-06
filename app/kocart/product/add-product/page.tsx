@@ -47,7 +47,8 @@ export default function AddProduct() {
             product_type: "PHYSICAL_PRODUCT",
             type_of_product: 'none',
             stock_management: false,
-            stockType: 'none'
+            stockType: 'none',
+            isSaveSettings: false
         }
     })
     const mainImageRef = useRef<any>()
@@ -305,9 +306,9 @@ export default function AddProduct() {
                                     </div>
                                 ) : ""
                             }
-                            <Button label="Save Settings" className="mt-4" />
+                            <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
                         </TabPanel>
-                        <TabPanel header="Attributes">
+                        <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
 
                         </TabPanel>
                     </TabView>

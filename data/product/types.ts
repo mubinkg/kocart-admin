@@ -28,7 +28,8 @@ export type ProductInputType = {
     sku?: string
     totalStock?: number,
     stockStatus: string,
-    stockType?: string
+    stockType?: string,
+    isSaveSettings: boolean
 }
 
 export type OptionType = {
