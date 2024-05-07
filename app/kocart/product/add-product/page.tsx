@@ -313,6 +313,9 @@ export default function AddProduct() {
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
                             <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
                         </TabPanel>
+                        <TabPanel header="Variants" disabled={!watch('isSaveSettings')}>
+                            <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
+                        </TabPanel>
                     </TabView>
                 </div>
                 <div className="flex flex-column">
