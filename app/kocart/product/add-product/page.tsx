@@ -25,6 +25,7 @@ import { getIsAdmin } from "@/util/storageUtils";
 import { InputSwitch } from 'primereact/inputswitch';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { Checkbox } from "primereact/checkbox";
+import AddAttibute from "@/components/product/AddAttribute";
 
 
 
@@ -309,7 +310,7 @@ export default function AddProduct() {
                             <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
                         </TabPanel>
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
-                            
+                            <AddAttibute isSaveSettings={watch('isSaveSettings')}/>
                         </TabPanel>
                     </TabView>
                 </div>
