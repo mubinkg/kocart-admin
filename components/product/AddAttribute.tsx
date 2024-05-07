@@ -3,21 +3,26 @@ import { useState } from "react"
 import { useFieldArray, useForm, Controller } from "react-hook-form"
 import Select from 'react-select'
 
-export default function AddAttibute({ isSaveSettings }: { isSaveSettings: boolean }) {
+export default function AddAttibute({ isSaveSettings, setAttributes }: { isSaveSettings: boolean, setAttributes:any }) {
     const [isSave, setIsSave] = useState(false)
-    const { control } = useForm()
+    const { control, handleSubmit } = useForm()
     const { append, remove, fields } = useFieldArray({
         control,
         name: 'productAttributes'
     })
 
+    function submitHandler(values:any){
+        setAttributes(values)
+        setIsSave(true)
+    }
+
     return (
         <div>
             <div className="flex justify-content-end">
                 {
-                    fields.length ? (<Button label="Add Attribute" onClick={()=>setIsSave(true)} outlined />):""
+                    fields.length ? (<Button className="mr-3" label="Add Attribute" onClick={handleSubmit(submitHandler)} outlined />):""
                 }
-                <Button label="Add Attribute" onClick={()=>append({attribute:"",attributeValues:[]})} outlined />
+                <Button label="Save Attribute" onClick={()=>append({attribute:"",attributeValues:[]})} outlined />
             </div>
             <div>
                 {

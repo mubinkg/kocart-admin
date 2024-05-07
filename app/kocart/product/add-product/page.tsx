@@ -7,7 +7,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
@@ -32,6 +32,7 @@ import AddAttibute from "@/components/product/AddAttribute";
 export default function AddProduct() {
     const isAdmin = getIsAdmin()
     const router = useRouter()
+    const [attributes, setAttributes] = useState([])
     const { data: sellerList } = useQuery(GET_SELLER, { variables: { limit: 1000, offset: 0, status: "active" }, fetchPolicy: "no-cache" })
     const { data: brandList } = useQuery(GET_BRANDS, { variables: { limit: 1000, offset: 0 }, fetchPolicy: "no-cache" })
     const { data: categoryList } = useQuery(GET_CATEGORIES, {
@@ -63,8 +64,8 @@ export default function AddProduct() {
             console.log(values)
             console.log(mainImageRef.current.getFiles()[0])
             values['pro_input_image'] = mainImageRef.current.getFiles()[0]
-            // await useCreateProduct(values, createProduct)
-            //router.push('/kocart/product/product-list')
+            await useCreateProduct(values, createProduct)
+            router.push('/kocart/product/product-list')
         } catch (err) {
             console.log(err)
         }
@@ -310,7 +311,7 @@ export default function AddProduct() {
                             <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
                         </TabPanel>
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
-                            <AddAttibute isSaveSettings={watch('isSaveSettings')}/>
+                            <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
                         </TabPanel>
                     </TabView>
                 </div>
