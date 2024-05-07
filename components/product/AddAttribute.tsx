@@ -1,8 +1,10 @@
 import { Button } from "primereact/button"
+import { useState } from "react"
 import { useFieldArray, useForm, Controller } from "react-hook-form"
 import Select from 'react-select'
 
 export default function AddAttibute({ isSaveSettings }: { isSaveSettings: boolean }) {
+    const [isSave, setIsSave] = useState(false)
     const { control } = useForm()
     const { append, remove, fields } = useFieldArray({
         control,
@@ -12,6 +14,9 @@ export default function AddAttibute({ isSaveSettings }: { isSaveSettings: boolea
     return (
         <div>
             <div className="flex justify-content-end">
+                {
+                    fields.length ? (<Button label="Add Attribute" onClick={()=>setIsSave(true)} outlined />):""
+                }
                 <Button label="Add Attribute" onClick={()=>append({attribute:"",attributeValues:[]})} outlined />
             </div>
             <div>
