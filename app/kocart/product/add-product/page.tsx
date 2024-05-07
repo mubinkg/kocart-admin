@@ -26,6 +26,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { Checkbox } from "primereact/checkbox";
 import AddAttibute from "@/components/product/AddAttribute";
+import AddVariants from "@/components/product/AddVariants";
 
 
 
@@ -314,7 +315,7 @@ export default function AddProduct() {
                             <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
                         </TabPanel>
                         <TabPanel header="Variants" disabled={!watch('isSaveSettings')}>
-                            <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
+                            <AddVariants/>
                         </TabPanel>
                     </TabView>
                 </div>
