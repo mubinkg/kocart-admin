@@ -13,7 +13,7 @@ import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ProductAttributeSet() {
     const {data:productAttributeList} = useQuery(GET_PORODUCT_ATTRIBUTE_LIST, {variables: {query: "", limit: 100, offset: 0}})
@@ -27,6 +27,11 @@ export default function ProductAttributeSet() {
     const [attributeSet, setAttributeSet] = useState('')
     const [attributeSetName, setAttributeSetName] = useState('')
     const toast = useRef<any>(null)
+    const [isAdmin,setAdmin] = useState(false)
+
+    useEffect(()=>{
+        setAdmin(getIsAdmin())
+    },[])
 
     const showError = (msg: string) => {
         toast.current?.show({ severity: 'error', summary: 'Error', detail: msg, life: 3000 });
@@ -97,10 +102,8 @@ export default function ProductAttributeSet() {
         <>
             <Toast ref={toast} />
             <BreadCrumb model={items} className="m-4" />
-            <Card className="m-4">
-                {
-                    getIsAdmin() ? (<Button label="Create New" onClick={() => setVisible(true)} className="mb-4"/>): ""
-                }
+\            <Card className="m-4">
+                <Button style={{display: isAdmin ? "block": "none"}} label="Create New" onClick={() => setVisible(true)} className="mb-4"/>
                 <DataTable 
                     title="Attributes" 
                     lazy 

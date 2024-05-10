@@ -22,18 +22,6 @@ export const GET_PRODUCT_ATTRIBUTE_SET_LIST = gql`query GetProductAttributeSetLi
 export const ADD_ATTRIBUTE = gql`mutation CreateProductAttribute($createProductAttributeInput: CreateProductAttributeInput!) {
   createProductAttribute(createProductAttributeInput: $createProductAttributeInput) {
     _id
-    attributeSet {
-      _id
-    }
-    name
-    status
-    values {
-      color
-      id
-      image
-      type
-      valueName
-    }
   }
 }`
 
@@ -41,7 +29,6 @@ export const GET_PORODUCT_ATTRIBUTE_LIST = gql`query ProductAttributes($limit: F
   productAttributes(limit: $limit, offset: $offset, query: $query) {
     count
     attributeList {
-      _id
       name
       status
       attributeSet {

@@ -10,7 +10,7 @@ import { useFieldArray, useForm, Controller } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid';
 
 const Attribute = ({ handleAddAttribute }: any) => {
-    const { control, register, handleSubmit, watch, setValue, reset } = useForm()
+    const { control, handleSubmit, watch, reset,register } = useForm()
     const { fields, append, remove } = useFieldArray<any>({
         control,
         name: 'attribute'
@@ -20,10 +20,10 @@ const Attribute = ({ handleAddAttribute }: any) => {
 
     const submitHandler = (value: any) => {
         let values = []
-        if (value?.data) {
-            values = value.data.map((v: any) => ({
+        if (value?.attribute) {
+            values = value?.attribute?.map((v: any) => ({
                 valueName: v?.attributeName || "",
-                image: v?.image || null,
+                image: v?.image[0] || null,
                 color: v?.color || null,
                 type: v?.attributeType || 'DEFAULT'
             }))
@@ -37,11 +37,11 @@ const Attribute = ({ handleAddAttribute }: any) => {
         <div className="flex flex-column gap-4">
             <div className="flex mt-4 gap-4">
                 <p className="mb-2 font-semibold">Attribute Values<span style={{ color: 'red' }}>*</span></p>
-                <Button label="Attribute Value" onClick={()=>append({attributeName:"",attributeType:cities[0],image: "",color:""})} />
+                <Button label="Attribute Value" onClick={() => append({ attributeName: "", attributeType: cities[0], image: "", color: "" })} />
             </div>
             <div className='flex flex-column gap-5'>
                 {fields.map((field, index) => (
-                    <div key={uuidv4()} className='flex gap-5'>
+                    <div key={field.id} className='flex gap-5'>
                         <div className='flex flex-column w-5'>
                             <label className='mb-2'>Attribute Name</label>
                             <Controller
@@ -68,15 +68,7 @@ const Attribute = ({ handleAddAttribute }: any) => {
                                 )}
                             />
                             {
-                                watch(`attribute.${index}.attributeType`) === 'IMAGE' ?
-                                    <Controller
-                                        name={`attribute.${index}.image`}
-                                        control={control}
-                                        render={({field})=>(
-                                            <FileUpload {...field}/>
-                                        )}
-                                    />
-                                    : ""
+                                    <input style={{display: watch(`attribute.${index}.attributeType`) === 'IMAGE' ?'block':'none'}} {...register(`attribute.${index}.image`)} type='file' />
                             }
                             {
                                 (watch(`attribute.${index}.attributeType`)) === 'COLOR' ?
