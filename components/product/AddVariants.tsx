@@ -34,27 +34,29 @@ export default function AddVariants({attributes}:{attributes:any}) {
             }
             return results;
         }
-        const sortedAttributes = (attributes.productAttributes.sort((a:any, b:any) => a.attributeValues
+        const sortedAttributes = (attributes?.productAttributes?.sort((a:any, b:any) => a.attributeValues
         .length - b.attributeValues
         .length))
         const combinations = findCombinationsIterative(sortedAttributes)
         combinations.forEach((val:any)=>{
             const titles = val?.map((v:any)=>v.varientName)
-            console.log(titles)
+            const id = val?.map((v:any)=>v.attributeValue).join('')
             append({
-                titles:titles
+                titles:titles,
+                id: id
             })
         })
     }, [])
 
     return (
         <div className="card">
+            <Button className='mb-4' label='Save Varients'/>
             <Accordion>
                 {
-                    fields.map((item, index) => (
+                    fields.map((item:any, index:any) => (
                         <AccordionTab key={item.id} header={() => (<div className='flex justify-content-between'>
                             {
-                                item.titles.map((title:string)=>(
+                                item['titles'].map((title:string)=>(
                                     <InputText value={title} disabled/>
                                 ))
                             }
