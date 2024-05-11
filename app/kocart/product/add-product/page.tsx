@@ -62,8 +62,6 @@ export default function AddProduct() {
 
     const submitHandler = async (values: ProductInputType) => {
         try {
-            console.log(values)
-            console.log(mainImageRef.current.getFiles()[0])
             values['pro_input_image'] = mainImageRef.current.getFiles()[0]
             await useCreateProduct(values, createProduct)
             router.push('/kocart/product/product-list')
@@ -312,10 +310,10 @@ export default function AddProduct() {
                             <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
                         </TabPanel>
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
-                            <AddAttibute isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
+                            <AddAttibute attributes={attributes} isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
                         </TabPanel>
                         <TabPanel header="Variants" disabled={!watch('isSaveSettings')}>
-                            <AddVariants/>
+                            <AddVariants attributes={attributes} />
                         </TabPanel>
                     </TabView>
                 </div>

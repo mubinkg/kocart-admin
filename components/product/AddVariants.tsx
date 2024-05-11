@@ -6,15 +6,45 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 
-export default function AddVariants() {
-    const { control } = useForm()
-    const { fields, append,remove } = useFieldArray({
+export default function AddVariants({attributes}:{attributes:any}) {
+    const { control } = useForm<any>()
+    const { fields, append,remove } = useFieldArray<any>({
         control,
         name: 'varients'
     })
 
     useEffect(() => {
-        append({})
+        function findCombinationsIterative(arrays:any) {
+            const results = [[]];
+            for (const arr of arrays) {
+              const newResults:any = [];
+              for (const comb of results) {
+                for (const element of arr.attributeValues) {
+                    const finalElement = {
+                        attribute: arr.attribute.value,
+                        attributeValue: element.value,
+                        varientName: element.label
+                    }
+                  const newComb = [...comb, finalElement]; // Create a new combination using spread operator
+                  newResults.push(newComb);
+                }
+              }
+              results.length = 0; // Clear existing combinations to create new ones with each sub-array
+              results.push(...newResults); // Efficiently add all new combinations
+            }
+            return results;
+        }
+        const sortedAttributes = (attributes.productAttributes.sort((a:any, b:any) => a.attributeValues
+        .length - b.attributeValues
+        .length))
+        const combinations = findCombinationsIterative(sortedAttributes)
+        combinations.forEach((val:any)=>{
+            const titles = val?.map((v:any)=>v.varientName)
+            console.log(titles)
+            append({
+                titles:titles
+            })
+        })
     }, [])
 
     return (
@@ -22,15 +52,19 @@ export default function AddVariants() {
             <Accordion>
                 {
                     fields.map((item, index) => (
-                        <AccordionTab header={() => (<div className='flex justify-content-between'>
-                            <p>Item</p>
+                        <AccordionTab key={item.id} header={() => (<div className='flex justify-content-between'>
+                            {
+                                item.titles.map((title:string)=>(
+                                    <InputText value={title} disabled/>
+                                ))
+                            }
                             <Button label='Delete' onClick={()=>remove(index)} severity="danger" outlined/>
                         </div>)}>
                             <div>
                                 <div className='flex flex-wrap gap-3'>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.price`}
                                             control={control}
                                             render={({ field }) => (
                                                 <InputNumber {...field} placeholder='Price' />
@@ -39,7 +73,7 @@ export default function AddVariants() {
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.specialPrice`}
                                             control={control}
                                             render={({ field }) => (
                                                 <InputNumber {...field} placeholder='Special Price' />
@@ -48,7 +82,7 @@ export default function AddVariants() {
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.sku`}
                                             control={control}
                                             render={({ field }) => (
                                                 <InputText {...field} placeholder='Sku' />
@@ -57,7 +91,7 @@ export default function AddVariants() {
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.totalStock`}
                                             control={control}
                                             render={({ field }) => (
                                                 <InputNumber {...field} placeholder='Total Stock' />
@@ -66,7 +100,7 @@ export default function AddVariants() {
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.stockStatus`}
                                             control={control}
                                             render={({ field }) => (
                                                 <InputNumber {...field} placeholder='Stock Status' />
@@ -74,40 +108,40 @@ export default function AddVariants() {
                                         />
                                     </div>
                                 </div>
-                                <div className='flex flex-wrap gap-3'>
+                                <div className='flex flex-wrap gap-3 mt-4'>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.wight`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Price' />
+                                                <InputNumber {...field} placeholder='Weight' />
                                             )}
                                         />
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.height`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Special Price' />
+                                                <InputNumber {...field} placeholder='Height' />
                                             )}
                                         />
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.breadth`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Total Stock' />
+                                                <InputNumber {...field} placeholder='Breadth' />
                                             )}
                                         />
                                     </div>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients`}
+                                            name={`varients.${index}.length`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Stock Status' />
+                                                <InputNumber {...field} placeholder='Length' />
                                             )}
                                         />
                                     </div>

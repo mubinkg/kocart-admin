@@ -1,12 +1,14 @@
+'use client'
+
 import { LOAD_ATTRIBUTE } from "@/graphql/attribute"
 import { useLazyQuery } from "@apollo/client"
 import { Button } from "primereact/button"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useFieldArray, useForm, Controller } from "react-hook-form"
 import AsyncSelect from 'react-select/async'
 import Select from 'react-select'
 
-export default function AddAttibute({ isSaveSettings, setAttributes }: { isSaveSettings: boolean, setAttributes: any }) {
+export default function AddAttibute({attributes, isSaveSettings, setAttributes }: { isSaveSettings: boolean, setAttributes: any, attributes:any }) {
     const [getAttribute, {data}] = useLazyQuery(LOAD_ATTRIBUTE)
     const [isSave, setIsSave] = useState(false)
     const [attributeValues, setAttributeValues] = useState([])
@@ -15,7 +17,15 @@ export default function AddAttibute({ isSaveSettings, setAttributes }: { isSaveS
         control,
         name: 'productAttributes'
     })
-    console.log('Attribute values : ',attributeValues)
+
+    useEffect(()=>{
+        attributes?.productAttributes?.forEach((val:any)=>{
+            append({
+                attribute: val.attribute,
+                attributeValues: val.attributeValues
+            })
+        })
+    },[])
 
     const loadAttributeOprions: any = async (val: string, callback: any) => {
         const res = await getAttribute({ variables: { query: val, limit: 10, offset: 0 } })
@@ -23,7 +33,6 @@ export default function AddAttibute({ isSaveSettings, setAttributes }: { isSaveS
     }
 
     function submitHandler(values: any) {
-        console.log(values)
         setAttributes(values)
         setIsSave(true)
     }
@@ -46,7 +55,8 @@ export default function AddAttibute({ isSaveSettings, setAttributes }: { isSaveS
                                     control={control}
                                     render={({ field }) => (
                                         <AsyncSelect 
-                                            loadOptions={loadAttributeOprions} 
+                                            loadOptions={loadAttributeOprions}
+                                            {...field}
                                             onChange={(val:any)=>{
                                                 setValue(`productAttributes.${index}.attribute`,val);
                                                 setAttributeValues(data?.productAttributes?.attributeList.find((el:any)=>el._id === val.value)?.values?.map((d:any)=>({label:d?.valueName, value:d?.id})||[]))
