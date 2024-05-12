@@ -99,6 +99,7 @@ export default function AddProduct() {
                                 setValue('product_type', option.value)
                                 option.value === 'DIGITAL_PRODUCT' ? setValue('type_of_product', 'digital') : setValue('type_of_product', 'simple')
                             }}
+                            defaultValue={productType[1]}
                             isClearable
                         />
                     </div>
@@ -220,12 +221,15 @@ export default function AddProduct() {
                                     options={
                                         watch('product_type') === 'DIGITAL_PRODUCT' ? typeOfDgitalProductOptions : typeOfProductOptions
                                     }
-                                    onChange={(option: any) => setValue('type_of_product', option.value)}
+                                    defaultValue={
+                                        watch('product_type') === 'DIGITAL_PRODUCT' ? typeOfDgitalProductOptions[0] : typeOfProductOptions[0]
+                                    }
+                                    onChange={(option: any) => setValue('type_of_product', option?.value)}
                                     isClearable
                                 />
                             </div>
                             {
-                                watch('type_of_product') !== 'variable' ? (<><div className="flex flex-column">
+                                watch('type_of_product') === 'simple' ||  watch('type_of_product') === 'digital' ? (<><div className="flex flex-column">
                                     <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
                                     <InputNumber className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
                                 </div>
