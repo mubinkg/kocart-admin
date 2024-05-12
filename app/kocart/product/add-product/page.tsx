@@ -23,7 +23,6 @@ import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { useRouter } from "next/navigation";
 import { getIsAdmin } from "@/util/storageUtils";
 import { InputSwitch } from 'primereact/inputswitch';
-import { TriStateCheckbox } from 'primereact/tristatecheckbox';
 import { Checkbox } from "primereact/checkbox";
 import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
@@ -34,6 +33,7 @@ export default function AddProduct() {
     const isAdmin = getIsAdmin()
     const router = useRouter()
     const [attributes, setAttributes] = useState([])
+    const [createProductVariantInput, setCreateProductVariantInput] = useState<any>([])
     const { data: sellerList } = useQuery(GET_SELLER, { variables: { limit: 1000, offset: 0, status: "active" }, fetchPolicy: "no-cache" })
     const { data: brandList } = useQuery(GET_BRANDS, { variables: { limit: 1000, offset: 0 }, fetchPolicy: "no-cache" })
     const { data: categoryList } = useQuery(GET_CATEGORIES, {
@@ -313,7 +313,7 @@ export default function AddProduct() {
                             <AddAttibute attributes={attributes} isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
                         </TabPanel>
                         <TabPanel header="Variants" disabled={!watch('isSaveSettings')}>
-                            <AddVariants attributes={attributes} />
+                            <AddVariants attributes={attributes} createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput}/>
                         </TabPanel>
                     </TabView>
                 </div>

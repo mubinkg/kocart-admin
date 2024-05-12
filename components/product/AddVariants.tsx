@@ -5,9 +5,24 @@ import { useFieldArray, useForm, Controller } from 'react-hook-form';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import Select from 'react-select'
 
-export default function AddVariants({attributes}:{attributes:any}) {
-    const { control } = useForm<any>()
+
+const stockOptions = [
+    {
+        label: 'In Stock',
+        value: 1
+    },
+    {
+        label: 'Out of Stock',
+        value: 2
+    }
+]
+
+export default function AddVariants({attributes, createProductVariantInput, setCreateProductVariantInput}:{attributes:any, createProductVariantInput:any,
+    setCreateProductVariantInput:any
+}) {
+    const { control, handleSubmit, setValue } = useForm<any>({defaultValues: {}})
     const { fields, append,remove } = useFieldArray<any>({
         control,
         name: 'varients'
@@ -25,32 +40,47 @@ export default function AddVariants({attributes}:{attributes:any}) {
                         attributeValue: element.value,
                         varientName: element.label
                     }
-                  const newComb = [...comb, finalElement]; // Create a new combination using spread operator
+                  const newComb = [...comb, finalElement];
                   newResults.push(newComb);
                 }
               }
-              results.length = 0; // Clear existing combinations to create new ones with each sub-array
-              results.push(...newResults); // Efficiently add all new combinations
+              results.length = 0;
+              results.push(...newResults);
             }
             return results;
         }
         const sortedAttributes = (attributes?.productAttributes?.sort((a:any, b:any) => a.attributeValues
         .length - b.attributeValues
-        .length))
+        .length)) || []
         const combinations = findCombinationsIterative(sortedAttributes)
         combinations.forEach((val:any)=>{
             const titles = val?.map((v:any)=>v.varientName)
             const id = val?.map((v:any)=>v.attributeValue).join('')
             append({
                 titles:titles,
-                id: id
+                id: id,
+                price: null,
+                specialPrice:null,
+                weight: null,
+                height: null,
+                breadth: null,
+                length: null,
+                stockStatus: stockOptions[0]
             })
         })
     }, [])
 
+    function submitHandler(values:any){
+        setCreateProductVariantInput(values)
+    }
+
     return (
         <div className="card">
-            <Button className='mb-4' label='Save Varients'/>
+            <Button 
+                className='mb-4' 
+                label='Save Varients'
+                onClick={handleSubmit(submitHandler)}
+            />
             <Accordion>
                 {
                     fields.map((item:any, index:any) => (
@@ -69,7 +99,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.price`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Price' />
+                                                <InputNumber 
+                                                    value={field.value} 
+                                                    onValueChange={(e)=>setValue(`varients.${index}.price`, e.value)} 
+                                                    placeholder='Price' 
+                                                />
                                             )}
                                         />
                                     </div>
@@ -78,7 +112,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.specialPrice`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Special Price' />
+                                                <InputNumber    
+                                                    value={field.value}
+                                                    onValueChange={(e)=>setValue(`varients.${index}.specialPrice`, e.value)}
+                                                    placeholder='Special Price' 
+                                                />
                                             )}
                                         />
                                     </div>
@@ -96,7 +134,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.totalStock`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Total Stock' />
+                                                <InputNumber 
+                                                    value={field.value} 
+                                                    placeholder='Total Stock'
+                                                    onValueChange={(e)=>setValue(`varients.${index}.totalStock`, e.value)}
+                                                />
                                             )}
                                         />
                                     </div>
@@ -105,7 +147,7 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.stockStatus`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Stock Status' />
+                                                <Select {...field} options={stockOptions} />
                                             )}
                                         />
                                     </div>
@@ -113,10 +155,14 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                 <div className='flex flex-wrap gap-3 mt-4'>
                                     <div className='flex-auto'>
                                         <Controller
-                                            name={`varients.${index}.wight`}
+                                            name={`varients.${index}.weight`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Weight' />
+                                                <InputNumber 
+                                                    value={field.value} 
+                                                    onValueChange={(e)=>setValue(`varients.${index}.weight`,e.value)}
+                                                    placeholder='Weight' 
+                                                />
                                             )}
                                         />
                                     </div>
@@ -125,7 +171,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.height`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Height' />
+                                                <InputNumber 
+                                                    value={field.value}
+                                                    onValueChange={(e)=>setValue(`varients.${index}.height`,e.value)}
+                                                    placeholder='Height' 
+                                                />
                                             )}
                                         />
                                     </div>
@@ -134,7 +184,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.breadth`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Breadth' />
+                                                <InputNumber
+                                                    value = {field.value} 
+                                                    onValueChange={(e)=>setValue(`varients.${index}.breadth`,e.value)}
+                                                    placeholder='Breadth' 
+                                                />
                                             )}
                                         />
                                     </div>
@@ -143,7 +197,11 @@ export default function AddVariants({attributes}:{attributes:any}) {
                                             name={`varients.${index}.length`}
                                             control={control}
                                             render={({ field }) => (
-                                                <InputNumber {...field} placeholder='Length' />
+                                                <InputNumber 
+                                                    value={field.value} 
+                                                    onValueChange={(e)=>setValue(`varients.${index}.length`,e.value)}
+                                                    placeholder='Length' 
+                                                />
                                             )}
                                         />
                                     </div>
