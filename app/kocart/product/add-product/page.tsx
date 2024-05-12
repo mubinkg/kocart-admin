@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
 import { countries, indicatorOptions, items, productType, stockStatusOptions, stockTypeOptions, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
-import { OptionType, ProductInputType } from "@/data/product/types";
+import { ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
 import { Button } from "primereact/button";
@@ -26,6 +26,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Checkbox } from "primereact/checkbox";
 import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
+import AdditionalInfo from "@/components/product/AdditionalInfo";
 
 
 
@@ -126,7 +127,7 @@ export default function AddProduct() {
                         </div>
                         <div className="flex flex-column w-3 pr-3">
                             <p className="mb-2 font-semibold">Brand</p>
-                            <Select options={brandList?.brands?.brands?.length ? brandList?.brands?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('brand', option.value)} />
+                            <Select options={brandList?.adminBrandList?.brands?.length ? brandList?.adminBrandList?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('brand', option.value)} />
                         </div>
                         {
                             watch('product_type') === 'PHYSICAL_PRODUCT' ?
@@ -215,103 +216,8 @@ export default function AddProduct() {
                     <p className="my-3 font-semibold">Additional Info</p>
                     <TabView>
                         <TabPanel header="General">
-                            <div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Type Of Product :<span className="text-red-500">*</span></p>
-                                <Select
-                                    options={
-                                        watch('product_type') === 'DIGITAL_PRODUCT' ? typeOfDgitalProductOptions : typeOfProductOptions
-                                    }
-                                    defaultValue={
-                                        watch('product_type') === 'DIGITAL_PRODUCT' ? typeOfDgitalProductOptions[0] : typeOfProductOptions[0]
-                                    }
-                                    onChange={(option: any) => setValue('type_of_product', option?.value)}
-                                    isClearable
-                                />
-                            </div>
-                            {
-                                watch('type_of_product') === 'simple' ||  watch('type_of_product') === 'digital' ? (<><div className="flex flex-column">
-                                    <p className="mb-2 font-semibold">Price<span className="text-red-500">*</span></p>
-                                    <InputNumber className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                                </div>
-                                    <div className="flex flex-column">
-                                        <p className="mb-2 font-semibold">Special Price</p>
-                                        <InputNumber value={watch('simple_special_price')} className="w-full" onChange={(e) => setValue('simple_special_price', e?.value || 0)} />
-                                    </div></>) : ""
-                            }
-                            {
-                                watch('product_type') === 'DIGITAL_PRODUCT' ? (<div className="flex flex-column w-3 pr-3">
-                                    <p className="mb-2 font-semibold">Is Download allowed?</p>
-                                    <InputSwitch checked={watch('download_allowed') ? true : false} placeholder="Warranty period" onChange={(e) => setValue('download_allowed', e.value)} />
-                                </div>) : ""
-                            }
-                            {
-                                watch('product_type') === 'PHYSICAL_PRODUCT' && watch('type_of_product') === 'simple' ? (<div className="grid grid-gutter">
-                                    <div className="col-3">
-                                        <p className="mb-2 font-semibold">Weight (kg)<span className="text-red-500">*</span></p>
-                                        <InputNumber placeholder="Weight" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                                    </div>
-                                    <div className="col-3">
-                                        <p className="mb-2 font-semibold">Height (cms)<span className="text-red-500">*</span></p>
-                                        <InputNumber placeholder="Height" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                                    </div>
-                                    <div className="col-3">
-                                        <p className="mb-2 font-semibold">Breadth (cms)<span className="text-red-500">*</span></p>
-                                        <InputNumber placeholder="Breadth" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                                    </div>
-                                    <div className="col-3">
-                                        <p className="mb-2 font-semibold">Length (kg)<span className="text-red-500">*</span></p>
-                                        <InputNumber placeholder="Length" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
-                                    </div>
-
-                                </div>) : ""
-                            }
-                            {
-                                watch('product_type') === 'PHYSICAL_PRODUCT' ? (
-                                    <div className="flex align-items-center gap-3 mt-3">
-                                        <Checkbox checked={watch('stock_management')} onChange={(e) => setValue('stock_management', e.checked ? true : false)} />
-                                        <p>Enable Stock Management</p>
-                                    </div>
-                                ) : ""
-                            }
-                            {
-                                watch('stock_management') ? (
-                                    <div>
-                                        <h2>Choose Stock Management</h2>
-                                        <div className="flex flex-column">
-                                            <p className="mb-2 font-semibold">Type:</p>
-                                            <Select
-                                                options={
-                                                    stockTypeOptions
-                                                }
-                                                defaultValue={stockTypeOptions[0]}
-                                                onChange={(option: any) => setValue('stockType', option.value)}
-                                                isClearable
-                                            />
-                                        </div>
-                                        {
-                                            watch('stockType') === 'product' ? (<><div className="flex flex-column">
-                                                <p className="mb-2 font-semibold">Sku</p>
-                                                <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
-                                            </div>
-                                                <div className="flex flex-column">
-                                                    <p className="mb-2 font-semibold">Total Stock</p>
-                                                    <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
-                                                </div>
-                                                <div className="flex flex-column">
-                                                    <p className="mb-2 font-semibold">Stock Status</p>
-                                                    <Select
-                                                        options={
-                                                            stockStatusOptions
-                                                        }
-                                                        onChange={(option: any) => setValue('type_of_product', option.value)}
-                                                        isClearable
-                                                    />
-                                                </div></>) : ""
-                                        }
-                                    </div>
-                                ) : ""
-                            }
-                            <Button onClick={()=>setValue('isSaveSettings', true)} label="Save Settings" className="mt-4" />
+                            <AdditionalInfo productType={watch('product_type')}/>
+                            
                         </TabPanel>
                         <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
                             <AddAttibute attributes={attributes} isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
