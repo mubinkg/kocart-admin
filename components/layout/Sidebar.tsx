@@ -102,7 +102,7 @@ export default function TemplateDemo() {
         label: 'Manage Stock',
         icon: 'pi pi-list-check',
         template: itemRenderer,
-        url: '/kocart/stock'
+        url: '/kocart/stock-management'
     })
     menuItems.push({
         label: 'Order',
