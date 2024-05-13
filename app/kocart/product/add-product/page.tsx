@@ -83,7 +83,7 @@ export default function AddProduct() {
             values['pro_input_image'] = mainImageRef.current.getFiles()[0]
             values['other_imagesInput'] = otherImageRef.current ? otherImageRef.current.getFiles()?.map((file:any)=>({image:file})) : null
             values['pro_input_video'] = videoRef.current? videoRef.current.getFiles()[0] : null
-            await useCreateProduct(values,addtionalInfo, attributes, createProduct)
+            await useCreateProduct(values,addtionalInfo, attributes,createProductVariantInput, createProduct)
         } catch (err) {
             console.log(err)
         }

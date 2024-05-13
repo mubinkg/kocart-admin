@@ -11,11 +11,11 @@ import Select from 'react-select'
 const stockOptions = [
     {
         label: 'In Stock',
-        value: 1
+        value: 'In Stock'
     },
     {
         label: 'Out of Stock',
-        value: 2
+        value: 'Out Of Stock'
     }
 ]
 
