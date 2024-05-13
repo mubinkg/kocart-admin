@@ -99,6 +99,12 @@ export default function TemplateDemo() {
         url: '/kocart/category'
     })
     menuItems.push({
+        label: 'Manage Stock',
+        icon: 'pi pi-list-check',
+        template: itemRenderer,
+        url: '/kocart/stock'
+    })
+    menuItems.push({
         label: 'Order',
         icon: 'pi pi-list-check',
         items: [
