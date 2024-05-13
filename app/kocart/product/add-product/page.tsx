@@ -7,7 +7,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
@@ -21,7 +21,7 @@ import { GET_BRANDS } from "@/graphql/brand/query";
 import { GET_CATEGORIES } from "@/graphql/category/query";
 import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { useRouter } from "next/navigation";
-import { getIsAdmin } from "@/util/storageUtils";
+import { getIsAdmin, getUser } from "@/util/storageUtils";
 import { InputSwitch } from 'primereact/inputswitch';
 import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
@@ -30,7 +30,7 @@ import AdditionalInfo from "@/components/product/AdditionalInfo";
 
 
 export default function AddProduct() {
-    const isAdmin = getIsAdmin()
+    const [isAdmin,setAdmin] = useState()
     const router = useRouter()
     const [attributes, setAttributes] = useState([])
     const [createProductVariantInput, setCreateProductVariantInput] = useState<any>([])
@@ -60,16 +60,25 @@ export default function AddProduct() {
     const otherImageRef = useRef<any>()
     const videoRef = useRef<any>()
 
+    useEffect(()=>{
+        const admin = getIsAdmin()
+        if(!admin){
+            const user = getUser()
+            console.log(user)
+            setValue('seller_id',user?._id)
+            setAdmin(admin)
+        }
+    },[])
+
     const countryOptions = countries.map(c => ({ label: c.name, value: c.code }))
 
     const submitHandler = async (values: ProductInputType) => {
         try {
             values['pro_input_image'] = mainImageRef.current.getFiles()[0]
-            console.log(values)
-            console.log(addtionalInfo)
-            console.log(attributes)
-            // await useCreateProduct(values, createProduct)
-            // router.push('/kocart/product/product-list')
+            values['other_imagesInput'] = otherImageRef.current ? otherImageRef.current.getFiles()?.map((file:any)=>({image:file})) : null
+            values['pro_input_video'] = videoRef.current? videoRef.current.getFiles()[0] : null
+            await useCreateProduct(values,addtionalInfo, attributes, createProduct)
+        // router.push('/kocart/product/product-list')
         } catch (err) {
             console.log(err)
         }
@@ -238,7 +247,7 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column">
                     <p className="my-3 font-semibold">Extra Description</p>
-                    <Editor value={watch('extra_input_description')} onTextChange={(e) => setValue('pro_input_description', e.htmlValue)} style={{ height: '320px' }} />
+                    <Editor value={watch('extra_input_description')} onTextChange={(e) => setValue('extra_input_description', e.htmlValue)} style={{ height: '320px' }} />
                 </div>
                 <Button hidden={createProductLoading} className="mt-4" onClick={handleSubmit(submitHandler)}>
                     {

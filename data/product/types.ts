@@ -14,6 +14,7 @@ export type ProductInputType = {
     pro_input_description?:any
     extra_input_description?:any
     pro_input_image?: any,
+    other_imagesInput:any,
     indicator?: string,
     total_allowed_quantity?:number,
     minimum_order_quantity?: number,
@@ -29,7 +30,9 @@ export type ProductInputType = {
     totalStock?: number,
     stockStatus: string,
     stockType?: string,
-    isSaveSettings: boolean
+    isSaveSettings: boolean,
+    download_link?:string,
+    pro_input_video: any
 }
 
 export type OptionType = {
