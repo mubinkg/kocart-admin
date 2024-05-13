@@ -63,7 +63,7 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
         {
           "height": d?.height,
           "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value)|| null,
-          "attributeValues": attribute?.id,
+          "attributeValues": d?.id,
           "breadth": d?.breadth,
           "length": d?.length,
           "price": d?.price,
