@@ -64,7 +64,6 @@ export default function AddProduct() {
         const admin = getIsAdmin()
         if(!admin){
             const user = getUser()
-            console.log(user)
             setValue('seller_id',user?._id)
             setAdmin(admin)
         }

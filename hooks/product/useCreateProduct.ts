@@ -40,10 +40,10 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
     }
 
     if(typeOfProduct === 'digital' || typeOfProduct === 'simple'){
-      data.createProductVariantInput = [
+      data.createProductInput.createProductVariantInput = [
         {
           "height": addtionalInfo?.height,
-          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value).join(',') || null,
+          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value) || null,
           "breadth": addtionalInfo?.breadth,
           "length": addtionalInfo?.length,
           "price": addtionalInfo?.simple_price,
@@ -52,22 +52,23 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
           "specialPrice": addtionalInfo.simple_special_price,
           "stockStatus": null,
           "totalStock": null,
-          "weight": addtionalInfo?.weight
+          "weight": addtionalInfo?.weight,
+          "attributeValues": attribute?.id,
         }
       ]
     }
     if(typeOfProduct === 'variable'){
-      console.log(createProductVariantInput.varients)
-      data.createProductVariantInput = createProductVariantInput?.varients?.map((d:any)=>(
+      console.log(createProductVariantInput)
+      data.createProductInput.createProductVariantInput = createProductVariantInput?.varients?.map((d:any)=>(
         {
           "height": d?.height,
-          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value).join(',') || null,
+          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value)|| null,
+          "attributeValues": attribute?.id,
           "breadth": d?.breadth,
           "length": d?.length,
           "price": d?.price,
-          "productId": null,
           "sku": d?.sku,
-          "specialPrice": d.special_price,
+          "specialPrice": d.specialPrice,
           "stockStatus": d.stockStatus?.value,
           "totalStock": d?.totalStock,
           "weight": addtionalInfo?.weight

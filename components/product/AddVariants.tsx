@@ -11,11 +11,11 @@ import Select from 'react-select'
 const stockOptions = [
     {
         label: 'In Stock',
-        value: 'In Stock'
+        value: 'IN_STOCK'
     },
     {
         label: 'Out of Stock',
-        value: 'Out Of Stock'
+        value: 'OUT_OF_STOCK'
     }
 ]
 
@@ -55,7 +55,7 @@ export default function AddVariants({attributes, createProductVariantInput, setC
         const combinations = findCombinationsIterative(sortedAttributes)
         combinations.forEach((val:any)=>{
             const titles = val?.map((v:any)=>v.varientName)
-            const id = val?.map((v:any)=>v.attributeValue).join('')
+            const id = val?.map((v:any)=>v.attributeValue)
             append({
                 titles:titles,
                 id: id,
