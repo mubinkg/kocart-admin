@@ -65,7 +65,8 @@ export default function AddVariants({attributes, createProductVariantInput, setC
                 height: null,
                 breadth: null,
                 length: null,
-                stockStatus: stockOptions[0]
+                stockStatus: stockOptions[0],
+                totalStock: null
             })
         })
     }, [])
