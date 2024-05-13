@@ -46,7 +46,7 @@ export default function AddProduct() {
             }
         }, fetchPolicy: "no-cache"
     })
-    const [createProduct, { loading: createProductLoading }] = useMutation(CREATE_PRODUCT)
+    const [createProduct, { loading: createProductLoading, data:creaProductData }] = useMutation(CREATE_PRODUCT)
     const { register, setValue, watch, handleSubmit } = useForm<ProductInputType>({
         defaultValues: {
             product_type: "PHYSICAL_PRODUCT",
@@ -70,6 +70,12 @@ export default function AddProduct() {
         }
     },[])
 
+    useEffect(()=>{
+        if(creaProductData){
+            router.push('/kocart/product/product-list')
+        }
+    }, [creaProductData])
+
     const countryOptions = countries.map(c => ({ label: c.name, value: c.code }))
 
     const submitHandler = async (values: ProductInputType) => {
@@ -78,7 +84,6 @@ export default function AddProduct() {
             values['other_imagesInput'] = otherImageRef.current ? otherImageRef.current.getFiles()?.map((file:any)=>({image:file})) : null
             values['pro_input_video'] = videoRef.current? videoRef.current.getFiles()[0] : null
             await useCreateProduct(values,addtionalInfo, attributes, createProduct)
-        // router.push('/kocart/product/product-list')
         } catch (err) {
             console.log(err)
         }

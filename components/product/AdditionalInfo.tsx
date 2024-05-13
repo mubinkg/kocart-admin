@@ -6,7 +6,7 @@ import { FileUpload } from 'primereact/fileupload'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 
@@ -35,6 +35,12 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
         setAdditionalInfo(values)
         setSaveSettings(false)
     }
+
+    useEffect(()=>{
+        for(const [key,value] of Object.entries(additionalInfo)){
+            setValue(key, value)
+        }
+    }, [])
 
     return (
         <div>
