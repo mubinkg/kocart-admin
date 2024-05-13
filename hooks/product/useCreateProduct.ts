@@ -53,7 +53,7 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
           "stockStatus": null,
           "totalStock": null,
           "weight": addtionalInfo?.weight,
-          "attributeValues": attribute?.id,
+          "attributeValues": null,
         }
       ]
     }
@@ -71,7 +71,7 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
           "specialPrice": d.specialPrice,
           "stockStatus": d.stockStatus?.value,
           "totalStock": d?.totalStock,
-          "weight": addtionalInfo?.weight
+          "weight": d?.weight
         }
       ))
     }
