@@ -6,6 +6,7 @@ import { FileUpload } from 'primereact/fileupload'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
+import { useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import Select from 'react-select'
 
@@ -24,10 +25,15 @@ const downloadLinkTypeOptions = [
     }
 ]
 
-export default function AdditionalInfo({ productType }: { productType: any }) {
-    const { setValue, watch, handleSubmit, register, control } = useForm()
+export default function AdditionalInfo({ productType, additionalInfo, setAdditionalInfo, setSaveSettings }: { productType: any, additionalInfo:any ,setAdditionalInfo:any, setSaveSettings:any}) {
+    
+    const uploadedProductRef = useRef<any>(null)
+    const { setValue, watch, handleSubmit} = useForm()
+    
     function submitHandler(values: any) {
-        console.log(values)
+        values['pro_input_zip'] = uploadedProductRef?.current?.getFiles() ?  uploadedProductRef?.current?.getFiles()[0]: null 
+        setAdditionalInfo(values)
+        setSaveSettings(false)
     }
 
     return (
@@ -62,24 +68,23 @@ export default function AdditionalInfo({ productType }: { productType: any }) {
                 </div>) : ""
             }
             {
-                watch('type_of_product') === 'simple' || watch('type_of_product') === 'digital' ? (<div className="grid grid-gutter">
-                    <div className="col-3">
+                watch('type_of_product') === 'simple' || watch('type_of_product') === 'digital' ? (<div className="flex flex-wrap">
+                    <div className="w-3 pr-4">
                         <p className="mb-2 font-semibold">Weight (kg)<span className="text-red-500">*</span></p>
-                        <InputNumber placeholder="Weight" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                        <InputNumber placeholder="Weight" className="w-full" value={watch('weight')} onChange={(e) => setValue('weight', e?.value || 0)} />
                     </div>
-                    <div className="col-3">
+                    <div className="w-3 pr-4">
                         <p className="mb-2 font-semibold">Height (cms)<span className="text-red-500">*</span></p>
-                        <InputNumber placeholder="Height" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                        <InputNumber placeholder="Height" className="w-full" value={watch('height')} onChange={(e) => setValue('height', e?.value || 0)} />
                     </div>
-                    <div className="col-3">
+                    <div className="w-3 pr-4">
                         <p className="mb-2 font-semibold">Breadth (cms)<span className="text-red-500">*</span></p>
-                        <InputNumber placeholder="Breadth" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                        <InputNumber placeholder="Breadth" className="w-full" value={watch('breadth')} onChange={(e) => setValue('breadth', e?.value || 0)} />
                     </div>
-                    <div className="col-3">
+                    <div className="w-3">
                         <p className="mb-2 font-semibold">Length (kg)<span className="text-red-500">*</span></p>
-                        <InputNumber placeholder="Length" className="w-full" value={watch('simple_price')} onChange={(e) => setValue('simple_price', e?.value || 0)} />
+                        <InputNumber placeholder="Length" className="w-full" value={watch('length')} onChange={(e) => setValue('length', e?.value || 0)} />
                     </div>
-
                 </div>) : ""
             }
             {
@@ -117,7 +122,7 @@ export default function AdditionalInfo({ productType }: { productType: any }) {
                             watch('download_link_type') === 'self_hosted' ? (
                                 <div>
                                     <p>File</p>
-                                    <FileUpload/>
+                                    <FileUpload ref={uploadedProductRef}/>
                                 </div>) : ""
                         }
                         {

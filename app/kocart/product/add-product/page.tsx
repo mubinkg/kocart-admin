@@ -23,7 +23,6 @@ import { useCreateProduct } from "@/hooks/product/useCreateProduct";
 import { useRouter } from "next/navigation";
 import { getIsAdmin } from "@/util/storageUtils";
 import { InputSwitch } from 'primereact/inputswitch';
-import { Checkbox } from "primereact/checkbox";
 import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
 import AdditionalInfo from "@/components/product/AdditionalInfo";
@@ -35,6 +34,8 @@ export default function AddProduct() {
     const router = useRouter()
     const [attributes, setAttributes] = useState([])
     const [createProductVariantInput, setCreateProductVariantInput] = useState<any>([])
+    const [addtionalInfo, setAdditionalInfo] = useState<any>({})
+    const [isSaveSettings, setSaveSettings] = useState(true)
     const { data: sellerList } = useQuery(GET_SELLER, { variables: { limit: 1000, offset: 0, status: "active" }, fetchPolicy: "no-cache" })
     const { data: brandList } = useQuery(GET_BRANDS, { variables: { limit: 1000, offset: 0 }, fetchPolicy: "no-cache" })
     const { data: categoryList } = useQuery(GET_CATEGORIES, {
@@ -64,8 +65,11 @@ export default function AddProduct() {
     const submitHandler = async (values: ProductInputType) => {
         try {
             values['pro_input_image'] = mainImageRef.current.getFiles()[0]
-            await useCreateProduct(values, createProduct)
-            router.push('/kocart/product/product-list')
+            console.log(values)
+            console.log(addtionalInfo)
+            console.log(attributes)
+            // await useCreateProduct(values, createProduct)
+            // router.push('/kocart/product/product-list')
         } catch (err) {
             console.log(err)
         }
@@ -216,15 +220,16 @@ export default function AddProduct() {
                     <p className="my-3 font-semibold">Additional Info</p>
                     <TabView>
                         <TabPanel header="General">
-                            <AdditionalInfo productType={watch('product_type')}/>
-                            
+                            <AdditionalInfo productType={watch('product_type')} additionalInfo={addtionalInfo} setAdditionalInfo={setAdditionalInfo} setSaveSettings={setSaveSettings} />
                         </TabPanel>
-                        <TabPanel header="Attributes" disabled={!watch('isSaveSettings')}>
-                            <AddAttibute attributes={attributes} isSaveSettings={watch('isSaveSettings')} setAttributes = {setAttributes}/>
+                        <TabPanel header="Attributes" disabled={isSaveSettings}>
+                            <AddAttibute attributes={attributes} isSaveSettings={addtionalInfo?.isSaveSettings} setAttributes={setAttributes} />
                         </TabPanel>
-                        <TabPanel header="Variants" disabled={!watch('isSaveSettings')}>
-                            <AddVariants attributes={attributes} createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput}/>
-                        </TabPanel>
+                        {
+                            addtionalInfo?.type_of_product === 'variable' ? (<TabPanel header="Variants">
+                                <AddVariants attributes={attributes} createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput} />
+                            </TabPanel>) : ""
+                        }
                     </TabView>
                 </div>
                 <div className="flex flex-column">
