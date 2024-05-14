@@ -37,7 +37,7 @@ export async function POST(request:Request){
     const prod_url = "http://35.208.204.126/api/graphql/"
     const local_url = "http://localhost:3001/graphql"
     
-    const res = await fetch(local_url as string, {
+    const res = await fetch(prod_url as string, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body,
