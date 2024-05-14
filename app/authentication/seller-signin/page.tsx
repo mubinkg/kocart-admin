@@ -25,7 +25,7 @@ export default function Home() {
   const signInHandler = async () => {
     try {
       setLoading(true)
-      const data = await axios.post((prod_url),
+      const data = await axios.post((local_url),
         {
             password: password,
             phone: phone
