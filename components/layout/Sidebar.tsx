@@ -177,6 +177,13 @@ export default function TemplateDemo() {
         })
     }
 
+    menuItems.push({
+        label: 'Media',
+        icon: 'pi pi-list-check',
+        template: itemRenderer,
+        url: '/kocart/media'
+    })
+
     const customerItems:MenuItem = {
         label: 'Customers',
         icon: 'pi pi-list-check',
