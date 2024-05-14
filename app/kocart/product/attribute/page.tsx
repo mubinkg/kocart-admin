@@ -102,7 +102,7 @@ export default function ProductAttributeSet() {
         <>
             <Toast ref={toast} />
             <BreadCrumb model={items} className="m-4" />
-\            <Card className="m-4">
+            <Card className="m-4">
                 <Button style={{display: isAdmin ? "block": "none"}} label="Create New" onClick={() => setVisible(true)} className="mb-4"/>
                 <DataTable 
                     title="Attributes" 

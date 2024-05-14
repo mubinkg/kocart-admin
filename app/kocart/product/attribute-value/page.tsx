@@ -1,6 +1,6 @@
 'use client'
 
-import { GET_PRODUCT_ATTRIBUTES_VALUE } from "@/graphql/product";
+import { GET_PRODUCT_ATTRIBUTES_VALUE, GET_PRODUCT_ATTRIBUTE_VALUE_LIST } from "@/graphql/product";
 import { useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
@@ -9,7 +9,7 @@ import { DataTable } from "primereact/datatable";
 
 
 export default function ProductAttributeSet() {
-    const { data: attributesRes, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTES_VALUE, { variables: { limit: 1000, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
+    const { data: attributesRes, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTE_VALUE_LIST, { variables: { limit: 1000, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
 
     const items = [
         { label: 'Product' },
@@ -22,8 +22,8 @@ export default function ProductAttributeSet() {
         <div className="m-4">
             <BreadCrumb model={items} className="mb-4"/>
             <Card title="Attribute Values">
-                <DataTable lazy totalRecords={attributesRes?.productAttributes?.count ? attributesRes?.productAttributes?.count : 0} onPage={(value) => console.log(value)} value={attributesRes?.productAttributes?.attributeList ? attributesRes?.productAttributes?.attributeList : []} paginator rows={5} rowsPerPageOptions={[1000, 2500, 5000]}>
-                    <Column field="_id" header="ID"></Column>
+                <DataTable lazy totalRecords={attributesRes?.attributeValues?.count ? attributesRes?.attributeValues?.count : 0} onPage={(value) => console.log(value)} value={attributesRes?.attributeValues?.values ? attributesRes?.attributeValues?.values : []} paginator rows={1000} rowsPerPageOptions={[1000, 2500, 5000]}>
+                    <Column field="values.id" header="ID"></Column>
                     <Column field="name" header="Attribute Name"></Column>
                     <Column field="values.valueName" header="Name"></Column>
                     <Column body={(item)=>statusBody(item?.status||"")} header="Status"></Column>

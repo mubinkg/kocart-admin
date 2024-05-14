@@ -89,3 +89,20 @@ export const GET_PRODUCT_ATTRIBUTES_VALUE = gql`query ProductAttributes($limit: 
     }
   }
 }`
+
+export const GET_PRODUCT_ATTRIBUTE_VALUE_LIST = gql`query AttributeValues($query: String, $offset: Float!, $limit: Float!) {
+  attributeValues(query: $query, offset: $offset, limit: $limit) {
+    count
+    values {
+      name
+      values {
+        color
+        id
+        image
+        type
+        valueName
+        status
+      }
+    }
+  }
+}`
