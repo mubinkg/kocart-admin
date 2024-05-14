@@ -23,9 +23,9 @@ export default function ProductAttributeSet() {
             <BreadCrumb model={items} className="mb-4"/>
             <Card title="Attribute Values">
                 <DataTable lazy totalRecords={attributesRes?.attributeValues?.count ? attributesRes?.attributeValues?.count : 0} onPage={(value) => console.log(value)} value={attributesRes?.attributeValues?.values ? attributesRes?.attributeValues?.values : []} paginator rows={1000} rowsPerPageOptions={[1000, 2500, 5000]}>
-                    <Column field="values.id" header="ID"></Column>
-                    <Column field="name" header="Attribute Name"></Column>
-                    <Column field="values.valueName" header="Name"></Column>
+                    <Column field="_id" header="ID"></Column>
+                    <Column field="productAttribute.name" header="Attribute Name"></Column>
+                    <Column field="valueName" header="Name"></Column>
                     <Column body={(item)=>statusBody(item?.status||"")} header="Status"></Column>
                 </DataTable>
             </Card>

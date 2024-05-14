@@ -94,15 +94,16 @@ export const GET_PRODUCT_ATTRIBUTE_VALUE_LIST = gql`query AttributeValues($query
   attributeValues(query: $query, offset: $offset, limit: $limit) {
     count
     values {
-      name
-      values {
-        color
-        id
-        image
-        type
-        valueName
-        status
+      _id
+      color
+      image
+      productAttribute {
+        _id
+        name
       }
+      status
+      type
+      valueName
     }
   }
 }`
