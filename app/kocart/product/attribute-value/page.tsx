@@ -1,6 +1,6 @@
 'use client'
 
-import { GET_PRODUCT_ATTRIBUTES_VALUE, GET_PRODUCT_ATTRIBUTE_VALUE_LIST } from "@/graphql/product";
+import {  GET_PRODUCT_ATTRIBUTE_VALUE_LIST } from "@/graphql/product";
 import { useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";

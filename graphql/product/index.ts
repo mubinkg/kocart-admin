@@ -29,6 +29,7 @@ export const GET_PORODUCT_ATTRIBUTE_LIST = gql`query ProductAttributes($limit: F
   productAttributes(limit: $limit, offset: $offset, query: $query) {
     count
     attributeList {
+      _id
       name
       status
       attributeSet {
@@ -76,19 +77,6 @@ export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProduc
   }
 }`
 
-export const GET_PRODUCT_ATTRIBUTES_VALUE = gql`query ProductAttributes($limit: Float!, $offset: Float!, $query: String) {
-  productAttributes(limit: $limit, offset: $offset, query: $query) {
-    count
-    attributeList {
-      _id
-      values {
-        valueName
-      }
-      status
-      name
-    }
-  }
-}`
 
 export const GET_PRODUCT_ATTRIBUTE_VALUE_LIST = gql`query AttributeValues($query: String, $offset: Float!, $limit: Float!) {
   attributeValues(query: $query, offset: $offset, limit: $limit) {
