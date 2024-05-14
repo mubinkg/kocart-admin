@@ -179,7 +179,7 @@ export default function TemplateDemo() {
 
     menuItems.push({
         label: 'Media',
-        icon: 'pi pi-list-check',
+        icon: 'pi pi-images',
         template: itemRenderer,
         url: '/kocart/media'
     })
