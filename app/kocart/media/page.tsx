@@ -43,6 +43,9 @@ export default function Page(){
             setClear((old)=>!old)
             refetch()
         }
+    }, [data])
+
+    useEffect(()=>{
         if(deleteMediaData){
             show({
                 message: 'Media deleted successfully.',
@@ -51,7 +54,7 @@ export default function Page(){
             })
             refetch()
         }
-    }, [data, error, deleteMediaData])
+    }, [deleteMediaData])
     
     function createMediaHandler(){
         if(fileRef?.current?.getFiles()?.length){
