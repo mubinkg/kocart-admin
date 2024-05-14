@@ -85,13 +85,13 @@ export default function TemplateDemo() {
             template: itemRenderer,
             url: '/kocart/seller'
         })
-        menuItems.push({
-            label: 'Brand',
-            icon: 'pi pi-users',
-            template: itemRenderer,
-            url: '/kocart/brand'
-        })
     }
+    menuItems.push({
+        label: 'Brand',
+        icon: 'pi pi-users',
+        template: itemRenderer,
+        url: '/kocart/brand'
+    })
     menuItems.push({
         label: 'Category',
         icon: 'pi pi-list-check',
