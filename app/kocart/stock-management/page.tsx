@@ -1,10 +1,15 @@
 'use client'
+import { GET_STOCK_LIST } from "@/graphql/stock-management";
+import { useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 
 export default function Brand() {
+
+    const {data, loading} = useQuery(GET_STOCK_LIST)
+    console.log(data)
 
     const items = [
         { label: 'Home' },
