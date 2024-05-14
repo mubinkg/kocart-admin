@@ -1,26 +1,16 @@
 
-import React, { useRef, useState } from 'react';
+'use client'
+
+import React, { useEffect, useRef, useState } from 'react';
 import { Toast } from 'primereact/toast';
-import { FileUpload, FileUploadHeaderTemplateOptions, FileUploadSelectEvent, FileUploadUploadEvent, ItemTemplateOptions,} from 'primereact/fileupload';
-import { ProgressBar } from 'primereact/progressbar';
+import { FileUpload, FileUploadHeaderTemplateOptions, FileUploadUploadEvent, ItemTemplateOptions,} from 'primereact/fileupload';
 import { Button } from 'primereact/button';
 import { Tooltip } from 'primereact/tooltip';
 import { Tag } from 'primereact/tag';
 
-export default function FileDng({fileUploadRef}:any) {
+export default function FileDng({fileUploadRef,clear }:any) {
     const toast = useRef<Toast>(null);
     const [totalSize, setTotalSize] = useState(0);
-
-    const onTemplateSelect = (e: FileUploadUploadEvent) => {
-        let _totalSize = totalSize;
-        let files = e.files;
-
-        for (let i = 0; i < files.length; i++) {
-            _totalSize += files[i].size || 0;
-        }
-
-        setTotalSize(_totalSize);
-    };
 
     const onTemplateUpload = (e: FileUploadUploadEvent) => {
         let _totalSize = 0;
@@ -42,19 +32,17 @@ export default function FileDng({fileUploadRef}:any) {
         setTotalSize(0);
     };
 
+    useEffect(()=>{
+        setTotalSize(()=>0)
+    }, [clear])
+
     const headerTemplate = (options: FileUploadHeaderTemplateOptions) => {
-        const { className, chooseButton, uploadButton, cancelButton } = options;
-        const value = totalSize / 10000;
-        const formatedValue = fileUploadRef && fileUploadRef.current ? fileUploadRef.current.formatSize(totalSize) : '0 B';
+        const { className, chooseButton, cancelButton } = options;
 
         return (
             <div className={className} style={{ backgroundColor: 'transparent', display: 'flex', alignItems: 'center' }}>
                 {chooseButton}
                 {cancelButton}
-                <div className="flex align-items-center gap-3 ml-auto">
-                    <span>{formatedValue} / 1 MB</span>
-                    <ProgressBar value={value} showValue={false} style={{ width: '10rem', height: '12px' }}></ProgressBar>
-                </div>
             </div>
         );
     };
@@ -99,7 +87,7 @@ export default function FileDng({fileUploadRef}:any) {
             <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
             <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={1000000}
+            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={10000000000}
                 onUpload={onTemplateUpload} onError={onTemplateClear} onClear={onTemplateClear}
                 headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
                 chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions} />
