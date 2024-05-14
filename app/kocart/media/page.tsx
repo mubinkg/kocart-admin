@@ -41,6 +41,7 @@ export default function Page(){
             })
             fileRef.current.value = null
             setClear((old)=>!old)
+            refetch()
         }
         if(deleteMediaData){
             show({
