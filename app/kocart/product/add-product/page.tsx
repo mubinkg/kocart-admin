@@ -31,15 +31,22 @@ import MediaPicker from "@/components/media/MediaPicker";
 
 
 export default function AddProduct() {
-    const [visible, setVisible] = useState(false)
+    const [visibleMainImage, setVisibleMainImage] = useState(false)
+    const [visibleOtherImage, setVisibleOtherImage] = useState(false)
+    const [visibleVideImage, setVisibleVideImage] = useState(false)
+
     const [isAdmin,setAdmin] = useState()
     const router = useRouter()
+
     const [attributes, setAttributes] = useState([])
     const [createProductVariantInput, setCreateProductVariantInput] = useState<any>([])
     const [addtionalInfo, setAdditionalInfo] = useState<any>({})
+
     const [isSaveSettings, setSaveSettings] = useState(true)
+
     const { data: sellerList } = useQuery(GET_SELLER, { variables: { limit: 1000, offset: 0, status: "active" }, fetchPolicy: "no-cache" })
     const { data: brandList } = useQuery(GET_BRANDS, { variables: { limit: 1000, offset: 0 }, fetchPolicy: "no-cache" })
+
     const { data: categoryList } = useQuery(GET_CATEGORIES, {
         variables: {
             "getCategoriesInput": {
@@ -92,7 +99,6 @@ export default function AddProduct() {
 
     return (
         <div>
-            <MediaPicker visible={visible} setVisible={setVisible}/>
             <BreadCrumb className="m-4" model={items} />
             <Card className="m-4">
                 <div className="flex flex-column">
@@ -204,13 +210,15 @@ export default function AddProduct() {
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-column pr-3">
-                    <p className="my-3 font-semibold">Main Image</p>
-                    <Button label="Choose File" onClick={()=>setVisible(true)}/>
+                <div className="my-3 gap-4 flex align-items-center">
+                    <p className="font-semibold">Main Image</p>
+                    <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose File" onClick={()=>setVisibleMainImage(true)}/>
+                    <MediaPicker visible={visibleMainImage} setVisible={setVisibleMainImage}/>
                 </div>
-                <div className="flex flex-column pr-3">
-                    <p className="my-3 font-semibold">Other Image</p>
-                    <FileUpload className="w-full" ref={otherImageRef} />
+                <div className="my-3 gap-4 flex align-items-center">
+                    <p className="font-semibold">Other Images</p>
+                    <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose Files" onClick={()=>setVisibleOtherImage(true)}/>
+                    <MediaPicker visible={visibleOtherImage} setVisible={setVisibleOtherImage} isMultiple={true}/>
                 </div>
                 <div className="flex gap-5">
                     <div className="flex flex-column w-6">
@@ -221,7 +229,8 @@ export default function AddProduct() {
                         {
                             watch('video_type') === 'SELF_HOSTED' ? (<div className="flex flex-column">
                                 <p className="my-3 font-semibold">Video <span className="text-red-500">*</span></p>
-                                <FileUpload className="w-full" ref={videoRef} />
+                                <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose Files" onClick={()=>setVisibleVideImage(true)}/>
+                                <MediaPicker visible={visibleVideImage} setVisible={setVisibleVideImage} isMultiple={false}/>
                             </div>) : ""
                         }
                         {

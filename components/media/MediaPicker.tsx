@@ -69,6 +69,7 @@ const MediaPicker = ({ visible, setVisible , isMultiple, callback}: { visible: b
         if(callback){
             callback(selectedProducts)
         }
+        setVisible(false)
     }
 
 
@@ -78,7 +79,7 @@ const MediaPicker = ({ visible, setVisible , isMultiple, callback}: { visible: b
                 <FileDng fileUploadRef={fileRef} />
                 <Button onClick={createMediaHandler} label={loading ? "Loading..." : "Upload"} className="mt-4" />
                 <div className='my-4 flex justify-content-between'>
-                    <Button label='Choose' onClick={handleChoose}/>
+                    <Button label='Choose Media' icon='pi pi-plus' onClick={handleChoose}/>
                     <div className="flex gap-2">
                         <InputText style={{ height: "40px" }} value={query} onChange={(e) => setQuery(e.target.value)} />
                         <Button size="small" label="Search" onClick={() => {
