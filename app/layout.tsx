@@ -5,6 +5,7 @@ import "primereact/resources/primereact.min.css";
 import '/node_modules/primeflex/primeflex.css'
 import 'primeicons/primeicons.css';
 import GraphqlProvider from "@/components/graphql/GraphqlProvider";
+import './globals.css'
 
 export const metadata: Metadata = {
   title: "Kocart",

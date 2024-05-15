@@ -26,10 +26,12 @@ import { InputSwitch } from 'primereact/inputswitch';
 import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
 import AdditionalInfo from "@/components/product/AdditionalInfo";
+import MediaPicker from "@/components/media/MediaPicker";
 
 
 
 export default function AddProduct() {
+    const [visible, setVisible] = useState(false)
     const [isAdmin,setAdmin] = useState()
     const router = useRouter()
     const [attributes, setAttributes] = useState([])
@@ -90,6 +92,7 @@ export default function AddProduct() {
 
     return (
         <div>
+            <MediaPicker visible={visible} setVisible={setVisible}/>
             <BreadCrumb className="m-4" model={items} />
             <Card className="m-4">
                 <div className="flex flex-column">
@@ -203,7 +206,7 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column pr-3">
                     <p className="my-3 font-semibold">Main Image</p>
-                    <FileUpload className="w-full" ref={mainImageRef} />
+                    <Button label="Choose File" onClick={()=>setVisible(true)}/>
                 </div>
                 <div className="flex flex-column pr-3">
                     <p className="my-3 font-semibold">Other Image</p>

@@ -6,14 +6,14 @@ export const CREATE_MEDIA = gql`mutation CreateMedia($createMediaInput: CreateMe
     }
   }`
 
-export const GET_MEDIA = gql`query AdminMedia {
-  adminMedia {
+export const GET_MEDIA = gql`query AdminMedia($limit: Float!, $offset: Float!, $query: String) {
+  adminMedia(limit: $limit, offset: $offset, query: $query) {
     count
     media {
       _id
+      name
       extension
       file
-      name
       size
       subDirectory
       type
