@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export default function Page() {
     const [createCity] = useMutation(CREATE_CITY)
-    const {data, refetch} = useQuery(ADMIN_CITY_LIST, {fetchPolicy:"no-cache", variables: {
+    const {data, refetch, loading} = useQuery(ADMIN_CITY_LIST, {fetchPolicy:"no-cache", variables: {
         "limit": 1000,
         "offset": 0,
         "query": ""
@@ -62,7 +62,7 @@ export default function Page() {
                     <p className="mb-2 font-semibold">City Name</p>
                     <InputText value={name} onChange={(e) => setName(e.target.value)} className="w-full block" id="cityname" placeholder="Enter city name" />
                 </div>
-                <Button label="Submit" className="mt-4" onClick={createCityHandler}/>
+                <Button disabled={loading} label={loading ? "Loading...":"Submit"} className="mt-4" onClick={createCityHandler}/>
             </Dialog>
         </Card>
     )
