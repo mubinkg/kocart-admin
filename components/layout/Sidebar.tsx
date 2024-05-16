@@ -184,6 +184,33 @@ export default function TemplateDemo() {
         url: '/kocart/media'
     })
 
+    const locationItems:MenuItem = {
+        label: 'Location',
+        icon: 'pi pi-list-check',
+        items: [
+            {
+                label: 'City',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/city'
+            },
+            {
+                label: 'Areas',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/area'
+            },
+            {
+                label: 'Countries',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/address'
+            }
+        ]
+    }
+
+    menuItems.push(locationItems)
+
     const customerItems:MenuItem = {
         label: 'Customers',
         icon: 'pi pi-list-check',
@@ -215,6 +242,6 @@ export default function TemplateDemo() {
     })
 
     return (
-        <Menu model={menuItems} className="h-screen w-full" />
+        <Menu model={menuItems} className="w-full" />
     )
 }
