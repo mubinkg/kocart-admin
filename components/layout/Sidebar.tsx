@@ -234,6 +234,27 @@ export default function TemplateDemo() {
         menuItems.push(customerItems)
     }
 
+    const reportsItems:MenuItem = {
+        label: 'Reports',
+        icon: 'pi pi-list-check',
+        items: [
+            {
+                label: 'SaleS Reports',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/customers'
+            },
+            {
+                label: 'Sale Inventory Reports',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/address'
+            }
+        ]
+    }
+
+    menuItems.push(reportsItems)
+
     menuItems.push({
         label: 'Sign Out',
         icon: 'pi pi-sign-out',
@@ -242,6 +263,6 @@ export default function TemplateDemo() {
     })
 
     return (
-        <Menu model={menuItems} className="w-full" />
+        <Menu model={menuItems} className="w-full"  style={{overflowY:"scroll", maxHeight:"100vh"}}/>
     )
 }
