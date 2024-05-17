@@ -1,24 +1,22 @@
 'use client'
 import { ADMIN_CITY_LIST, CREATE_CITY } from "@/graphql/city";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Page() {
+    
     const [createCity] = useMutation(CREATE_CITY)
-    const {data, refetch, loading} = useQuery(ADMIN_CITY_LIST, {fetchPolicy:"no-cache", variables: {
-        "limit": 1000,
-        "offset": 0,
-        "query": ""
-      }})
+    const [getCities, {data,loading}] = useLazyQuery(ADMIN_CITY_LIST, {fetchPolicy:"no-cache"})
 
     const [visible, setVisible] = useState(false)
     const [name, setName] = useState<string>('')
+    const [pageData, setPageData] = useState<any>(null)
 
     async function createCityHandler() {
         try{
@@ -29,17 +27,39 @@ export default function Page() {
                     }
                   }
             })
-            await refetch({
-                "limit": 1000,
-                "offset": 0,
-                "query": ""
-              })
+            await getCities({
+                variables:{
+                    "limit": 5,
+                    "offset": 0,
+                    "query": ""
+                }
+            })
             setName('');
             setVisible(false);
         }
         catch(err){
             console.log(err)
         }
+    }
+
+    useEffect(()=>{
+        if(pageData){
+            pageChangeHandler(pageData?.rows,pageData?.first)
+        }
+    }, [pageData])
+
+    useEffect(()=>{
+        pageChangeHandler(5,0)
+    },[])
+
+    async function pageChangeHandler(limit:any, offset:any){
+        await getCities({
+            variables:{
+                limit:limit,
+                offset:offset,
+                query: ""
+            }
+        })
     }
 
     return (
@@ -50,8 +70,11 @@ export default function Page() {
                 totalRecords={data?.adminCityList?.count ? data?.adminCityList?.count : 0}
                 lazy
                 paginator 
-                rows={1000} 
-                rowsPerPageOptions={[1000, 2000, 5000]}
+                rows={pageData?.rows || 5}
+                first={pageData?.first || 1} 
+                rowsPerPageOptions={[5,10,20,50]}
+                onPage={(value) => setPageData(value)}
+                loading={loading}
             >
                 <Column field="_id" header="ID"/>
                 <Column field="city_name" header="Name"/>
