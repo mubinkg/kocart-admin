@@ -1,14 +1,15 @@
 'use client'
+
 import { stockStatusOptions, stockTypeOptions, typeOfDgitalProductOptions, typeOfProductOptions } from '@/data/product/items'
 import { Button } from 'primereact/button'
 import { Checkbox } from 'primereact/checkbox'
-import { FileUpload } from 'primereact/fileupload'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputSwitch } from 'primereact/inputswitch'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useRef } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import Select from 'react-select'
+import MediaPicker from '../media/MediaPicker'
 
 const downloadLinkTypeOptions = [
     {
@@ -26,12 +27,10 @@ const downloadLinkTypeOptions = [
 ]
 
 export default function AdditionalInfo({ productType, additionalInfo, setAdditionalInfo, setSaveSettings }: { productType: any, additionalInfo: any, setAdditionalInfo: any, setSaveSettings: any }) {
-
-    const uploadedProductRef = useRef<any>(null)
+    const [visible, setVisible] = useState(false)
     const { setValue, watch, handleSubmit } = useForm()
 
     function submitHandler(values: any) {
-        values['pro_input_zip'] = uploadedProductRef?.current?.getFiles() ? uploadedProductRef?.current?.getFiles()[0] : null
         setAdditionalInfo(values)
         setSaveSettings(false)
     }
@@ -119,8 +118,12 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                         {
                             watch('download_link_type') === 'self_hosted' ? (
                                 <div>
-                                    <p>File</p>
-                                    <FileUpload ref={uploadedProductRef} />
+                                    <Button style={{height:"40px", marginTop: "50px"}} icon="pi pi-upload" outlined size="small" label="Choose Files" onClick={()=>setVisible(true)}/>
+                                    <MediaPicker 
+                                        visible={visible} 
+                                        setVisible={setVisible} 
+                                        callback={(value:any)=>console.log(value)}
+                                    />
                                 </div>) : ""
                         }
                         {
