@@ -30,7 +30,7 @@ export default function Page() {
 
     const {getCities} = useGetCities()
 
-    async function loadCityOptions(val:string, callback:any){
+    const  loadCityOptions:any =async (val:string, callback:any)=>{
         const res = await getCities({
             variables: {
                 limit:10,
@@ -40,11 +40,9 @@ export default function Page() {
         })
         const cities = res?.data?.adminCityList?.cities || []
         callback(cities.map((d:any)=>({label: d.city_name, value: d._id})))
-        return
     }
 
     const [visible, setVisible] = useState(false)
-    const [name, setName] = useState<string>('')
     const [createCity] = useMutation(CREATE_AREA)
 
     const { data, refetch, loading } = useQuery(GET_ADMIN_AREA_LIST, {
@@ -138,7 +136,7 @@ export default function Page() {
                             <InputNumber 
                                 style={{border:errors.area_name ? "1px solid red":""}} 
                                 {...field}
-                                value={field?.minimum_free_delivery_order_amount}
+                                value={field?.value || 0}
                                 onChange={(e)=>{
                                     setValue('minimum_free_delivery_order_amount',e.value)
                                 }}
@@ -155,7 +153,7 @@ export default function Page() {
                             <InputNumber 
                                 style={{border:errors.area_name ? "1px solid red":""}} 
                                 {...field}
-                                value={field?.delivery_charges}
+                                value={field?.value}
                                 onChange={(e)=>{
                                     setValue('delivery_charges',e.value)
                                 }}
