@@ -25,19 +25,19 @@ const downloadLinkTypeOptions = [
     }
 ]
 
-export default function AdditionalInfo({ productType, additionalInfo, setAdditionalInfo, setSaveSettings }: { productType: any, additionalInfo:any ,setAdditionalInfo:any, setSaveSettings:any}) {
-    
+export default function AdditionalInfo({ productType, additionalInfo, setAdditionalInfo, setSaveSettings }: { productType: any, additionalInfo: any, setAdditionalInfo: any, setSaveSettings: any }) {
+
     const uploadedProductRef = useRef<any>(null)
-    const { setValue, watch, handleSubmit} = useForm()
-    
+    const { setValue, watch, handleSubmit } = useForm()
+
     function submitHandler(values: any) {
-        values['pro_input_zip'] = uploadedProductRef?.current?.getFiles() ?  uploadedProductRef?.current?.getFiles()[0]: null 
+        values['pro_input_zip'] = uploadedProductRef?.current?.getFiles() ? uploadedProductRef?.current?.getFiles()[0] : null
         setAdditionalInfo(values)
         setSaveSettings(false)
     }
 
-    useEffect(()=>{
-        for(const [key,value] of Object.entries(additionalInfo)){
+    useEffect(() => {
+        for (const [key, value] of Object.entries(additionalInfo)) {
             setValue(key, value)
         }
     }, [])
@@ -94,14 +94,6 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                 </div>) : ""
             }
             {
-                watch('product_type') === 'PHYSICAL_PRODUCT' ? (
-                    <div className="flex align-items-center gap-3 mt-3">
-                        <Checkbox checked={watch('stock_management')} onChange={(e) => setValue('stock_management', e.checked ? true : false)} />
-                        <p>Enable Stock Management</p>
-                    </div>
-                ) : ""
-            }
-            {
                 watch('type_of_product') === 'digital' ? (
                     <div className="flex align-items-start gap-4 mt-3">
                         <div>
@@ -117,7 +109,7 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                                             name='download_link_type'
                                             options={downloadLinkTypeOptions}
                                             defaultValue={downloadLinkTypeOptions[0]}
-                                            onChange={(e)=>setValue('download_link_type',e?.value)}
+                                            onChange={(e) => setValue('download_link_type', e?.value)}
                                         />
 
                                     </div>
@@ -128,23 +120,31 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                             watch('download_link_type') === 'self_hosted' ? (
                                 <div>
                                     <p>File</p>
-                                    <FileUpload ref={uploadedProductRef}/>
+                                    <FileUpload ref={uploadedProductRef} />
                                 </div>) : ""
                         }
                         {
-                            watch('download_link_type') === 'add_link' ? 
-                            (
-                                <div>
-                                    <p>Digital Product Link *</p>
-                                    <InputText style={{height: "40px"}}/>
-                                </div>
-                            ) : ""
+                            watch('download_link_type') === 'add_link' ?
+                                (
+                                    <div>
+                                        <p>Digital Product Link *</p>
+                                        <InputText style={{ height: "40px" }} />
+                                    </div>
+                                ) : ""
                         }
                     </div>
                 ) : ""
             }
             {
-                watch('stock_management') ? (
+                productType === 'PHYSICAL_PRODUCT' ? (
+                    <div className="flex align-items-center gap-3 mt-3">
+                        <Checkbox checked={watch('stock_management')} onChange={(e) => setValue('stock_management', e.checked ? true : false)} />
+                        <p>Enable Stock Management</p>
+                    </div>
+                ) : ""
+            }
+            {
+                watch('stock_management') === true && watch('type_of_product') === 'variable' ? (
                     <div>
                         <h2>Choose Stock Management</h2>
                         <div className="flex flex-column">
@@ -156,28 +156,28 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                                 isClearable
                             />
                         </div>
-                        {
-                            watch('stockType') === 'product' ? (<><div className="flex flex-column">
-                                <p className="mb-2 font-semibold">Sku</p>
-                                <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
-                            </div>
-                                <div className="flex flex-column">
-                                    <p className="mb-2 font-semibold">Total Stock</p>
-                                    <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
-                                </div>
-                                <div className="flex flex-column">
-                                    <p className="mb-2 font-semibold">Stock Status</p>
-                                    <Select
-                                        options={
-                                            stockStatusOptions
-                                        }
-                                        onChange={(option: any) => setValue('type_of_product', option.value)}
-                                        isClearable
-                                    />
-                                </div></>) : ""
-                        }
                     </div>
                 ) : ""
+            }
+            {
+                watch('stockType') === 'product' || (watch('type_of_product') === 'simple' && watch('stock_management') === true) ? (<><div className="flex flex-column">
+                    <p className="mb-2 font-semibold">Sku</p>
+                    <InputText value={watch('sku')} className="w-full" onChange={(e) => setValue('sku', e?.target?.value || '')} />
+                </div>
+                    <div className="flex flex-column">
+                        <p className="mb-2 font-semibold">Total Stock</p>
+                        <InputNumber value={watch('totalStock')} className="w-full" onChange={(e) => setValue('totalStock', e?.value || 0)} />
+                    </div>
+                    <div className="flex flex-column">
+                        <p className="mb-2 font-semibold">Stock Status</p>
+                        <Select
+                            options={
+                                stockStatusOptions
+                            }
+                            onChange={(option: any) => setValue('type_of_product', option.value)}
+                            isClearable
+                        />
+                    </div></>) : ""
             }
             <Button onClick={handleSubmit(submitHandler)} label="Save Settings" className="mt-4" />
         </div>

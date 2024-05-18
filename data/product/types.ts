@@ -14,8 +14,8 @@ export type ProductInputType = {
     pro_input_description?:any
     extra_input_description?:any
     pro_input_image?: any,
-    other_imagesInput:any,
     indicator?: string,
+    other_images?:string[],
     total_allowed_quantity?:number,
     minimum_order_quantity?: number,
     quantity_step_size?: number,

@@ -2,16 +2,15 @@
 
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
-import { FileUpload } from "primereact/fileupload";
 import { InputNumber } from "primereact/inputnumber";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { TabPanel, TabView } from "primereact/tabview";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
-import { countries, indicatorOptions, items, productType, stockStatusOptions, stockTypeOptions, typeOfDgitalProductOptions, typeOfProductOptions, videoTypeOptions } from "@/data/product/items";
+import { countries, indicatorOptions, items, productType, videoTypeOptions } from "@/data/product/items";
 import { ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
@@ -27,6 +26,7 @@ import AddAttibute from "@/components/product/AddAttribute";
 import AddVariants from "@/components/product/AddVariants";
 import AdditionalInfo from "@/components/product/AdditionalInfo";
 import MediaPicker from "@/components/media/MediaPicker";
+import { Image } from "primereact/image";
 
 
 
@@ -65,9 +65,6 @@ export default function AddProduct() {
             isSaveSettings: false
         }
     })
-    const mainImageRef = useRef<any>()
-    const otherImageRef = useRef<any>()
-    const videoRef = useRef<any>()
 
     useEffect(()=>{
         const admin = getIsAdmin()
@@ -88,9 +85,6 @@ export default function AddProduct() {
 
     const submitHandler = async (values: ProductInputType) => {
         try {
-            values['pro_input_image'] = mainImageRef.current.getFiles()[0]
-            values['other_imagesInput'] = otherImageRef.current ? otherImageRef.current.getFiles()?.map((file:any)=>({image:file})) : null
-            values['pro_input_video'] = videoRef.current? videoRef.current.getFiles()[0] : null
             await useCreateProduct(values,addtionalInfo, attributes,createProductVariantInput, createProduct)
         } catch (err) {
             console.log(err)
@@ -213,12 +207,32 @@ export default function AddProduct() {
                 <div className="my-3 gap-4 flex align-items-center">
                     <p className="font-semibold">Main Image</p>
                     <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose File" onClick={()=>setVisibleMainImage(true)}/>
-                    <MediaPicker visible={visibleMainImage} setVisible={setVisibleMainImage}/>
+                    <MediaPicker visible={visibleMainImage} setVisible={setVisibleMainImage} callback={(data)=>setValue('pro_input_image', data?.file || '')}/>
+                    {
+                        watch('pro_input_image') ? <Image style={{border: "2px solid gray"}} src={watch('pro_input_image')} width="200"/> : ""
+                    }
                 </div>
                 <div className="my-3 gap-4 flex align-items-center">
                     <p className="font-semibold">Other Images</p>
                     <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose Files" onClick={()=>setVisibleOtherImage(true)}/>
-                    <MediaPicker visible={visibleOtherImage} setVisible={setVisibleOtherImage} isMultiple={true}/>
+                    <MediaPicker 
+                        visible={visibleOtherImage} 
+                        setVisible={setVisibleOtherImage} 
+                        isMultiple={true}
+                        callback={(data)=>{
+                            setValue('other_images', data?.map((d:any)=>d.file) || [])
+                        }}
+                    />
+                    {
+                        watch('other_images')?
+                        (
+                            <div>
+                                {
+                                    watch('other_images')?.map((d:any)=><Image style={{border: "2px solid gray", marginRight: '5px', display:"inline-block"}} key={d} src={d} width="200"/>)
+                                }
+                            </div>
+                        ):""
+                    }
                 </div>
                 <div className="flex gap-5">
                     <div className="flex flex-column w-6">
@@ -230,7 +244,14 @@ export default function AddProduct() {
                             watch('video_type') === 'SELF_HOSTED' ? (<div className="flex flex-column">
                                 <p className="my-3 font-semibold">Video <span className="text-red-500">*</span></p>
                                 <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose Files" onClick={()=>setVisibleVideImage(true)}/>
-                                <MediaPicker visible={visibleVideImage} setVisible={setVisibleVideImage} isMultiple={false}/>
+                                <MediaPicker 
+                                    visible={visibleVideImage} 
+                                    setVisible={setVisibleVideImage} 
+                                    isMultiple={false}
+                                    callback={(data:any)=>{
+                                        setValue('video', data.media)
+                                    }}
+                                />
                             </div>) : ""
                         }
                         {

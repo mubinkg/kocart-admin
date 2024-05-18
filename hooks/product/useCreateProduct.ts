@@ -1,7 +1,7 @@
 import { ProductInputType } from "@/data/product/types";
 
 export async function useCreateProduct(values: ProductInputType, addtionalInfo: any, attribute: any,createProductVariantInput:any, callback: any) {
-  console.log(values?.other_imagesInput)
+  console.log(values)
   try {
     const typeOfProduct = addtionalInfo?.type_of_product
     const data:any = {
@@ -24,11 +24,11 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
         "category": values?.category,
         "video_type": values?.video_type,
         "video": values?.video,
+        "other_images": values?.other_images || [],
         "download_allowed": addtionalInfo?.download_allowed ? 1 : 0,
         "download_link": addtionalInfo?.download_link,
         "download_link_type": addtionalInfo?.download_link_type,
         "extra_input_description": values?.extra_input_description,
-        "other_imagesInput": values?.other_imagesInput,
         "pro_input_description": values?.pro_input_description,
         "pro_input_image": values.pro_input_image,
         "pro_input_video": values?.pro_input_video,
