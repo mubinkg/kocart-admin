@@ -39,6 +39,7 @@ export default function ProductList() {
             <i
                 className="pi pi-eye cursor-pointer"
                 onClick={() => {
+                    console.log(item);
                     setProduct(item);
                     setVisible(true)
                 }}
@@ -78,6 +79,21 @@ export default function ProductList() {
                                 <hr/>
                                 <h4>Category : {product?.category?.name}</h4>
                                 <Rating value={0} cancel={false}/>
+                                {
+                                    product?.variant === 'variable' ? 
+                                    (
+                                        <div>
+                                            <h4 className="mt-4">Variants</h4>
+                                            <DataTable
+                                                value={product?.productvariants||[]}
+                                            >
+                                                <Column field="_id" header="ID"/>
+                                                <Column field="price" header="Price"/>
+                                            </DataTable>
+                                        </div>
+                                    )
+                                    :""
+                                }
                             </div>
                         </div>
                     </Card>

@@ -156,6 +156,7 @@ export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProduc
         totalStock
         weight
       }
+      variant
     }
   }
 }`
