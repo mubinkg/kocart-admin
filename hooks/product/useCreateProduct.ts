@@ -1,13 +1,13 @@
 import { ProductInputType } from "@/data/product/types";
 
 export async function useCreateProduct(values: ProductInputType, addtionalInfo: any, attribute: any,createProductVariantInput:any, callback: any) {
-  console.log(values)
+  console.log(values,addtionalInfo, attribute)
   try {
     const typeOfProduct = addtionalInfo?.type_of_product
     const data:any = {
       "createProductInput": {
         "pro_input_name": values?.pro_input_name,
-        "product_type": "SIMPLE_PRODUCT",
+        "product_type": values?.product_type,
         "short_description": values?.short_description,
         "tags": values?.tags?.join(','),
         "indicator": values?.indicator,
@@ -33,8 +33,12 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
         "pro_input_image": values.pro_input_image,
         "pro_input_video": values?.pro_input_video,
         "pro_input_zip": addtionalInfo?.pro_input_zip,
+        "variant":addtionalInfo?.type_of_product,
         "variant_stock_level_type": null,
-        attribute_values: attribute?.productAttributes?.map((d:any)=>d?.attribute?.value).join(','),
+        attributes: attribute?.productAttributes?.map((d:any)=>({
+          attribute:d?.attribute?.value,
+          values: d?.attributeValues?.map((d:any)=>d.value) || []
+        })) || [],
         createProductVariantInput: []
       },
     }
@@ -47,11 +51,10 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
           "breadth": addtionalInfo?.breadth,
           "length": addtionalInfo?.length,
           "price": addtionalInfo?.simple_price,
-          "productId": null,
           "sku": addtionalInfo?.sku,
           "specialPrice": addtionalInfo.simple_special_price,
-          "stockStatus": null,
-          "totalStock": null,
+          "stockStatus": addtionalInfo?.stockStatus,
+          "totalStock": addtionalInfo?.totalStock,
           "weight": addtionalInfo?.weight,
           "attributeValues": null,
         }

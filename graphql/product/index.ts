@@ -61,17 +61,100 @@ export const GET_ADMIN_PRODUCT_LIST = gql`query GetAdminProductList($adminProduc
     count
     products {
       _id
-      pro_input_description
-      product_type
-      pro_input_image
-      pro_input_name
+      attributes {
+        attribute {
+          _id
+        }
+        values {
+          _id
+          color
+          image
+          status
+          type
+          valueName
+        }
+      }
+      attribute_values
       brand {
         _id
+        image
         name
       }
+      cancelable_till
       category {
         _id
+        banner
+        image
         name
+        order
+        parent
+        status
+      }
+      download_allowed
+      download_link
+      extra_input_description
+      download_link_type
+      globalOrderNo
+      guarantee_period
+      indicator
+      is_cancelable
+      is_returnable
+      made_in
+      minimum_order_quantity
+      other_images
+      pro_input_description
+      pro_input_image
+      pro_input_name
+      pro_input_video
+      pro_input_zip
+      seller {
+        mobile
+        _id
+        account_name
+        account_number
+        address
+        address_proof
+        bank_code
+        bank_name
+        business_license
+        email
+        isAdmin
+        name
+        password
+        status
+        national_identity_card
+      }
+      product_type
+      quantity_step_size
+      short_description
+      status
+      tags
+      tax
+      total_allowed_quantity
+      video
+      video_type
+      warranty_period
+      productvariants {
+        _id
+        attributeReference
+        attributeValues {
+          _id
+        }
+        attributes {
+          _id
+        }
+        breadth
+        height
+        length
+        price
+        product {
+          _id
+        }
+        sku
+        specialPrice
+        stockStatus
+        totalStock
+        weight
       }
     }
   }
