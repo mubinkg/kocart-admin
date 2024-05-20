@@ -177,7 +177,7 @@ export default function AdditionalInfo({ productType, additionalInfo, setAdditio
                             options={
                                 stockStatusOptions
                             }
-                            onChange={(option: any) => setValue('type_of_product', option.value)}
+                            onChange={(option: any) => setValue('stockStatus', option.value)}
                             isClearable
                         />
                     </div></>) : ""

@@ -1,10 +1,10 @@
 import { ProductInputType } from "@/data/product/types";
 
-export async function useCreateProduct(values: ProductInputType, addtionalInfo: any, attribute: any,createProductVariantInput:any, callback: any) {
-  console.log(values,addtionalInfo, attribute)
+export async function useCreateProduct(values: ProductInputType, addtionalInfo: any, attribute: any, createProductVariantInput: any, callback: any) {
+  console.log(addtionalInfo)
   try {
     const typeOfProduct = addtionalInfo?.type_of_product
-    const data:any = {
+    const data: any = {
       "createProductInput": {
         "pro_input_name": values?.pro_input_name,
         "product_type": values?.product_type,
@@ -33,17 +33,17 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
         "pro_input_image": values.pro_input_image,
         "pro_input_video": values?.pro_input_video,
         "pro_input_zip": addtionalInfo?.pro_input_zip,
-        "variant":addtionalInfo?.type_of_product,
+        "variant": addtionalInfo?.type_of_product,
         "variant_stock_level_type": null,
-        attributes: attribute?.productAttributes?.map((d:any)=>({
-          attribute:d?.attribute?.value,
-          values: d?.attributeValues?.map((d:any)=>d.value) || []
+        attributes: attribute?.productAttributes?.map((d: any) => ({
+          attribute: d?.attribute?.value,
+          values: d?.attributeValues?.map((d: any) => d.value) || []
         })) || [],
         createProductVariantInput: []
       },
     }
 
-    if(typeOfProduct === 'digital' || typeOfProduct === 'simple'){
+    if (typeOfProduct === 'digital' || typeOfProduct === 'simple') {
       data.createProductInput.createProductVariantInput = [
         {
           "height": addtionalInfo?.height,
@@ -57,24 +57,28 @@ export async function useCreateProduct(values: ProductInputType, addtionalInfo: 
           "totalStock": addtionalInfo?.totalStock,
           "weight": addtionalInfo?.weight,
           "attributeValues": null,
+          "productType": addtionalInfo?.type_of_product,
+          "stockType": addtionalInfo?.stockType || "product"
         }
       ]
     }
-    if(typeOfProduct === 'variable'){
+    if (typeOfProduct === 'variable') {
       console.log(createProductVariantInput)
-      data.createProductInput.createProductVariantInput = createProductVariantInput?.varients?.map((d:any)=>(
+      data.createProductInput.createProductVariantInput = createProductVariantInput?.varients?.map((d: any) => (
         {
           "height": d?.height,
-          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value)|| null,
+          "attributeReference": attribute?.productAttributes?.map((d: any) => d?.attribute?.value) || null,
           "attributeValues": d?.id,
           "breadth": d?.breadth,
           "length": d?.length,
           "price": d?.price,
-          "sku": d?.sku,
+          "sku": addtionalInfo?.stockType === 'product' ? addtionalInfo.sku : d?.sku,
           "specialPrice": d.specialPrice,
-          "stockStatus": d.stockStatus?.value,
-          "totalStock": d?.totalStock,
-          "weight": d?.weight
+          "stockStatus": addtionalInfo?.stockType === 'product' ? addtionalInfo.stockStatus : d.stockStatus?.value,
+          "totalStock": addtionalInfo?.stockType === 'product' ? addtionalInfo.totalStock : d?.totalStock,
+          "weight": d?.weight,
+          "productType": addtionalInfo?.type_of_product,
+          "stockType": addtionalInfo?.stockType || "product"
         }
       ))
     }

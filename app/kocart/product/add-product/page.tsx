@@ -38,7 +38,7 @@ export default function AddProduct() {
     const [isAdmin,setAdmin] = useState()
     const router = useRouter()
 
-    const [attributes, setAttributes] = useState([])
+    const [attributes, setAttributes] = useState<any>([])
     const [createProductVariantInput, setCreateProductVariantInput] = useState<any>([])
     const [addtionalInfo, setAdditionalInfo] = useState<any>({})
 
@@ -97,7 +97,7 @@ export default function AddProduct() {
             <Card className="m-4">
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                    <InputText {...register('pro_input_name')} className="w-full block" id="username" placeholder="Attribute Name" />
+                    <InputText {...register('pro_input_name')} className="w-full block" id="username" placeholder="Product Name" />
                 </div>
                 <div className="flex justfy-content-between gap-4">
                     {
@@ -127,7 +127,7 @@ export default function AddProduct() {
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Short Description<span className="text-red-500">*</span></p>
-                    <InputTextarea rows={3} cols={4} {...register('short_description')} className="w-full block" id="username" placeholder="Attribute Name" />
+                    <InputTextarea rows={3} cols={4} {...register('short_description')} className="w-full block" id="username" placeholder="Short description" />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Tags  <span className="text-sm">(These tags help you in search result)</span></p>
@@ -181,7 +181,7 @@ export default function AddProduct() {
                             watch('product_type') === 'PHYSICAL_PRODUCT' ?
                                 (<div className="flex flex-column w-3 pr-3">
                                     <p className="mb-2 font-semibold">Guarantee Period</p>
-                                    <InputText placeholder="Warranty period" style={{ height: "37px" }} value={watch('guarantee_period')} onChange={(e) => setValue('guarantee_period', e.target.value || "")} />
+                                    <InputText placeholder="Guarantee period" style={{ height: "37px" }} value={watch('guarantee_period')} onChange={(e) => setValue('guarantee_period', e.target.value || "")} />
                                 </div>) : ""
                         }
                         {
@@ -273,7 +273,11 @@ export default function AddProduct() {
                         </TabPanel>
                         {
                             addtionalInfo?.type_of_product === 'variable' ? (<TabPanel header="Variants">
-                                <AddVariants attributes={attributes} createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput} />
+                                <AddVariants 
+                                    attributes={attributes}
+                                    addtionalInfo = {addtionalInfo}
+                                    createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput} 
+                                />
                             </TabPanel>) : ""
                         }
                     </TabView>
