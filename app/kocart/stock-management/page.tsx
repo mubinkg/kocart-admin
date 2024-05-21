@@ -26,7 +26,7 @@ export default function Brand() {
 
     const renderAttributeValue = (item:any)=>(
         <p style={{fontWeight:'bold', fontSize:"18px"}}>
-            {item?.attributeValues?.map((d:any)=>d?.valueName).join(',')}
+            {item?.attributeValues?.map((d:any)=>d?.valueName).join(',') || "Simple Product"}
         </p>
     )
 
@@ -47,7 +47,15 @@ export default function Brand() {
                 ):
                 (
                     <div>
-                        Not Variable
+                        <DataTable
+                            value={item.values}
+                            rowGroupMode="rowspan" 
+                            groupRowsBy="totalStock"
+                        >
+                            <Column header="Name" body={renderAttributeValue}/>
+                            <Column header="Stock Qty" field="totalStock"/>
+                            <Column header="Action" body={attributeActionRenderer} field="totalStock"/>
+                        </DataTable>
                     </div>
                 )
             }
