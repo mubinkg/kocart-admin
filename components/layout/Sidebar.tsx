@@ -239,10 +239,10 @@ export default function TemplateDemo() {
         icon: 'pi pi-list-check',
         items: [
             {
-                label: 'SaleS Reports',
+                label: 'Sales Reports',
                 icon: 'pi pi-align-left',
                 template: subItemRenderer,
-                url: '/kocart/customers'
+                url: '/kocart/report/sales-report'
             },
             {
                 label: 'Sale Inventory Reports',
