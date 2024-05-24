@@ -6,10 +6,13 @@ import { Card } from "primereact/card";
 import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 import OrderList from "../order/order-list/page";
+import { useQuery } from "@apollo/client";
+import { DASHBOARD_TOP_CONTENT } from "@/graphql/dashboard";
 
 export default function Dashboard() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
+    const {data} = useQuery(DASHBOARD_TOP_CONTENT)
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -85,25 +88,25 @@ export default function Dashboard() {
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Orders</h3>
-                        <h2 className="text-right">4568</h2>
+                        <h2 className="text-right">{data?.dashboardTopContent?.totalOrder}</h2>
                     </Card>
                 </div>
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Products</h3>
-                        <h2 className="text-right">897</h2>
+                        <h2 className="text-right">{data?.dashboardTopContent?.totalProduct}</h2>
                     </Card>
                 </div>
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Rating</h3>
-                        <h2 className="text-right">4/208</h2>
+                        <h2 className="text-right">{data?.dashboardTopContent?.totalRating/data?.dashboardTopContent?.rating}/{data?.dashboardTopContent?.rating}</h2>
                     </Card>
                 </div>
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Balance ($)</h3>
-                        <h2 className="text-right">3,291,013.34</h2>
+                        <h2 className="text-right">{data?.dashboardTopContent?.totalBalance}</h2>
                     </Card>
                 </div>
             </div>
