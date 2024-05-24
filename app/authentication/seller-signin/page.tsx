@@ -10,6 +10,7 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { loginUrl } from "@/util/urlUtils";
 
 
 export default function Home() {
@@ -17,15 +18,11 @@ export default function Home() {
   const [password, setPassword] = useState('')
   const [phone, setPhone] = useState('')
   const [loading, setLoading] = useState(false)
-
-  const prod_url = "http://35.208.204.126/api/auth/"
-  const local_url = "http://localhost:3000/api/auth/"
-  let url = ''
   
   const signInHandler = async () => {
     try {
       setLoading(true)
-      const data = await axios.post((prod_url),
+      const data = await axios.post((loginUrl),
         {
             password: password,
             phone: phone

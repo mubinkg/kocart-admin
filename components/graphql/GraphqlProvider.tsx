@@ -4,12 +4,10 @@ import React from 'react'
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client'
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs';
 import { setContext } from '@apollo/client/link/context';
-
-const prod_url = "http://35.208.204.126/api/graphql/"
-const local_url = "http://localhost:3001/graphql"
+import { baseUrl } from '@/util/urlUtils';
 
 const link = createUploadLink({
-  uri: prod_url,
+  uri: baseUrl,
 })
 
 const authLink = setContext((_, { headers }) => {

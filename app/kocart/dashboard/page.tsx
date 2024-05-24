@@ -13,7 +13,7 @@ export default function Dashboard() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
     const {data} = useQuery(DASHBOARD_TOP_CONTENT)
-    const {data:categoryWiseProduct} = useQuery(SELLER_CATEGORY_WISE_PRODUCT)
+    const {data:categoryWiseProduct} = useQuery(SELLER_CATEGORY_WISE_PRODUCT, {fetchPolicy:"no-cache"})
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);

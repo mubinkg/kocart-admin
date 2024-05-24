@@ -1,3 +1,4 @@
+import { loginApiUrl } from "@/util/urlUtils";
 
 export async function POST(request:Request){
     try{
@@ -32,12 +33,9 @@ export async function POST(request:Request){
         phone: phone
     };
 
-    const body = JSON.stringify({ query, variables });
-
-    const prod_url = "http://35.208.204.126/api/graphql/"
-    const local_url = "http://localhost:3001/graphql"
+    const body = JSON.stringify({ query, variables })
     
-    const res = await fetch(prod_url as string, {
+    const res = await fetch(loginApiUrl as string, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body,
