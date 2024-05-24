@@ -3,26 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { Chart } from 'primereact/chart';
 import { Card } from 'primereact/card';
 
-export default function PieChart() {
+export default function PieChart({categoryCountData}:{categoryCountData:any}) {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
         const data = {
-            labels: ['Vegetable', 'Electronics', 'Fashion'],
+            labels: categoryCountData?.map((category:any)=>category.category.name)||[],
             datasets: [
                 {
-                    data: [540, 325, 702],
+                    data: categoryCountData?.map((category:any)=>category.count)||[],
                     backgroundColor: [
                         documentStyle.getPropertyValue('--blue-500'), 
                         documentStyle.getPropertyValue('--yellow-500'), 
-                        documentStyle.getPropertyValue('--green-500')
                     ],
                     hoverBackgroundColor: [
                         documentStyle.getPropertyValue('--blue-400'), 
                         documentStyle.getPropertyValue('--yellow-400'), 
-                        documentStyle.getPropertyValue('--green-400')
                     ]
                 }
             ]

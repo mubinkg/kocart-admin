@@ -9,3 +9,13 @@ export const DASHBOARD_TOP_CONTENT = gql`query DashboardTopContent {
       totalOrder
     }
   }`
+
+export const SELLER_CATEGORY_WISE_PRODUCT = gql`query Category {
+    sellerCategoryWiseProduct {
+      category {
+        _id
+        name
+      }
+      count
+    }
+  }`

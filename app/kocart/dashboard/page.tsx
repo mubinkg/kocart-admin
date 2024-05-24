@@ -7,12 +7,13 @@ import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 import OrderList from "../order/order-list/page";
 import { useQuery } from "@apollo/client";
-import { DASHBOARD_TOP_CONTENT } from "@/graphql/dashboard";
+import { DASHBOARD_TOP_CONTENT, SELLER_CATEGORY_WISE_PRODUCT } from "@/graphql/dashboard";
 
 export default function Dashboard() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
     const {data} = useQuery(DASHBOARD_TOP_CONTENT)
+    const {data:categoryWiseProduct} = useQuery(SELLER_CATEGORY_WISE_PRODUCT)
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -117,7 +118,7 @@ export default function Dashboard() {
                     </Card>
                 </div>
                 <div className="col-6">
-                    <PieChart />
+                    <PieChart categoryCountData={categoryWiseProduct?.sellerCategoryWiseProduct}/>
                 </div>
             </div>
             <h3>Order Outline</h3>
