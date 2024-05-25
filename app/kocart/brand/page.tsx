@@ -1,6 +1,7 @@
 'use client'
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
-import { useMutation, useQuery } from "@apollo/client";
+import { getIsAdmin } from "@/util/storageUtils";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -10,14 +11,17 @@ import { Dialog } from "primereact/dialog";
 import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function Brand() {
-    const { data, loading, error , refetch} = useQuery(GET_BRANDS, { variables: { limit: 100, offset: 0 } })
+    const [getBrands, {data,loading,error}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
     const [createBrand, {loading:brandLoading, error:brandError}] = useMutation(CREATE_BRAND)
     const [visible, setVisible] = useState(false)
     const fileUploadRef = useRef<FileUpload>(null);
     const [name, setName] = useState('')
+    const [pageData, setPageData] = useState<any>({})
+    const [isAdmin, setAdmin] = useState(false)
 
     const createBrandHandler = async ()=>{
         try{
@@ -33,12 +37,39 @@ export default function Brand() {
                       }
                 })
             }
-            await refetch()
+            await getBrandList({limit:5, offset:0})
             setVisible(false)
         }catch(err){
     
         }
     }
+
+    const getBrandList = async ({limit, offset}:{limit:number,offset:number})=>{
+        try{
+            await getBrands({
+                variables: {
+                    limit:limit,offset:offset
+                }
+            })
+        }catch(err){
+            Swal.fire({
+                title: "Brand List",
+                text: 'Error on fetching brand list.',
+                icon: 'error'
+            })
+        }
+    }
+
+    useEffect(()=>{
+        getBrandList({limit: 5, offset:0})
+        setAdmin(getIsAdmin())
+    }, [])
+
+    useEffect(()=>{
+        if(Object.entries(pageData).length){
+            getBrandList({limit:pageData?.rows,offset:pageData?.first})
+        }
+    }, [pageData])
 
     const items = [
         { label: 'Brand' },
@@ -51,8 +82,18 @@ export default function Brand() {
         <div>
             <BreadCrumb model={items} className="m-4" />
             <Card className="m-4">
-                <Button label="Add New" className="mb-4" onClick={() => setVisible(true)} />
-                <DataTable lazy totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0} onPage={(value) => console.log(value)} value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
+                {isAdmin ? <Button label="Add New" className="mb-4" onClick={() => setVisible(true)} />:""}
+                <DataTable 
+                    lazy 
+                    loading={loading}
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
+                    totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0} 
+                    onPage={(values) => setPageData(values)} 
+                    value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []} 
+                    paginator
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                >
                     <Column field="_id" header="ID"></Column>
                     <Column field="name" header="Name"></Column>
                     <Column body={brandImageRenderer} header="Image"></Column>

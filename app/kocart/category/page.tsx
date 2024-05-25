@@ -1,5 +1,6 @@
 'use client'
 import { CREATE_CATEGROY, GET_CATEGORIES } from "@/graphql/category/query";
+import { getIsAdmin } from "@/util/storageUtils";
 import { useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Button } from "primereact/button";
@@ -11,7 +12,7 @@ import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Category() {
     const { data, error, loading, refetch } = useQuery(GET_CATEGORIES, { variables: { getCategoriesInput: { limit: 100, offset: 0 } } })
@@ -21,6 +22,7 @@ export default function Category() {
     const imageRef = useRef<any>(null)
     const bannerRef = useRef<any>(null)
     const toast = useRef<any>(null)
+    const [isAdmin, setAdmin] = useState(false)
 
     const showError = () => {
         toast.current?.show({severity:'error', summary: 'Error', detail:'Message Content', life: 3000});
@@ -61,12 +63,16 @@ export default function Category() {
         }
     }
 
+    useEffect(()=>{
+        setAdmin(getIsAdmin())
+    }, [])
+
     return (
         <div>
             <BreadCrumb model={items} className="m-4" />
             <Toast ref={toast} />
             <Card className="m-4">
-                <Button label="Add New" className="mb-3" onClick={()=>setVisible(true)}/>
+                {isAdmin && <Button label="Add New" className="mb-3" onClick={()=>setVisible(true)}/>}
                 <DataTable lazy totalRecords={data?.getAdminCategories?.count ? data?.getAdminCategories?.count : 0} onPage={(value) => console.log(value)} value={data?.getAdminCategories?.categories ? data?.getAdminCategories?.categories : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
                     <Column field="_id" header="ID"></Column>
                     <Column field="name" header="Name"></Column>
