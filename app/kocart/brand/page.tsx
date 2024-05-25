@@ -1,4 +1,5 @@
 'use client'
+import MediaPicker from "@/components/media/MediaPicker";
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
 import { getIsAdmin } from "@/util/storageUtils";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -15,19 +16,18 @@ import { useEffect, useRef, useState } from "react";
 import Swal from "sweetalert2";
 
 export default function Brand() {
-    const [getBrands, {data,loading,error}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
-    const [createBrand, {loading:brandLoading, error:brandError}] = useMutation(CREATE_BRAND)
+    const [getBrands, {data,loading}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
+    const [createBrand, {loading:brandLoading}] = useMutation(CREATE_BRAND)
     const [visible, setVisible] = useState(false)
-    const fileUploadRef = useRef<FileUpload>(null);
     const [name, setName] = useState('')
     const [pageData, setPageData] = useState<any>({})
     const [isAdmin, setAdmin] = useState(false)
+    const [visibleMedia, setVisisbleMedia] = useState(false)
+    const [brandImage, setBrandImgae] = useState('')
 
     const createBrandHandler = async ()=>{
         try{
-            if(fileUploadRef.current){
-                const file = fileUploadRef.current?.getFiles()
-                const brandImage = file[0]
+            if(brandImage){
                 await createBrand({
                     variables: {
                         "createBrandInput": {
@@ -107,9 +107,17 @@ export default function Brand() {
                 </div>
                 <div className="flex flex-column">
                     <p className="my-3 font-semibold">Brand Image</p>
-                    <FileUpload className="w-full" ref={fileUploadRef}/>
+                    <Button style={{height:"40px"}} icon="pi pi-upload" outlined size="small" label="Choose File" onClick={()=>setVisisbleMedia(true)}/>
+                    <MediaPicker 
+                        visible={visibleMedia} 
+                        setVisible={setVisisbleMedia} 
+                        callback={(data)=>setBrandImgae(data?.file || "")}
+                    />
+                    {
+                        brandImage ? <Image src={brandImage} width="400" className="mt-4" style={{border:"2px solid gray"}}/>:""
+                    }
                 </div>
-                <Button label="Submit" className="my-3" onClick={createBrandHandler}/>
+                <Button disabled={brandLoading} label={brandLoading ? "Loading...": "Submit"} className="my-3" onClick={createBrandHandler}/>
             </Dialog>
         </div>
     )
