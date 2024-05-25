@@ -248,7 +248,7 @@ export default function TemplateDemo() {
                 label: 'Sale Inventory Reports',
                 icon: 'pi pi-align-left',
                 template: subItemRenderer,
-                url: '/kocart/address'
+                url: '/kocart/report/inventory-report'
             }
         ]
     }
