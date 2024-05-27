@@ -7,12 +7,14 @@ import { Chart } from "primereact/chart";
 import { useEffect, useState } from "react";
 import OrderList from "../order/order-list/page";
 import { useQuery } from "@apollo/client";
-import { DASHBOARD_TOP_CONTENT, SELLER_CATEGORY_WISE_PRODUCT } from "@/graphql/dashboard";
+import { DASHBOARD_TOP_CONTENT, ORDER_OUTLINE} from "@/graphql/dashboard";
+import { OrderStatusEnum } from "@/data/dashboard/type";
 
 export default function Dashboard() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
     const {data} = useQuery(DASHBOARD_TOP_CONTENT)
+    const {data:orderOutline} = useQuery(ORDER_OUTLINE)
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -100,7 +102,9 @@ export default function Dashboard() {
                 <div className="col-3">
                     <Card>
                         <h3 className="text-right">Rating</h3>
-                        <h2 className="text-right">{data?.dashboardTopContent?.totalRating/data?.dashboardTopContent?.rating}/{data?.dashboardTopContent?.rating}</h2>
+                        <h2 className="text-right">
+                            {data?.dashboardTopContent?.rating ? data?.dashboardTopContent?.totalRating/data?.dashboardTopContent?.rating:"0"}/{data?.dashboardTopContent?.rating}
+                        </h2>
                     </Card>
                 </div>
                 <div className="col-3">
@@ -122,12 +126,12 @@ export default function Dashboard() {
             </div>
             <h3>Order Outline</h3>
             <div className="grid grid-gutter">
-                <OutlineItem count={1103} title="Received" icon={""}/>
-                <OutlineItem count={1103} title="Received" icon={""}/>
-                <OutlineItem count={1103} title="Received" icon={""}/>
-                <OutlineItem count={1103} title="Received" icon={""}/>
-                <OutlineItem count={1103} title="Received" icon={""}/>
-                <OutlineItem count={1103} title="Received" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.RECEIVED)?.statusCount || 0} title="Received" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.PROCESSED)?.statusCount || 0} title="Processed" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.SHIPPED)?.statusCount || 0} title="Shipped" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.DELIVERED)?.statusCount || 0}  title="Delivered" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.CANCELLED)?.statusCount || 0}   title="Cancelled" icon={""}/>
+                <OutlineItem count={orderOutline?.statusWiseOrderCount?.find((d:any)=>d._id === OrderStatusEnum.RETURNED)?.statusCount || 0} title="Returned" icon={""}/>
             </div>
             <OrderList/>
         </div>

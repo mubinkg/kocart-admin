@@ -19,3 +19,10 @@ export const SELLER_CATEGORY_WISE_PRODUCT = gql`query Category {
       count
     }
   }`
+
+export const ORDER_OUTLINE = gql`query StatusWiseOrderCount {
+  statusWiseOrderCount {
+    _id
+    statusCount
+  }
+}`
