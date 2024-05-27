@@ -1,7 +1,8 @@
 'use client'
 import { FeaturedSectionType, ProductTypes, SectionStyle } from "@/data/featured-section/types";
+import { OptionType } from "@/data/product/types";
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
-import { GET_ALL_CATEGORY } from "@/graphql/fetured-section";
+import { CREATE_FEATURED_SECTION, GET_ADMIN_SECTIONS, GET_ALL_CATEGORY, GET_PRODUCT_FOR_FEATURED_SECTION } from "@/graphql/fetured-section";
 import { productTypeOptions, styleOptions } from "@/graphql/fetured-section/data";
 import { getIsAdmin } from "@/util/storageUtils";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -16,10 +17,11 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select'
+import AsyncSelect from 'react-select/async'
 import Swal from "sweetalert2";
 
 export default function Page() {
-    const { register, control, handleSubmit, watch , getValues} = useForm<FeaturedSectionType>({
+    const { register, control, handleSubmit, watch, reset } = useForm<FeaturedSectionType>({
         defaultValues: {
             title: "",
             description: "",
@@ -31,22 +33,69 @@ export default function Page() {
     })
 
     const { data: categoryList } = useQuery(GET_ALL_CATEGORY, { fetchPolicy: "no-cache" })
+    const [getProduct] = useLazyQuery(GET_PRODUCT_FOR_FEATURED_SECTION)
+    const [createFeaturedSection, {loading:createFeaturedSectionLoading}] = useMutation(CREATE_FEATURED_SECTION)
 
-    const [getBrands, { data, loading }] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache" })
+    const [getSections, { data, loading }] = useLazyQuery(GET_ADMIN_SECTIONS, { fetchPolicy: "no-cache" })
     const [visible, setVisible] = useState(false)
     const [pageData, setPageData] = useState<any>({})
     const [isAdmin, setAdmin] = useState(false)
 
-    useEffect(()=>{
-        console.log(getValues('categories'))
+    useEffect(() => {
+        if (watch('productType')) {
+            const productType = watch('productType').value
+            const categories = watch('categories')?.map((d: OptionType) => d.value)
+            const query: Record<string, any> = {}
+            if (categories) {
+                query['categories'] = categories
+            }
+            if (productType === 'DIGITAL_PRODUCT') {
+                query['productType'] = productType
+            }
+            getProduct({
+                variables: {
+                    adminFeaturedSectionProductFilterInput: {
+                        ...query,
+                        limit: 10,
+                        offset: 0
+                    }
+                }
+            })
+        }
     }, [watch('productType'), watch('categories')])
 
-
-    const getBrandList = async ({ limit, offset }: { limit: number, offset: number }) => {
-        try {
-            await getBrands({
+    const loadProductOptions: any = async (val: string, callback: any) => {
+        if (watch('productType')) {
+            const productType = watch('productType').value
+            const categories = watch('categories')?.map((d: OptionType) => d.value)
+            const query: Record<string, any> = {}
+            if (categories) {
+                query['categories'] = categories
+            }
+            if (productType === 'DIGITAL_PRODUCT') {
+                query['productType'] = productType
+            }
+            const res = await getProduct({
                 variables: {
-                    limit: limit, offset: offset
+                    adminFeaturedSectionProductFilterInput: {
+                        ...query,
+                        limit: 10,
+                        offset: 0
+                    }
+                }
+            })
+
+            const products = res?.data?.getProductsForFeaturedSections || []
+            callback(products.map((d: any) => ({ label: d.pro_input_name, value: d._id })))
+        }
+    }
+
+
+    const getSectionList = async ({ limit, offset }: { limit: number, offset: number }) => {
+        try {
+            await getSections({
+                variables: {
+                    limit: limit, offset: offset, query:""
                 }
             })
         } catch (err) {
@@ -58,18 +107,46 @@ export default function Page() {
         }
     }
 
-    const submitHandler = (data: any) => {
-        console.log(data)
+    const submitHandler = async (data: FeaturedSectionType) => {
+        try{
+            const values:Record<string, any> = {}
+            values['title'] = data.title
+            values['description'] = data.description
+            values['productType'] = data.productType.value
+            values['style'] = data.style.value
+            if(data?.categories && data.categories.length){
+                values['categories'] = data.categories.map(d=>d.value)
+            }
+            if(data?.products && data.products.length){
+                values['products'] = data.products.map((d:OptionType)=>d.value)
+            }
+
+            await createFeaturedSection({
+                variables:{
+                    createSectionInput:values
+                }
+            })
+            await getSectionList({limit:5, offset:0})
+            reset()
+            setVisible(false)
+        }
+        catch(err){
+            Swal.fire({
+                title:"Featured Section",
+                text:'Error on create featured section',
+                icon:"warning"
+            })
+        }
     }
 
     useEffect(() => {
-        getBrandList({ limit: 5, offset: 0 })
+        getSectionList({ limit: 5, offset: 0 })
         setAdmin(getIsAdmin())
     }, [])
 
     useEffect(() => {
         if (Object.entries(pageData).length) {
-            getBrandList({ limit: pageData?.rows, offset: pageData?.first })
+            getSectionList({ limit: pageData?.rows, offset: pageData?.first })
         }
     }, [pageData])
 
@@ -78,7 +155,8 @@ export default function Page() {
         { label: 'Manage Sections' }
     ];
 
-    const brandImageRenderer = (item: any) => <Image src={item?.image} alt="Brand Image" width="200" />
+    const sectionCategoryRenderer = (item: any) => <p>{item.categories.join(' , ')}</p>
+    const sectionProductRenderer = (item:any) => <p style={{maxWidth:"300px", wordWrap:"break-word"}}>{item?.products?.map((d:any)=>d._id)?.join(',') || ""}</p>
 
     return (
         <div>
@@ -90,15 +168,21 @@ export default function Page() {
                     loading={loading}
                     rows={pageData?.rows || 5}
                     first={pageData?.first || 1}
-                    totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0}
+                    totalRecords={data?.getAdminSetions?.count ? data?.getAdminSetions?.count : 0}
                     onPage={(values) => setPageData(values)}
-                    value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []}
+                    value={data?.getAdminSetions?.sections ? data?.getAdminSetions?.sections : []}
                     paginator
                     rowsPerPageOptions={[5, 10, 25, 50]}
                 >
                     <Column field="_id" header="ID"></Column>
-                    <Column field="name" header="Name"></Column>
-                    <Column body={brandImageRenderer} header="Image"></Column>
+                    <Column field="title" header="Title"></Column>
+                    <Column field="description" header="Description"></Column>
+                    <Column field="style" header="Style"></Column>
+                    <Column body={sectionCategoryRenderer} header="Categories"></Column>
+                    <Column body={sectionProductRenderer} header="Product Ids"></Column>
+                    <Column field="productType" header="Product Type"></Column>
+                    <Column field="createdAt" header="Date"></Column>
+                    <Column field="" header="Action"></Column>
                 </DataTable>
             </Card>
 
@@ -161,15 +245,27 @@ export default function Page() {
                     />
                 </div>
                 {
-                    watch('productType')?.value === 'CUSTOM_PRODUCT' ? (
+                    watch('productType')?.value === 'CUSTOM_PRODUCT' || watch('productType')?.value === 'DIGITAL_PRODUCT' ? (
                         <div className="flex flex-column">
                             <p className="mb-2 font-semibold">Products <span style={{ color: "red" }}>*</span></p>
-                            <Select />
+                            <Controller
+                                name="products"
+                                control={control}
+                                render={({ field }) => (
+                                    <AsyncSelect
+                                        {...field}
+                                        loadOptions={loadProductOptions}
+                                        isMulti
+                                        isSearchable
+                                        isClearable
+                                    />
+                                )}
+                            />
                         </div>
                     ) : ""
                 }
 
-                <Button label={"Submit"} className="my-3" onClick={handleSubmit(submitHandler)} />
+                <Button label={createFeaturedSectionLoading?"Loading...":"Submit"} className="my-3" onClick={handleSubmit(submitHandler)} disabled={createFeaturedSectionLoading}/>
             </Dialog>
         </div>
     )

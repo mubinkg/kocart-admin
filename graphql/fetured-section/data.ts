@@ -1,19 +1,19 @@
 export const styleOptions:any = [
     {
         label: 'Default',
-        value: 'default'
+        value: 'DEFAULT'
     },
     {
         label: 'Style 1',
-        value: 'style 1'
+        value: 'STYLE_ONE'
     },
     {
         label: 'Style 2',
-        value: 'style 2'
+        value: 'STYLE_TWO'
     },
     {
         label: 'Style 3',
-        value: 'style 3'
+        value: 'STYLE_THREE'
     }
 ]
 

@@ -18,8 +18,8 @@ export type SelectType = {
 export type FeaturedSectionType = {
     title:string
     description:string
-    categories?:string[]
+    categories?:SelectType[]
     style:SelectType
     productType:SelectType
-    products:string[]
+    products:SelectType[]
 }

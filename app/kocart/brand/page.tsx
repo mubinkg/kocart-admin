@@ -9,7 +9,6 @@ import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
-import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
