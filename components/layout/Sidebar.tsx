@@ -211,6 +211,29 @@ export default function TemplateDemo() {
 
     menuItems.push(locationItems)
 
+    const featuredSectionItems:MenuItem = {
+        label: 'Featured Sections',
+        icon: 'pi pi-list-check',
+        items: [
+            {
+                label: 'Manage Sections',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/sections/manage-sections'
+            },
+            {
+                label: 'Section Order',
+                icon: 'pi pi-align-left',
+                template: subItemRenderer,
+                url: '/kocart/sections/sections-order'
+            }
+        ]
+    }
+
+    if(isAdmin){
+        menuItems.push(featuredSectionItems)
+    }
+
     const customerItems:MenuItem = {
         label: 'Customers',
         icon: 'pi pi-list-check',
