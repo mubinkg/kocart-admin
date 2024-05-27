@@ -10,7 +10,7 @@ export enum ProductTypes{
     CUSTOM_PRODUCT = 'CUSTOM_PRODUCT'
 }
 
-export type FeaturedSection = {
+export type FeaturedSectionType = {
     title:string
     description:string
     categories?:string[]

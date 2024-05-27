@@ -1,4 +1,5 @@
 'use client'
+import { FeaturedSectionType, ProductTypes, SectionStyle } from "@/data/featured-section/types";
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
 import { getIsAdmin } from "@/util/storageUtils";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -11,38 +12,26 @@ import { Dialog } from "primereact/dialog";
 import { Image } from "primereact/image";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Select from 'react-select'
 import Swal from "sweetalert2";
 
 export default function Page() {
-    const {register, control} = useForm()
+    const {register, control, handleSubmit} = useForm<FeaturedSectionType>({
+        defaultValues:{
+            title: "",
+            description: "",
+            categories: [],
+            style: SectionStyle.DEFAULT,
+            productType: ProductTypes.CUSTOM_PRODUCT,
+            products: []
+        }
+    })
     const [getBrands, {data,loading}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
-    const [createBrand, {loading:brandLoading}] = useMutation(CREATE_BRAND)
     const [visible, setVisible] = useState(false)
-    const [name, setName] = useState('')
     const [pageData, setPageData] = useState<any>({})
     const [isAdmin, setAdmin] = useState(false)
-    const [brandImage, setBrandImgae] = useState('')
 
-    const createBrandHandler = async ()=>{
-        try{
-            if(brandImage){
-                await createBrand({
-                    variables: {
-                        "createBrandInput": {
-                          "image": brandImage,
-                          "name": name
-                        }
-                      }
-                })
-            }
-            await getBrandList({limit:5, offset:0})
-            setVisible(false)
-        }catch(err){
-    
-        }
-    }
 
     const getBrandList = async ({limit, offset}:{limit:number,offset:number})=>{
         try{
@@ -58,6 +47,10 @@ export default function Page() {
                 icon: 'error'
             })
         }
+    }
+
+    const submitHandler = (data:any)=>{
+        console.log(data)
     }
 
     useEffect(()=>{
@@ -103,15 +96,19 @@ export default function Page() {
             <Dialog header="Create New Brand" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Title for section <span style={{color: "red"}}>*</span></p>
-                    <InputText value={name} onChange={(e)=>setName(e.target.value)} className="w-full block" id="username" placeholder="Title" />
+                    <InputText {...register('title')} className="w-full block" id="username" placeholder="Title" />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Short description <span style={{color: "red"}}>*</span></p>
-                    <InputText value={name} onChange={(e)=>setName(e.target.value)} className="w-full block" id="username" placeholder="Short Description" />
+                    <InputText {...register('description')} className="w-full block" id="username" placeholder="Short Description" />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Categories</p>
-                    <Select/>
+                    <Controller
+                        name="categories"
+                        control={control}
+                        render={({field})=> <Select {...field}/>}
+                    />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Style <span style={{color: "red"}}>*</span></p>
@@ -125,7 +122,7 @@ export default function Page() {
                     <p className="mb-2 font-semibold">Products <span style={{color: "red"}}>*</span></p>
                     <Select/>
                 </div>
-                <Button disabled={brandLoading} label={brandLoading ? "Loading...": "Submit"} className="my-3" onClick={createBrandHandler}/>
+                <Button  label={"Submit"} className="my-3" onClick={handleSubmit(submitHandler)}/>
             </Dialog>
         </div>
     )
