@@ -13,7 +13,6 @@ export default function Dashboard() {
     const [chartData, setChartData] = useState({});
     const [chartOptions, setChartOptions] = useState({});
     const {data} = useQuery(DASHBOARD_TOP_CONTENT)
-    const {data:categoryWiseProduct} = useQuery(SELLER_CATEGORY_WISE_PRODUCT, {fetchPolicy:"no-cache"})
 
     useEffect(() => {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -118,7 +117,7 @@ export default function Dashboard() {
                     </Card>
                 </div>
                 <div className="col-6">
-                    <PieChart categoryCountData={categoryWiseProduct?.sellerCategoryWiseProduct}/>
+                    <PieChart/>
                 </div>
             </div>
             <h3>Order Outline</h3>
