@@ -19,33 +19,37 @@ import Select from 'react-select'
 import Swal from "sweetalert2";
 
 export default function Page() {
-    const {register, control, handleSubmit} = useForm<FeaturedSectionType>({
-        defaultValues:{
+    const { register, control, handleSubmit, watch , getValues} = useForm<FeaturedSectionType>({
+        defaultValues: {
             title: "",
             description: "",
             categories: [],
-            style: SectionStyle.DEFAULT,
-            productType: ProductTypes.CUSTOM_PRODUCT,
+            style: {},
+            productType: {},
             products: []
         }
     })
 
-    const {data:categoryList} = useQuery(GET_ALL_CATEGORY, {fetchPolicy:"no-cache"})
+    const { data: categoryList } = useQuery(GET_ALL_CATEGORY, { fetchPolicy: "no-cache" })
 
-    const [getBrands, {data,loading}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
+    const [getBrands, { data, loading }] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache" })
     const [visible, setVisible] = useState(false)
     const [pageData, setPageData] = useState<any>({})
     const [isAdmin, setAdmin] = useState(false)
 
+    useEffect(()=>{
+        console.log(getValues('categories'))
+    }, [watch('productType'), watch('categories')])
 
-    const getBrandList = async ({limit, offset}:{limit:number,offset:number})=>{
-        try{
+
+    const getBrandList = async ({ limit, offset }: { limit: number, offset: number }) => {
+        try {
             await getBrands({
                 variables: {
-                    limit:limit,offset:offset
+                    limit: limit, offset: offset
                 }
             })
-        }catch(err){
+        } catch (err) {
             Swal.fire({
                 title: "Brand List",
                 text: 'Error on fetching brand list.',
@@ -54,18 +58,18 @@ export default function Page() {
         }
     }
 
-    const submitHandler = (data:any)=>{
+    const submitHandler = (data: any) => {
         console.log(data)
     }
 
-    useEffect(()=>{
-        getBrandList({limit: 5, offset:0})
+    useEffect(() => {
+        getBrandList({ limit: 5, offset: 0 })
         setAdmin(getIsAdmin())
     }, [])
 
-    useEffect(()=>{
-        if(Object.entries(pageData).length){
-            getBrandList({limit:pageData?.rows,offset:pageData?.first})
+    useEffect(() => {
+        if (Object.entries(pageData).length) {
+            getBrandList({ limit: pageData?.rows, offset: pageData?.first })
         }
     }, [pageData])
 
@@ -74,21 +78,21 @@ export default function Page() {
         { label: 'Manage Sections' }
     ];
 
-    const brandImageRenderer = (item: any) => <Image src={item?.image} alt="Brand Image" width="200"/>
+    const brandImageRenderer = (item: any) => <Image src={item?.image} alt="Brand Image" width="200" />
 
     return (
         <div>
             <BreadCrumb model={items} className="m-4" />
             <Card className="m-4" title="Featured Sections">
-                {isAdmin ? <Button label="Add New" className="mb-4" onClick={() => setVisible(true)} />:""}
+                {isAdmin ? <Button label="Add New" className="mb-4" onClick={() => setVisible(true)} /> : ""}
                 <DataTable
-                    lazy 
+                    lazy
                     loading={loading}
                     rows={pageData?.rows || 5}
-                    first={pageData?.first || 1} 
-                    totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0} 
-                    onPage={(values) => setPageData(values)} 
-                    value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []} 
+                    first={pageData?.first || 1}
+                    totalRecords={data?.adminBrandList?.total ? data?.adminBrandList?.total : 0}
+                    onPage={(values) => setPageData(values)}
+                    value={data?.adminBrandList?.brands ? data?.adminBrandList?.brands : []}
                     paginator
                     rowsPerPageOptions={[5, 10, 25, 50]}
                 >
@@ -100,11 +104,11 @@ export default function Page() {
 
             <Dialog header="Create New Fatured Section" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Title for section <span style={{color: "red"}}>*</span></p>
+                    <p className="mb-2 font-semibold">Title for section <span style={{ color: "red" }}>*</span></p>
                     <InputText {...register('title')} className="w-full block" id="username" placeholder="Title" />
                 </div>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Short description <span style={{color: "red"}}>*</span></p>
+                    <p className="mb-2 font-semibold">Short description <span style={{ color: "red" }}>*</span></p>
                     <InputText {...register('description')} className="w-full block" id="username" placeholder="Short Description" />
                 </div>
                 <div className="flex flex-column">
@@ -113,52 +117,59 @@ export default function Page() {
                         name="categories"
                         control={control}
                         render={
-                            ({field})=> 
-                            <Select 
-                                {...field}
-                                options={categoryList?.getAllCategory?.map((d:any)=>({label: d.name, value:d._id}))||[]}
-                                isMulti={true}
-                                isSearchable={true}
-                                isClearable={true}
-                            />
+                            ({ field }) =>
+                                <Select
+                                    {...field}
+                                    options={categoryList?.getAllCategory?.map((d: any) => ({ label: d.name, value: d._id })) || []}
+                                    isMulti={true}
+                                    isSearchable={true}
+                                    isClearable={true}
+                                />
                         }
                     />
                 </div>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Style <span style={{color: "red"}}>*</span></p>
+                    <p className="mb-2 font-semibold">Style <span style={{ color: "red" }}>*</span></p>
                     <Controller
                         name="style"
                         control={control}
                         render={
-                            ({field})=>
-                            <Select
-                                {...field}
-                                options={styleOptions}
-                                isClearable={true}
-                            />
+                            ({ field }) =>
+                                <Select
+                                    {...field}
+                                    options={styleOptions}
+                                    isClearable={true}
+                                    isSearchable
+                                />
                         }
                     />
                 </div>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Product Types <span style={{color: "red"}}>*</span></p>
+                    <p className="mb-2 font-semibold">Product Types <span style={{ color: "red" }}>*</span></p>
                     <Controller
                         name="productType"
                         control={control}
                         render={
-                            ({field})=>
-                            <Select
-                                {...field}
-                                options={productTypeOptions}
-                                isClearable={true}
-                            />
+                            ({ field }) =>
+                                <Select
+                                    {...field}
+                                    options={productTypeOptions}
+                                    isClearable={true}
+                                    isSearchable
+                                />
                         }
                     />
                 </div>
-                <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Products <span style={{color: "red"}}>*</span></p>
-                    <Select/>
-                </div>
-                <Button  label={"Submit"} className="my-3" onClick={handleSubmit(submitHandler)}/>
+                {
+                    watch('productType')?.value === 'CUSTOM_PRODUCT' ? (
+                        <div className="flex flex-column">
+                            <p className="mb-2 font-semibold">Products <span style={{ color: "red" }}>*</span></p>
+                            <Select />
+                        </div>
+                    ) : ""
+                }
+
+                <Button label={"Submit"} className="my-3" onClick={handleSubmit(submitHandler)} />
             </Dialog>
         </div>
     )

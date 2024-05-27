@@ -10,11 +10,16 @@ export enum ProductTypes{
     CUSTOM_PRODUCT = 'CUSTOM_PRODUCT'
 }
 
+export type SelectType = {
+    label: string,
+    value: string
+}
+
 export type FeaturedSectionType = {
     title:string
     description:string
     categories?:string[]
-    style:SectionStyle
-    productType?:ProductTypes
-    products?:string[]
+    style:SelectType
+    productType:SelectType
+    products:string[]
 }
