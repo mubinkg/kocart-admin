@@ -1,6 +1,8 @@
 'use client'
 import { FeaturedSectionType, ProductTypes, SectionStyle } from "@/data/featured-section/types";
 import { CREATE_BRAND, GET_BRANDS } from "@/graphql/brand/query";
+import { GET_ALL_CATEGORY } from "@/graphql/fetured-section";
+import { productTypeOptions, styleOptions } from "@/graphql/fetured-section/data";
 import { getIsAdmin } from "@/util/storageUtils";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -27,6 +29,9 @@ export default function Page() {
             products: []
         }
     })
+
+    const {data:categoryList} = useQuery(GET_ALL_CATEGORY, {fetchPolicy:"no-cache"})
+
     const [getBrands, {data,loading}] = useLazyQuery(GET_BRANDS, { fetchPolicy: "no-cache"})
     const [visible, setVisible] = useState(false)
     const [pageData, setPageData] = useState<any>({})
@@ -93,7 +98,7 @@ export default function Page() {
                 </DataTable>
             </Card>
 
-            <Dialog header="Create New Brand" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
+            <Dialog header="Create New Fatured Section" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Title for section <span style={{color: "red"}}>*</span></p>
                     <InputText {...register('title')} className="w-full block" id="username" placeholder="Title" />
@@ -107,16 +112,47 @@ export default function Page() {
                     <Controller
                         name="categories"
                         control={control}
-                        render={({field})=> <Select {...field}/>}
+                        render={
+                            ({field})=> 
+                            <Select 
+                                {...field}
+                                options={categoryList?.getAllCategory?.map((d:any)=>({label: d.name, value:d._id}))||[]}
+                                isMulti={true}
+                                isSearchable={true}
+                                isClearable={true}
+                            />
+                        }
                     />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Style <span style={{color: "red"}}>*</span></p>
-                    <Select/>
+                    <Controller
+                        name="style"
+                        control={control}
+                        render={
+                            ({field})=>
+                            <Select
+                                {...field}
+                                options={styleOptions}
+                                isClearable={true}
+                            />
+                        }
+                    />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Product Types <span style={{color: "red"}}>*</span></p>
-                    <Select/>
+                    <Controller
+                        name="productType"
+                        control={control}
+                        render={
+                            ({field})=>
+                            <Select
+                                {...field}
+                                options={productTypeOptions}
+                                isClearable={true}
+                            />
+                        }
+                    />
                 </div>
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Products <span style={{color: "red"}}>*</span></p>
