@@ -23,10 +23,14 @@ export default function PieChart() {
                         backgroundColor: [
                             documentStyle.getPropertyValue('--blue-500'),
                             documentStyle.getPropertyValue('--yellow-500'),
+                            documentStyle.getPropertyValue('--green-500'),
+                            documentStyle.getPropertyValue('--gray-500'),
                         ],
                         hoverBackgroundColor: [
                             documentStyle.getPropertyValue('--blue-400'),
                             documentStyle.getPropertyValue('--yellow-400'),
+                            documentStyle.getPropertyValue('--green-400'),
+                            documentStyle.getPropertyValue('--gray-400'),
                         ]
                     }
                 ]
