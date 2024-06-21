@@ -8,9 +8,8 @@ import logo from '../../../public/logo/cocartlogo.png'
 import Link from "next/link";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { loginUrl } from "@/util/urlUtils";
+import { signinAction } from "@/app/action";
 
 
 export default function Home() {
@@ -22,15 +21,9 @@ export default function Home() {
   const signInHandler = async () => {
     try {
       setLoading(true)
-      const data = await axios.post((loginUrl),
-        {
-            password: password,
-            phone: phone
-        }
-      )
-
-      localStorage.setItem('access_token', data?.data?.data?.signinSeller?.access_token)
-      localStorage.setItem('user',  JSON.stringify(data?.data?.data?.signinSeller?.seller||""))
+      const data = await signinAction(phone,password)
+      localStorage.setItem('access_token',data?.data?.signinSeller?.access_token)
+      localStorage.setItem('user',  JSON.stringify(data?.data?.signinSeller?.seller||{}))
       setLoading(false)
       router.push('/kocart/dashboard')
     } catch (err:any) {

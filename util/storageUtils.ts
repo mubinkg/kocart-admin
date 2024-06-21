@@ -1,7 +1,7 @@
 export function getUser(){
     if (typeof window !== "undefined") {
         const user = localStorage.getItem("user") || ""
-        return JSON.parse(user)
+        return JSON?.parse(user)
     }
     return null
 }

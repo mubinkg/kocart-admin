@@ -5,8 +5,8 @@ import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { logoutAction } from '@/app/action';
 import { getIsAdmin } from '@/util/storageUtils';
 
 export default function TemplateDemo() {
@@ -46,7 +46,7 @@ export default function TemplateDemo() {
 
     const signoutHandler = async ()=>{
         try{
-            await axios.get('/api/logout')
+            await logoutAction()
             router.push('/authentication/seller-signin')
         }
         catch(err){
