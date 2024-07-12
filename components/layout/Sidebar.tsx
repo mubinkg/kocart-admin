@@ -47,7 +47,7 @@ export default function TemplateDemo() {
     const signoutHandler = async ()=>{
         try{
             await logoutAction()
-            router.push('/authentication/seller-signin')
+            router.push('/seller-signin')
         }
         catch(err){
             Swal.fire({

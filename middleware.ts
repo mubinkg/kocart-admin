@@ -5,10 +5,10 @@ import { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
     const token = (request.cookies.get('access_token'))
     const {pathname} = request.nextUrl
-    if(!token && pathname !== '/authentication/seller-signin' ){
-        return NextResponse.redirect(new URL('/authentication/seller-signin', request.url))
+    if(!token && pathname !== '/seller-signin' ){
+        return NextResponse.redirect(new URL('/seller-signin', request.url))
     }
-    if(token && pathname === '/authentication/seller-signin'){
+    if(token && pathname === '/seller-signin'){
         return  NextResponse.redirect(new URL('/', request.url))
     }
     if(token && pathname === '/'){
@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
  
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ['/', '/authentication/seller-signin', '/seller', '/kocart/:param*'],
+    matcher: ['/', '/seller-signin', '/seller', '/kocart/:param*'],
 }

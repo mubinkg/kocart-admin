@@ -69,7 +69,7 @@ export default function Home() {
               </form>
             </div>
             <div>
-              <Link href="/authentication/register-seller/">
+              <Link href="/register-seller/">
                 <p className="text-center	 text-xl text-[#41469B] py-5 hover:cursor-pointer">Dont have any account?</p>
               </Link>
             </div>

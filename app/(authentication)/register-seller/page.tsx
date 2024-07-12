@@ -78,7 +78,7 @@ export default function RegisterSeller() {
           }
         }
       })
-      router.push('/authentication/seller-signin')
+      router.push('/seller-signin')
     } catch (err) {
       
     }
