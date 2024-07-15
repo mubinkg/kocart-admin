@@ -5,12 +5,14 @@ import { ColorPicker } from 'primereact/colorpicker';
 import { Dropdown } from 'primereact/dropdown';
 import { FileUpload } from 'primereact/fileupload';
 import { InputText } from 'primereact/inputtext';
-import React from 'react'
+import React, { useState } from 'react'
 import { useFieldArray, useForm, Controller } from 'react-hook-form'
 import { v4 as uuidv4 } from 'uuid';
+import MediaPicker from '../media/MediaPicker';
 
 const Attribute = ({ handleAddAttribute }: any) => {
-    const { control, handleSubmit, watch, reset,register } = useForm()
+    const [visible, setVisible] = useState(false)
+    const { control, handleSubmit, watch, reset,setValue } = useForm()
     const { fields, append, remove } = useFieldArray<any>({
         control,
         name: 'attribute'
@@ -23,7 +25,7 @@ const Attribute = ({ handleAddAttribute }: any) => {
         if (value?.attribute) {
             values = value?.attribute?.map((v: any) => ({
                 valueName: v?.attributeName || "",
-                image: v?.image[0] || null,
+                image: v?.image || null,
                 color: v?.color || null,
                 type: v?.attributeType || 'DEFAULT'
             }))
@@ -68,7 +70,12 @@ const Attribute = ({ handleAddAttribute }: any) => {
                                 )}
                             />
                             {
-                                    <input style={{display: watch(`attribute.${index}.attributeType`) === 'IMAGE' ?'block':'none'}} {...register(`attribute.${index}.image`)} type='file' />
+                                   watch(`attribute.${index}.attributeType`) === 'IMAGE' && (
+                                    <div className='mt-2'>
+                                        <Button size='small' onClick={()=>setVisible(true)}>Add Image</Button>
+                                        <MediaPicker visible={visible} setVisible={setVisible} callback={(value:any)=>setValue(`attribute.${index}.image`,value.file)}/>
+                                    </div>
+                                   )
                             }
                             {
                                 (watch(`attribute.${index}.attributeType`)) === 'COLOR' ?
