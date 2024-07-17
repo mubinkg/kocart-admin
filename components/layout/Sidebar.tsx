@@ -256,6 +256,12 @@ export default function TemplateDemo() {
     if(isAdmin){
         menuItems.push(customerItems)
     }
+    menuItems.push({
+        label: 'Transactions',
+        icon: 'pi pi-credit-card',
+        template: itemRenderer,
+        url: '/kocart/transactions'
+    })
 
     const reportsItems:MenuItem = {
         label: 'Reports',
