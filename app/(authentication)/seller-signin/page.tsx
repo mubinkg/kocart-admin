@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <main>
       <div className="flex justify-content-center align-items-center h-screen">
-        <Card className="w-4">
+        <Card className="lg:w-4 sm:w-12 md:w-12">
             <div className="flex align-items-center justify-content-center">
               <Image alt="kocart logo" src={logo} />
             </div>
