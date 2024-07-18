@@ -1,7 +1,7 @@
 'use client'
 import { CREATE_CATEGROY, GET_CATEGORIES } from "@/graphql/category/query";
 import { getIsAdmin } from "@/util/storageUtils";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -15,7 +15,7 @@ import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 
 export default function Category() {
-    const { data, error, loading, refetch } = useQuery(GET_CATEGORIES, { variables: { getCategoriesInput: { limit: 100, offset: 0 } } })
+    const [getCategories,{ data, error, loading, refetch }] = useLazyQuery(GET_CATEGORIES, { fetchPolicy:"no-cache" })
     const [createCategory,{data:createCategoryData, error:createCategoryError, loading:careateCategoryLoading}] = useMutation(CREATE_CATEGROY)
     const [name, setName] = useState('')
     const [visible, setVisible] = useState(false)
@@ -23,6 +23,19 @@ export default function Category() {
     const bannerRef = useRef<any>(null)
     const toast = useRef<any>(null)
     const [isAdmin, setAdmin] = useState(false)
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
+
+    useEffect(()=>{
+        getCategories({
+            variables: { getCategoriesInput: { limit: pageData.rows, offset: pageData.first} }
+        })
+    },[])
+
+    useEffect(()=>{
+        getCategories({
+            variables: { getCategoriesInput: { limit: pageData.rows, offset: pageData.first} }
+        })
+    },[pageData])
 
     const showError = () => {
         toast.current?.show({severity:'error', summary: 'Error', detail:'Message Content', life: 3000});
@@ -73,7 +86,17 @@ export default function Category() {
             <Toast ref={toast} />
             <Card className="m-4">
                 {isAdmin && <Button label="Add New" className="mb-3" onClick={()=>setVisible(true)}/>}
-                <DataTable lazy totalRecords={data?.getAdminCategories?.count ? data?.getAdminCategories?.count : 0} onPage={(value) => console.log(value)} value={data?.getAdminCategories?.categories ? data?.getAdminCategories?.categories : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
+                <DataTable 
+                    lazy
+                    loading={loading}
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1}
+                    totalRecords={data?.getAdminCategories?.count ? data?.getAdminCategories?.count : 0} 
+                    onPage={(value) => setPageData(value)}
+                    value={data?.getAdminCategories?.categories ? data?.getAdminCategories?.categories : []} 
+                    paginator 
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                >
                     <Column field="_id" header="ID"></Column>
                     <Column field="name" header="Name"></Column>
                     <Column field="order" header="Order"></Column>

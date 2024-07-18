@@ -35,8 +35,10 @@ export default function Page() {
                     loading={loading}
                     rows={pageData?.rows || 5}
                     first={pageData?.first || 1} 
-                    totalRecords={customerData?.customerAdminList?.count ? customerData?.customerAdminList?.count : 0} onPage={(value) => setPageData(value)} 
-                    value={customerData?.customerAdminList?.customers ? customerData?.customerAdminList?.customers : []} paginator 
+                    totalRecords={customerData?.customerAdminList?.count ? customerData?.customerAdminList?.count : 0}
+                    onPage={(value) => setPageData(value)} 
+                    value={customerData?.customerAdminList?.customers ? customerData?.customerAdminList?.customers : []} 
+                    paginator 
                     rowsPerPageOptions={[5,10,20,50]}
                 >
                     <Column field="_id" header="ID"></Column>
