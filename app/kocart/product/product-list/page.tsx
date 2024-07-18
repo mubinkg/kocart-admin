@@ -2,6 +2,7 @@
 
 import { GET_ADMIN_PRODUCT_LIST } from "@/graphql/product";
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
@@ -15,6 +16,8 @@ import { useState } from "react";
 export default function ProductList() {
     const [visible, setVisible] = useState(false)
     const [product, setProduct] = useState<any>({})
+    const navigation = useRouter()
+    
     const { data } = useQuery(GET_ADMIN_PRODUCT_LIST, {
         variables: {
             "adminProductListDto": {
@@ -35,7 +38,7 @@ export default function ProductList() {
     ];
 
     const productAction = (item: any) => (
-        <div>
+        <div style={{display:"flex", flexDirection:"column"}}>
             <i
                 className="pi pi-eye cursor-pointer"
                 onClick={() => {
@@ -44,7 +47,11 @@ export default function ProductList() {
                     setVisible(true)
                 }}
             >
-
+            </i>
+            <i
+                className="pi pi-eye cursor-pointer"
+                onClick={() => navigation.push(`/kocart/product/edit/${item._id}`)}
+            >
             </i>
         </div>
     )
