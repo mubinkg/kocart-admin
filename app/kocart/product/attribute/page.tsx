@@ -3,7 +3,7 @@
 import Attribute from "@/components/product/Attribute";
 import { ADD_ATTRIBUTE, ADD_ATTRIBUTE_SET, GET_PORODUCT_ATTRIBUTE_LIST, GET_PRODUCT_ATTRIBUTE_SET_LIST } from "@/graphql/product";
 import { getIsAdmin } from "@/util/storageUtils";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { AutoComplete } from "primereact/autocomplete";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Button } from "primereact/button";
@@ -16,7 +16,7 @@ import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 
 export default function ProductAttributeSet() {
-    const {data:productAttributeList} = useQuery(GET_PORODUCT_ATTRIBUTE_LIST, {variables: {query: "", limit: 100, offset: 0}})
+    const [getAttributes,{data:productAttributeList, loading}] = useLazyQuery(GET_PORODUCT_ATTRIBUTE_LIST, {fetchPolicy:"no-cache"})
     const [addAttribute] = useMutation(ADD_ATTRIBUTE)
     const [addAttributeSet, { loading: addAttributeSetLoading }] = useMutation(ADD_ATTRIBUTE_SET)
     const { data: productAttributeSetResponse, refetch: refetchProductAttributeSet } = useQuery(GET_PRODUCT_ATTRIBUTE_SET_LIST, { variables: { limit: 10, offset: 0, query: "" }, fetchPolicy: 'no-cache' })
@@ -28,10 +28,15 @@ export default function ProductAttributeSet() {
     const [attributeSetName, setAttributeSetName] = useState('')
     const toast = useRef<any>(null)
     const [isAdmin,setAdmin] = useState(false)
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
 
     useEffect(()=>{
         setAdmin(getIsAdmin())
     },[])
+
+    useEffect(()=>{
+        getAttributes({variables: {limit: pageData.rows, offset: pageData.first, query: "" }})
+    },[,pageData])
 
     const showError = (msg: string) => {
         toast.current?.show({ severity: 'error', summary: 'Error', detail: msg, life: 3000 });
@@ -105,13 +110,16 @@ export default function ProductAttributeSet() {
             <Card className="m-4">
                 <Button style={{display: isAdmin ? "block": "none"}} label="Create New" onClick={() => setVisible(true)} className="mb-4"/>
                 <DataTable 
-                    title="Attributes" 
+                    title="Attributes"
+                    loading={loading}
                     lazy 
                     paginator 
-                    rows={5} 
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
                     rowsPerPageOptions={[5, 10, 25, 50]}
                     totalRecords={productAttributeList?.productAttributes?.count ? productAttributeList?.productAttributes?.count : 0}
                     value={productAttributeList?.productAttributes?.attributeList || []}
+                    onPage={(value) => setPageData(value)} 
                 >
                     <Column field="_id" header="ID"/>
                     <Column field="attributeSet.attributeSetName" header="Attribute Set"/>
