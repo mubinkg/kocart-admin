@@ -1,21 +1,34 @@
 'use client'
 import { GET_STOCK_LIST } from "@/graphql/stock-management";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Image } from "primereact/image";
+import { useEffect, useState } from "react";
 
 export default function Brand() {
-
-    const {data, loading} = useQuery(GET_STOCK_LIST, {
-        variables: {
-            "limit": 1000,
-            "offset": 0,
-            "query": ""
-          }
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
+    const [getStocks, {data, loading}] = useLazyQuery(GET_STOCK_LIST, {
+        fetchPolicy:"no-cache"
     })
+
+    useEffect(()=>{
+        getStocks({variables: {
+            "limit": pageData.rows,
+            "offset": pageData.first,
+            "query": ""
+          }})
+    }, [])
+
+    useEffect(()=>{
+        getStocks({variables: {
+            "limit": pageData.rows,
+            "offset": pageData.first,
+            "query": ""
+          }})
+    }, [pageData])
 
     const items = [
         { label: 'Home' },
@@ -38,7 +51,9 @@ export default function Brand() {
                 (item?.productType === 'variable' && item.stockType === 'variable') ?
                 (
                     <div>
-                        <DataTable value={item.values}>
+                        <DataTable 
+                            value={item.values}
+                        >
                             <Column header="Name" body={renderAttributeValue}/>
                             <Column header="Stock Qty" field="totalStock"/>
                             <Column header="Action" body={attributeActionRenderer}/>
@@ -69,7 +84,13 @@ export default function Brand() {
                 <DataTable 
                     totalRecords={data?.getAdminStockList?.count ? data?.getAdminStockList.count:0}
                     lazy
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
+                    loading={loading}
                     value={data?.getAdminStockList?.stock ? data?.getAdminStockList?.stock:[]}
+                    onPage={(value) => setPageData(value)}
+                    paginator 
+                    rowsPerPageOptions={[5,10,20,50]} 
                 >
                     <Column header="Name" field="product.pro_input_name"/>
                     <Column header="Image" body={brandImageRenderer}/>
