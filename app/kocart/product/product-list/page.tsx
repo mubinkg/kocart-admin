@@ -1,7 +1,7 @@
 'use client'
 
 import { GET_ADMIN_PRODUCT_LIST } from "@/graphql/product";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
@@ -10,25 +10,28 @@ import { DataTable } from "primereact/datatable";
 import { Dialog } from "primereact/dialog";
 import { Image } from "primereact/image";
 import { Rating } from 'primereact/rating';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function ProductList() {
     const [visible, setVisible] = useState(false)
     const [product, setProduct] = useState<any>({})
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
     const navigation = useRouter()
     
-    const { data } = useQuery(GET_ADMIN_PRODUCT_LIST, {
-        variables: {
+    const [getProducts,{ data ,loading}] = useLazyQuery(GET_ADMIN_PRODUCT_LIST, { fetchPolicy: "no-cache"})
+
+    useEffect(()=>{
+        getProducts({variables:{
             "adminProductListDto": {
                 "category": null,
                 "seller": null,
                 "status": null,
-                "limit": 1000,
-                "offset": 0
+                "limit": pageData.rows,
+                "offset": pageData.first
             }
-        }, fetchPolicy: "no-cache"
-    })
+        }})
+    },[,pageData])
 
     const productImageRenderer = (url: any) => <Image alt="Category Image" width="100" src={url} />
 
@@ -63,10 +66,13 @@ export default function ProductList() {
                 <DataTable
                     lazy
                     paginator
-                    rows={1000}
-                    rowsPerPageOptions={[1000, 2500, 5000]}
+                    loading={loading}
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
+                    rowsPerPageOptions={[5, 10, 25, 50]}
                     value={data?.getAdminProductList?.products || []}
                     totalRecords={data?.getAdminProductList?.count || 0}
+                    onPage={(value) => setPageData(value)} 
                 >
                     <Column body={(item: any) => productImageRenderer(item?.pro_input_image)} header="Image" />
                     <Column field="pro_input_name" header="Name" />
