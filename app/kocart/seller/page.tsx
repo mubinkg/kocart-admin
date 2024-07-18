@@ -1,33 +1,43 @@
 'use client'
 import { GET_SELLET, UPDATE_SELLER } from '@/graphql/seller/query';
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import { BreadCrumb } from 'primereact/breadcrumb';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function Seller() {
-    const {data, loading, error, refetch} = useQuery(GET_SELLET, {variables: {limit: 100, offset:0}})
+    const [getSellers,{data, loading,refetch}] = useLazyQuery(GET_SELLET, {fetchPolicy:"no-cache"})
     const [updateSeller] = useMutation(UPDATE_SELLER)
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
+
+    useEffect(()=>{
+        getSellers({variables: {limit: pageData.rows, offset:pageData.first}})
+    },[])
+
+    useEffect(()=>{
+        getSellers({variables: {limit: pageData.rows, offset:pageData.first}})
+    },[pageData])
 
     const updateStatus = async (id:string, status: string)=>{
         try{
-        await updateSeller({
-            variables: {
-                "updateSellerInput": {
-                  "id": id,
-                  "status": status
+            await updateSeller({
+                variables: {
+                    "updateSellerInput": {
+                    "id": id,
+                    "status": status
+                    }
                 }
-              }
-        })
-        refetch()
-        Swal.fire({
-            title:'Seller Update',
-            icon: 'success',
-            text: 'Update seller success'
-        })
+            })
+            refetch()
+            Swal.fire({
+                title:'Seller Update',
+                icon: 'success',
+                text: 'Update seller success'
+            })
         }catch(err){
             Swal.fire({
                 title:'Seller Update',
@@ -50,7 +60,17 @@ export default function Seller() {
         <div>
             <BreadCrumb model={items} className='m-4'/>
             <Card className='m-4' >
-                <DataTable lazy totalRecords={data ? data?.sellers?.total: 0} onPage={(value)=>console.log(value)} value={data ? data.sellers.sellers : []} paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}>
+                <DataTable 
+                    lazy
+                    loading={loading}
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
+                    totalRecords={data ? data?.sellers?.total: 0} 
+                    onPage={(value)=>setPageData(value)} 
+                    value={data ? data.sellers.sellers : []} 
+                    paginator 
+                    rowsPerPageOptions={[5, 10, 25, 50]}
+                >
                     <Column field="_id" header="ID"></Column>
                     <Column field="name" header="Name"></Column>
                     <Column field="mobile" header="Mobile"></Column>
