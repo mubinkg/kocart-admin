@@ -1,36 +1,46 @@
 'use client'
 
 import { GET_ORDER_LIST } from "@/graphql/order";
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Toast } from "primereact/toast";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function OrderList() {
     const toast = useRef<any>(null)
-
+    const [pageData, setPageData] = useState<any>({rows:5,first:0})
     const showError = (message: string) => {
         toast.current.show({ severity: 'error', summary: 'Error', detail: message, life: 3000 });
     }
-    const { data, error } = useQuery(GET_ORDER_LIST, {
-        variables: {
-            "adminOrderListInput": {
-                "end_date": null,
-                "payment_method": null,
-                "product_type": null,
-                "start_date": null,
-                "status": null
-            }
-        }
+    const [getOrders,{ data, error, loading }] = useLazyQuery(GET_ORDER_LIST, {
+        fetchPolicy:"no-cache"
     })
+
     useEffect(() => {
         if (error) {
             showError('Error on fetching order list.')
         }
     }, [error])
+    
+    useEffect(()=>{
+        getOrders({
+            variables:{
+                "adminOrderListInput": {
+                    "end_date": null,
+                    "payment_method": null,
+                    "product_type": null,
+                    "start_date": null,
+                    "status": null,
+                    "limit": pageData.rows,
+                    "offset": pageData.first
+                }
+            }
+        })
+    },[,pageData])
+
     const items = [
         { label: 'Order' },
         { label: 'Order List' }
@@ -38,11 +48,11 @@ export default function OrderList() {
 
     const orderAction = () => (
         <div className="flex flex-column">
-            <i className="pi pi-eye mb-3" />
-            <i className="pi pi-trash mb-3"/>
-            <i className="pi pi-file mb-3"/>
-            <i className="pi pi-phone mb-3"/>
-            <i className="pi pi-map-marker"/>
+            <i className="pi pi-eye mb-3" style={{cursor:"pointer"}}/>
+            <i className="pi pi-trash mb-3" style={{cursor:"pointer"}}/>
+            <i className="pi pi-file mb-3" style={{cursor:"pointer"}}/>
+            <i className="pi pi-phone mb-3" style={{cursor:"pointer"}}/>
+            <i className="pi pi-map-marker" style={{cursor:"pointer"}}/>
         </div>
     )
 
@@ -53,8 +63,14 @@ export default function OrderList() {
             <Card className="m-4">
                 <DataTable
                     lazy
+                    loading={loading}
+                    rows={pageData?.rows || 5}
+                    first={pageData?.first || 1} 
                     totalRecords={data?.getAdminOrderList?.count ? data?.getAdminOrderList?.count : 0}
                     value={data?.getAdminOrderList?.orders ? data?.getAdminOrderList?.orders : []}
+                    onPage={(value) => setPageData(value)} 
+                    paginator 
+                    rowsPerPageOptions={[5,10,20,50]}
                 >
                     <Column field="_id" header="Order ID"></Column>
                     <Column field="user.name" header="User Name"></Column>
