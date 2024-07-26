@@ -179,3 +179,51 @@ export const GET_PRODUCT_ATTRIBUTE_VALUE_LIST = gql`query AttributeValues($query
     }
   }
 }`
+
+export const GET_PRODUCT_DETAILS = gql`query Product($productId: String!) {
+  product(productId: $productId) {
+    _id
+    attribute_values
+    brand {
+      _id
+      name
+      image
+    }
+    cancelable_till
+    category {
+      _id
+    }
+    download_allowed
+    download_link
+    download_link_type
+    extra_input_description
+    globalOrderNo
+    guarantee_period
+    indicator
+    is_favorite
+    is_cancelable
+    is_returnable
+    made_in
+    minimum_order_quantity
+    pro_input_description
+    other_images
+    pro_input_image
+    pro_input_name
+    pro_input_video
+    pro_input_zip
+    product_type
+    quantity_step_size
+    seller {
+      _id
+    }
+    short_description
+    status
+    tags
+    tax
+    total_allowed_quantity
+    variant
+    video
+    video_type
+    warranty_period
+  }
+}`

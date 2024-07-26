@@ -5,6 +5,11 @@ export const items = [
     { label: 'Add Product' }
 ];
 
+export const updateProduct = [
+    { label: 'Product' },
+    { label: 'Update Product' }
+];
+
 export const productType:OptionType[] = [
     {
         label: 'Digital Product',
