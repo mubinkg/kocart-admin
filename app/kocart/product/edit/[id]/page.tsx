@@ -7,10 +7,10 @@ import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
 import { TabPanel, TabView } from "primereact/tabview";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import Select from 'react-select'
 import { Editor } from 'primereact/editor';
-import { countries, indicatorOptions, productType, updateProduct, videoTypeOptions } from "@/data/product/items";
+import { countries, indicatorMap, indicatorOptions, productType, updateProduct, videoTypeOptions } from "@/data/product/items";
 import { ProductInputType } from "@/data/product/types";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_PRODUCT, GET_SELLER } from "@/graphql/product";
@@ -63,9 +63,8 @@ export default function AddProduct({params:{id}}:IProps) {
         }, fetchPolicy: "no-cache"
     })
     const [createProduct, { loading: createProductLoading, data:creaProductData }] = useMutation(CREATE_PRODUCT)
-    const { register, setValue, watch, handleSubmit} = useForm<ProductInputType>({
+    const { register, setValue, watch, handleSubmit, control, getValues} = useForm<ProductInputType>({
         defaultValues: {
-            product_type: "PHYSICAL_PRODUCT",
             type_of_product: 'none',
             stock_management: false,
             stockType: 'none',
@@ -85,7 +84,25 @@ export default function AddProduct({params:{id}}:IProps) {
     useEffect(()=>{
         console.log('product details: ', productDetails)
         if(productDetails){
-            setValue('pro_input_image', productDetails?.pro_input_name)
+            setValue('pro_input_name', productDetails?.pro_input_name)
+            setValue('short_description', productDetails?.short_description)
+            setValue('tags', productDetails?.tags?.split(','))
+            setValue('product_type', productDetails.product_type)
+            setValue('made_in', productDetails.made_in)
+            setValue('pro_input_image', productDetails.pro_input_image)
+            setValue('other_images', productDetails.other_images)
+            setValue('extra_input_description', productDetails.extra_input_description)
+            setValue('indicator', productDetails.indicator)
+            setValue('made_in', productDetails.made_in)
+            setValue('brand', productDetails?.brand?._id)
+            setValue('total_allowed_quantity', productDetails?.total_allowed_quantity)
+            setValue('minimum_order_quantity', productDetails.minimum_order_quantity)
+            setValue('quantity_step_size', productDetails.quantity_step_size)
+            setValue('warranty_period', productDetails.warranty_period)
+            setValue('guarantee_period', productDetails.guarantee_period)
+            setValue('is_returnable', productDetails.is_returnable)
+            setValue('is_cancelable', productDetails.is_cancelable)
+            
         }
     }, [productDetails])
 
@@ -111,7 +128,13 @@ export default function AddProduct({params:{id}}:IProps) {
             <Card className="m-4">
                 <div className="flex flex-column">
                     <p className="mb-2 font-semibold">Product Name<span className="text-red-500">*</span></p>
-                    <InputText {...register('pro_input_name')} className="w-full block" id="username" placeholder="Product Name" />
+                    <Controller
+                        control={control}
+                        name="pro_input_name"
+                        render={
+                            ({field})=><InputText className="w-full block" id="username" placeholder="Product Name" {...field} />
+                        }
+                    />
                 </div>
                 <div className="flex justfy-content-between gap-4">
                     {
@@ -134,8 +157,10 @@ export default function AddProduct({params:{id}}:IProps) {
                                 setValue('product_type', option.value)
                                 option.value === 'DIGITAL_PRODUCT' ? setValue('type_of_product', 'digital') : setValue('type_of_product', 'simple')
                             }}
-                            defaultValue={productType[1]}
+                            value={productType.find((val)=>val.value === getValues('product_type'))}
                             isClearable
+                            isSearchable
+                            isLoading
                         />
                     </div>
                 </div>
@@ -152,16 +177,33 @@ export default function AddProduct({params:{id}}:IProps) {
                         {
                             watch('product_type') === 'PHYSICAL_PRODUCT' ? (<div className="pr-3 flex flex-column w-3">
                                 <p className="mb-2 font-semibold">Indicator</p>
-                                <Select options={indicatorOptions} onChange={(value: any) => setValue('indicator', value.value)} />
+                                <Select 
+                                    options={indicatorOptions} 
+                                    onChange={(value: any) => setValue('indicator', value.value)}
+                                    isClearable
+                                    value={indicatorOptions.find((val)=>val.value === indicatorMap[watch('indicator')||0])}
+                                />
                             </div>) : ""
                         }
                         <div className="pr-3 flex flex-column w-3">
                             <p className="mb-2 font-semibold">Made In</p>
-                            <Select options={countryOptions} onChange={(value: any) => setValue('made_in', value.value)} />
+                            <Select 
+                                options={countryOptions} 
+                                onChange={(value: any) => setValue('made_in', value.value)}
+                                isClearable
+                                isSearchable
+                                value={countryOptions.find((val)=>val.value === watch('made_in'))} 
+                            />
                         </div>
                         <div className="flex flex-column w-3 pr-3">
                             <p className="mb-2 font-semibold">Brand</p>
-                            <Select options={brandList?.adminBrandList?.brands?.length ? brandList?.adminBrandList?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} onChange={(option: any) => setValue('brand', option.value)} />
+                            <Select 
+                                options={brandList?.adminBrandList?.brands?.length ? brandList?.adminBrandList?.brands.map((d: any) => ({ label: d.name, value: d._id })) : []} 
+                                onChange={(option: any) => setValue('brand', option.value)} 
+                                isClearable
+                                isSearchable
+                                value={brandList?.adminBrandList?.brands?.length ? brandList?.adminBrandList?.brands.map((d: any) => ({ label: d.name, value: d._id })).find((val:any)=>val.value === watch('brand')) : {}}
+                            />
                         </div>
                         {
                             watch('product_type') === 'PHYSICAL_PRODUCT' ?

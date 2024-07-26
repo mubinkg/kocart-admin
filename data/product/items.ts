@@ -84,6 +84,12 @@ export const indicatorOptions:OptionType[] = [
     }
 ]
 
+export const indicatorMap:any = {
+    '0': "NONE",
+    '1': "HALAL",
+    "2": "NON_HALAL"
+}
+
 export const countries = [ 
     {name: 'Afghanistan', code: 'AF'}, 
     {name: 'Åland Islands', code: 'AX'}, 
