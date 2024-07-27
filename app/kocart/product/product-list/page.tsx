@@ -75,6 +75,7 @@ export default function ProductList() {
             </i>
             <i
                 className="pi pi-star cursor-pointer mt-3"
+                onClick={() => navigation.push(`/kocart/product/ratings/${item._id}`)}
             >
             </i>
             <i

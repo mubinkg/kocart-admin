@@ -1,9 +1,8 @@
 'use client'
 
-import { SLIDER_PRODUCT } from "@/graphql/slider";
 import { useLazyQuery } from "@apollo/client";
 import { Card } from "primereact/card";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { ADMIN_PRODUCT_FAQ_LIST } from "@/graphql/faq";
@@ -20,7 +19,7 @@ export default function Page({params}:any) {
 
     const items = [
         { label: 'Product' },
-        { label: 'Product Faq List' }
+        { label: 'Product Rating List' }
     ];
 
     return (
@@ -39,9 +38,10 @@ export default function Page({params}:any) {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                 >
                     <Column field="_id" header="ID"></Column>
-                    <Column field="question" header="Question"></Column>
-                    <Column field="ans" header="Answr"></Column>
-                    <Column field="user.account_name" header="User"></Column>
+                    <Column field="username" header="Username"></Column>
+                    <Column field="rating" header="Rating"></Column>
+                    <Column field="image" header="Image"></Column>
+                    <Column field="createdAt" header="Date Added"></Column>
                 </DataTable>
             </Card>
         </div>
