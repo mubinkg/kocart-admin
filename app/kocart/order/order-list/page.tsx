@@ -2,14 +2,17 @@
 
 import { GET_ORDER_LIST } from "@/graphql/order";
 import { useLazyQuery, useQuery } from "@apollo/client";
+import { useRouter } from "next/navigation";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Card } from "primereact/card";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
+import Swal from "sweetalert2";
 
 export default function OrderList() {
+    const navigation = useRouter()
     const toast = useRef<any>(null)
     const [pageData, setPageData] = useState<any>({rows:5,first:0})
     const showError = (message: string) => {
@@ -46,10 +49,29 @@ export default function OrderList() {
         { label: 'Order List' }
     ];
 
-    const orderAction = () => (
+    const orderAction = (item:any) => (
         <div className="flex flex-column">
-            <i className="pi pi-eye mb-3" style={{cursor:"pointer"}}/>
-            <i className="pi pi-trash mb-3" style={{cursor:"pointer"}}/>
+            <i 
+                className="pi pi-eye mb-3" 
+                style={{cursor:"pointer"}}
+                onClick={()=>navigation.push(`/kocart/order/${item._id}`)}
+            />
+            <i 
+                className="pi pi-trash mb-3" 
+                style={{cursor:"pointer"}}
+                onClick={() =>
+                    Swal.fire({
+                        title: "Delete Order",
+                        text: "Are you sure to delete this order",
+                        showCancelButton: true,
+                        cancelButtonColor:"green",
+                        confirmButtonColor: 'red',
+                        confirmButtonText: "Delete"
+                    }).then(res=>{
+                        console.log(res)
+                    })
+                }
+            />
             <i className="pi pi-file mb-3" style={{cursor:"pointer"}}/>
             <i className="pi pi-phone mb-3" style={{cursor:"pointer"}}/>
             <i className="pi pi-map-marker" style={{cursor:"pointer"}}/>
@@ -83,7 +105,7 @@ export default function OrderList() {
                     <Column field="final_total" header="Final Total($)" />
                     <Column field="payment_method" header="Payment Method" />
                     <Column field="created_at" header="Order Date" />
-                    <Column body={() => orderAction()} header="Action" />
+                    <Column body={(item) => orderAction(item)} header="Action" />
                 </DataTable>
             </Card>
         </div>
