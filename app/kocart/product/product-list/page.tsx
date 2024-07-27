@@ -11,6 +11,7 @@ import { Dialog } from "primereact/dialog";
 import { Image } from "primereact/image";
 import { Rating } from 'primereact/rating';
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 
 export default function ProductList() {
@@ -58,7 +59,27 @@ export default function ProductList() {
             </i>
             <i
                 className="pi pi-trash cursor-pointer mt-3"
-                onClick={() => navigation.push(`/kocart/product/edit/${item._id}`)}
+                onClick={() =>
+                    Swal.fire({
+                        title: "Delete Product",
+                        text: "Are you sure to delete this product",
+                        showCancelButton: true,
+                        cancelButtonColor:"green",
+                        confirmButtonColor: 'red',
+                        confirmButtonText: "Delete"
+                    }).then(res=>{
+                        console.log(res)
+                    })
+                }
+            >
+            </i>
+            <i
+                className="pi pi-star cursor-pointer mt-3"
+            >
+            </i>
+            <i
+                className="pi pi-question-circle cursor-pointer mt-3"
+                onClick={() => navigation.push(`/kocart/product/faq/${item._id}`)}
             >
             </i>
         </div>
