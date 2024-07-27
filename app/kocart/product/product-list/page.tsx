@@ -52,7 +52,12 @@ export default function ProductList() {
             >
             </i>
             <i
-                className="pi pi-pen-to-square cursor-pointer mt-1"
+                className="pi pi-pen-to-square cursor-pointer mt-3"
+                onClick={() => navigation.push(`/kocart/product/edit/${item._id}`)}
+            >
+            </i>
+            <i
+                className="pi pi-trash cursor-pointer mt-3"
                 onClick={() => navigation.push(`/kocart/product/edit/${item._id}`)}
             >
             </i>
