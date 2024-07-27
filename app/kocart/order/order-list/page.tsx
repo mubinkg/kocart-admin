@@ -73,7 +73,6 @@ export default function OrderList() {
                 }
             />
             <i className="pi pi-file mb-3" style={{cursor:"pointer"}}/>
-            <i className="pi pi-phone mb-3" style={{cursor:"pointer"}}/>
             <i className="pi pi-map-marker" style={{cursor:"pointer"}}/>
         </div>
     )
