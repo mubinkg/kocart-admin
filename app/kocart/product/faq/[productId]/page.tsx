@@ -29,9 +29,9 @@ export default function Page({params}:any) {
             <Card className="m-4 p-2">
                 <DataTable 
                     lazy 
-                    totalRecords={faqList?.adminFaqList?.count ? faqList?.adminFaqList?.count : 0} 
+                    totalRecords={faqList?.getProductFaqList?.count ? faqList?.getProductFaqList?.count : 0} 
                     onPage={(value) => setPageData(value)} 
-                    value={faqList?.adminFaqList?.faqs ? faqList?.adminFaqList?.faqs : []} 
+                    value={faqList?.getProductFaqList?.faqs ? faqList?.getProductFaqList?.faqs : []} 
                     paginator 
                     rows={pageData?.rows || 5}
                     first={pageData?.first || 1} 
