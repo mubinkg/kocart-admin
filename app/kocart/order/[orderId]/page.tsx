@@ -64,7 +64,7 @@ export default function Page({params}:any){
                 <Divider/>
                 <div className="flex mx-2 align-items-center content-center">
                     <h4 style={{width: "120px"}}>Address</h4>
-                    <h4>{order?.address}</h4>
+                    <h4>{order?.address?.address}</h4>
                 </div>
                 <Divider/>
                 <div className="flex mx-2 align-items-center content-center">

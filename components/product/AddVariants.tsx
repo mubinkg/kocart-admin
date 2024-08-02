@@ -29,6 +29,8 @@ export default function AddVariants({ attributes, addtionalInfo, createProductVa
         name: 'varients'
     })
 
+    console.log('Field list : ', fields)
+
     useEffect(() => {
         function findCombinationsIterative(arrays: any) {
             const results = [[]];
@@ -51,9 +53,9 @@ export default function AddVariants({ attributes, addtionalInfo, createProductVa
             return results;
         }
         const sortedAttributes = (attributes?.productAttributes?.sort((a: any, b: any) => a.attributeValues
-            .length - b.attributeValues
-                .length)) || []
+            .length - b.attributeValues.length)) || []
         const combinations = findCombinationsIterative(sortedAttributes)
+        console.log('Combination lists ', combinations)
         combinations.forEach((val: any) => {
             const titles = val?.map((v: any) => v.varientName)
             const id = val?.map((v: any) => v.attributeValue)

@@ -272,13 +272,18 @@ export default function AddProduct() {
                             <AddAttibute attributes={attributes} isSaveSettings={addtionalInfo?.isSaveSettings} setAttributes={setAttributes} />
                         </TabPanel>
                         {
-                            addtionalInfo?.type_of_product === 'variable' ? (<TabPanel header="Variants">
-                                <AddVariants 
-                                    attributes={attributes}
-                                    addtionalInfo = {addtionalInfo}
-                                    createProductVariantInput={createProductVariantInput} setCreateProductVariantInput={setCreateProductVariantInput} 
-                                />
-                            </TabPanel>) : ""
+                            addtionalInfo?.type_of_product === 'variable' ? 
+                            (
+                                <TabPanel header="Variants">
+                                    <AddVariants 
+                                        attributes={attributes}
+                                        addtionalInfo = {addtionalInfo}
+                                        createProductVariantInput={createProductVariantInput} 
+                                        setCreateProductVariantInput={setCreateProductVariantInput} 
+                                    />
+                                </TabPanel>
+                            ) 
+                            : ""
                         }
                     </TabView>
                 </div>

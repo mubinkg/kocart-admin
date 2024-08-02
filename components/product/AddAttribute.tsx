@@ -11,13 +11,11 @@ export default function AddAttibute({attributes, isSaveSettings, setAttributes }
     const {data} = useQuery(LOAD_ATTRIBUTE)
     const [isSave, setIsSave] = useState(false)
     const [attributeValues, setAttributeValues] = useState([])
-    const { control, handleSubmit,setValue } = useForm()
+    const { control, handleSubmit,setValue, reset } = useForm()
     const { append, remove, fields } = useFieldArray({
         control,
         name: 'productAttributes'
     })
-
-    console.log(data)
 
     useEffect(()=>{
         attributes?.productAttributes?.forEach((val:any)=>{
@@ -29,6 +27,7 @@ export default function AddAttibute({attributes, isSaveSettings, setAttributes }
     },[])
 
     function submitHandler(values: any) {
+        console.log('Attribute value list: ', values)
         setAttributes(values)
         setIsSave(true)
     }
