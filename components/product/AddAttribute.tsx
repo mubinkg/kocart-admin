@@ -18,6 +18,7 @@ export default function AddAttibute({attributes, isSaveSettings, setAttributes }
     })
 
     useEffect(()=>{
+        console.log(attributes?.productAttributes)
         attributes?.productAttributes?.forEach((val:any)=>{
             append({
                 attribute: val.attribute,

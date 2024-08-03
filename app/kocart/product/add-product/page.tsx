@@ -29,7 +29,6 @@ import MediaPicker from "@/components/media/MediaPicker";
 import { Image } from "primereact/image";
 
 
-
 export default function AddProduct() {
     const [visibleMainImage, setVisibleMainImage] = useState(false)
     const [visibleOtherImage, setVisibleOtherImage] = useState(false)
