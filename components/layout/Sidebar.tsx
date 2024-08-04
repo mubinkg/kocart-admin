@@ -257,6 +257,13 @@ export default function TemplateDemo() {
         menuItems.push(customerItems)
     }
     menuItems.push({
+        label: 'Withdrawal Request',
+        icon: 'pi pi-money-bill',
+        template: itemRenderer,
+        url: '/kocart/withdrawal-request'
+    })
+    
+    menuItems.push({
         label: 'Transactions',
         icon: 'pi pi-credit-card',
         template: itemRenderer,
