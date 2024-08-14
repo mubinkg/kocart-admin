@@ -106,7 +106,7 @@ export default function TemplateDemo() {
     })
     menuItems.push({
         label: 'Chat',
-        icon: 'pi pi-list-check',
+        icon: 'pi pi-inbox',
         template: itemRenderer,
         url: '/kocart/chat'
     })
