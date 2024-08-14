@@ -34,3 +34,10 @@ export const GET_STOCK_LIST = gql`query GetAdminStockList($limit: Float!, $offse
     }
   }
 }`
+
+export const UPDATE_STOCK = gql`mutation UpdateProductVariant($updateProductVariantInput: UpdateProductVariantInput!) {
+  updateProductVariant(updateProductVariantInput: $updateProductVariantInput) {
+    _id
+    totalStock
+  }
+}`

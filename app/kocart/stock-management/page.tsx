@@ -1,6 +1,6 @@
 'use client'
-import { GET_STOCK_LIST } from "@/graphql/stock-management";
-import { useLazyQuery, useQuery } from "@apollo/client";
+import { GET_STOCK_LIST, UPDATE_STOCK } from "@/graphql/stock-management";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -31,6 +31,9 @@ export default function Brand() {
     })
     const [visible, setVisible] = useState(false);
     const [item, setItem] = useState<any>({})
+    const [quantity,setQuantity] = useState<any>(0)
+    const [type, setType] = useState<any>('add')
+    const [updateStock, {loading:updateStockLoading}] = useMutation(UPDATE_STOCK)
 
     useEffect(()=>{
         getStocks({variables: {
@@ -61,13 +64,32 @@ export default function Brand() {
         </p>
     )
 
+    function submitHandler(){
+        const data = {
+            quantity,
+            type,
+            id: item._id
+        }
+        updateStock({
+            variables: {
+                updateProductVariantInput: data
+            }
+        })
+        setVisible(false)
+        getStocks({variables: {
+            "limit": pageData.rows,
+            "offset": pageData.first,
+            "query": ""
+          }})
+    }
+
     const attributeActionRenderer =  
     (item:any)=>(
         <i 
             onClick={()=>{
                 setVisible(true);
-                setItem(item)
-                console.log(item)
+                setItem(item);
+                setQuantity(0);
             }} 
             className="pi pi-pen-to-square cursor-pointer"
         />
@@ -134,13 +156,13 @@ export default function Brand() {
                 />
                 <div className="flex w-12 flex-column">
                     <p className="my-3 font-semibold">Current Stock</p>
-                    <InputNumber className="w-12" value={item?.totalStock}/>
+                    <InputNumber className="w-12" disabled value={item?.totalStock}/>
                     <p className="my-3 font-semibold">Quantity <span style={{ color: "red" }}>*</span></p>
-                    <InputNumber className="w-12"/>
+                    <InputNumber value={quantity} onChange={(e)=>setQuantity(e.value)} className="w-12"/>
                     <p className="my-3 font-semibold">Type</p>
-                    <Select className="w-12" options={stockUpdateOptions} defaultValue={stockUpdateOptions[0]}/>
+                    <Select onChange={(value)=>setType(value?.value)} className="w-12" options={stockUpdateOptions} defaultValue={stockUpdateOptions[0]}/>
                 </div>
-                <Button className="w-12 mt-4" label="Submit"/>
+                <Button onClick={submitHandler} className="w-12 mt-4" label="Submit"/>
             </Dialog>
         </div>
     )
