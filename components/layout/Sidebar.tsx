@@ -105,6 +105,12 @@ export default function TemplateDemo() {
         url: '/kocart/stock-management'
     })
     menuItems.push({
+        label: 'Chat',
+        icon: 'pi pi-list-check',
+        template: itemRenderer,
+        url: '/kocart/chat'
+    })
+    menuItems.push({
         label: 'Order',
         icon: 'pi pi-list-check',
         items: [
