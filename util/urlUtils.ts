@@ -1,5 +1,5 @@
-const env:any = 'production'
-// const env = 'dev'
+// const env:any = 'production'
+const env = 'dev'
 // const env:any = 'uat'
 
 export const loginApiUrl = env === 'dev' ?"http://localhost:3001/graphql" : env === 'uat' ? "http://52.201.228.135/api/graphql/": "http://kocart.com/api/graphql/";
