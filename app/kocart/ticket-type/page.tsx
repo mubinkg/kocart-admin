@@ -1,7 +1,7 @@
 'use client'
 
 import { CREATE_CITY } from "@/graphql/city";
-import { CREATE_TICKET_TYPE, DELETE_TICKET_TYPE, GET_TICKET_TYPES } from "@/graphql/ticket";
+import { CREATE_TICKET_TYPE, DELETE_TICKET_TYPE, GET_TICKET_TYPES, UPDATE_TICKET_TYPE } from "@/graphql/ticket";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -15,12 +15,16 @@ import Swal from "sweetalert2";
 export default function Page() {
 
     const [createTicket, {loading:loadingTicketType}] = useMutation(CREATE_TICKET_TYPE)
+    const [updateTicketType, {loading:updateTicketTypeLoading}] = useMutation(UPDATE_TICKET_TYPE)
     const [getTickets, { data, loading }] = useLazyQuery(GET_TICKET_TYPES, { fetchPolicy: "no-cache" })
     const [deleteTicketType, {loading:deleteTicketTypeLoading}] = useMutation(DELETE_TICKET_TYPE)
 
     const [visible, setVisible] = useState(false)
+    const [updateVisible, setUpdateVisible] = useState(false)
     const [title, setTitle] = useState<string>('')
     const [pageData, setPageData] = useState<any>(null)
+    const [updateTitle, setUpdateTitle] = useState<string>('')
+    const [id, setId] = useState<string>('')
 
     async function createCityHandler() {
         try {
@@ -93,10 +97,39 @@ export default function Page() {
         })
     }
 
+    async function updateTicketTypeHandler(){
+        try{
+            await updateTicketType({
+                variables: {
+                    "updateTicketTypeInput": {
+                      "id": id,
+                      "title":updateTitle
+                    }
+                  }
+            })
+            setUpdateTitle('');
+            setId('');
+            setUpdateVisible(false);
+            await getTickets({
+                variables: {
+                    "limit": 5,
+                    "offset": 0,
+                }
+            });
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
     function ticketAction(item:any){
         return (
             <div>
-                <i className="pi pi-pen-to-square mr-3 cursor-pointer"></i>
+                <i onClick={()=>{
+                    setUpdateTitle(item.title);
+                    setUpdateVisible(true);
+                    setId(item._id);
+                }} className="pi pi-pen-to-square mr-3 cursor-pointer"></i>
                 <i onClick={()=>deleteTicketTypeHandler(item._id)} className="pi pi-trash cursor-pointer"></i>
             </div>
         )
@@ -128,7 +161,14 @@ export default function Page() {
                         <p className="mb-2 font-semibold">Title</p>
                         <InputText value={title} onChange={(e) => setTitle(e.target.value)} className="w-full block" id="cityname" placeholder="Enter ticket title" />
                     </div>
-                    <Button disabled={loadingTicketType} label={loading ? "Loading..." : "Submit"} className="mt-4" onClick={createCityHandler} />
+                    <Button disabled={loadingTicketType} label={loadingTicketType ? "Loading..." : "Submit"} className="mt-4" onClick={createCityHandler} />
+                </Dialog>
+                <Dialog position="top" header="Update Ticket Types" visible={updateVisible} onHide={() => setUpdateVisible(false)} className="w-6">
+                    <div className="flex flex-column">
+                        <p className="mb-2 font-semibold">Title</p>
+                        <InputText value={updateTitle} onChange={(e) => setUpdateTitle(e.target.value)} className="w-full block" id="cityname" placeholder="Enter ticket title" />
+                    </div>
+                    <Button disabled={updateTicketTypeLoading} label={updateTicketTypeLoading ? "Loading..." : "Submit"} className="mt-4" onClick={updateTicketTypeHandler} />
                 </Dialog>
             </Card>
         </div>

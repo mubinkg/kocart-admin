@@ -23,3 +23,9 @@ export const DELETE_TICKET_TYPE = gql`mutation DeleteTicketType($deleteTicketTyp
     title
   }
 }`
+
+export const UPDATE_TICKET_TYPE = gql`mutation UpdateTicketType($updateTicketTypeInput: UpdateTicketType!) {
+  updateTicketType(updateTicketTypeInput: $updateTicketTypeInput) {
+    _id
+  }
+}`
