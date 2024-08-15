@@ -182,6 +182,14 @@ export default function TemplateDemo() {
             url: '/kocart/slider'
         })
     }
+    if(isAdmin){
+        menuItems.push({
+            label: 'Offers',
+            icon: 'pi pi-list-check',
+            template: itemRenderer,
+            url: '/kocart/offer'
+        })
+    }
 
     menuItems.push({
         label: 'Media',
