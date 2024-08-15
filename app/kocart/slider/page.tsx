@@ -16,7 +16,7 @@ import { Image } from "primereact/image";
 
 
 export default function Page() {
-    const {data:sliderList, refetch} = useQuery(GET_SLIDER_LIST, {variables: {limit: 1000, offset: 0}})
+    const {data:sliderList, refetch} = useQuery(GET_SLIDER_LIST, {variables: {limit: 1000, offset: 0}, fetchPolicy: "no-cache"})
     const [createSlider, {loading: sliderCreateLoading}] = useMutation(CREATE_SLIDER)
     const {data: slitedTypeList} = useQuery(SLIDER_TYPE)
     const [getSliderProduct] = useLazyQuery(SLIDER_PRODUCT)
