@@ -1,7 +1,7 @@
 'use client'
 
 import { CREATE_CITY } from "@/graphql/city";
-import { CREATE_TICKET_TYPE, GET_TICKET_TYPES } from "@/graphql/ticket";
+import { CREATE_TICKET_TYPE, DELETE_TICKET_TYPE, GET_TICKET_TYPES } from "@/graphql/ticket";
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
@@ -16,6 +16,7 @@ export default function Page() {
 
     const [createTicket, {loading:loadingTicketType}] = useMutation(CREATE_TICKET_TYPE)
     const [getTickets, { data, loading }] = useLazyQuery(GET_TICKET_TYPES, { fetchPolicy: "no-cache" })
+    const [deleteTicketType, {loading:deleteTicketTypeLoading}] = useMutation(DELETE_TICKET_TYPE)
 
     const [visible, setVisible] = useState(false)
     const [title, setTitle] = useState<string>('')
@@ -63,12 +64,11 @@ export default function Page() {
             variables: {
                 limit: limit,
                 offset: offset,
-                query: ""
             }
         })
     }
 
-    function deleteTicketType(){
+    function deleteTicketTypeHandler(id:string){
         Swal.fire({
             title: "Are You Sure!",
             text: "You won't be able to revert this!",
@@ -76,14 +76,28 @@ export default function Page() {
             cancelButtonColor:"red",
             confirmButtonColor: "blue",
             confirmButtonText:"Yes, delete it!"
+        }).then(async (res)=>{
+            if(res.isConfirmed){
+                deleteTicketType({
+                    variables: {
+                        "deleteTicketTypeId": id
+                      }
+                })
+                await getTickets({
+                    variables: {
+                        "limit": 5,
+                        "offset": 0,
+                    }
+                })
+            }
         })
     }
 
-    function ticketAction(){
+    function ticketAction(item:any){
         return (
             <div>
                 <i className="pi pi-pen-to-square mr-3 cursor-pointer"></i>
-                <i onClick={deleteTicketType} className="pi pi-trash cursor-pointer"></i>
+                <i onClick={()=>deleteTicketTypeHandler(item._id)} className="pi pi-trash cursor-pointer"></i>
             </div>
         )
     }

@@ -16,3 +16,10 @@ export const CREATE_TICKET_TYPE = gql`mutation CreateTicketType($createTicketTyp
       title
     }
   }`
+
+export const DELETE_TICKET_TYPE = gql`mutation DeleteTicketType($deleteTicketTypeId: String!) {
+  deleteTicketType(id: $deleteTicketTypeId) {
+    _id
+    title
+  }
+}`
