@@ -110,6 +110,28 @@ export default function TemplateDemo() {
         template: itemRenderer,
         url: '/kocart/chat'
     })
+
+    if(isAdmin){
+        menuItems.push({
+            label: 'Ticket',
+            icon: 'pi pi-list-check',
+            items: [
+                {
+                    label: 'Ticket Type',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/ticket-type'
+                },
+                {
+                    label: 'Tickets',
+                    icon: 'pi pi-align-left',
+                    template: subItemRenderer,
+                    url: '/kocart/ticket'
+                },
+            ]
+        })
+    }
+
     menuItems.push({
         label: 'Order',
         icon: 'pi pi-list-check',
