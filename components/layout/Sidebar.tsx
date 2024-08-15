@@ -94,13 +94,13 @@ export default function TemplateDemo() {
     })
     menuItems.push({
         label: 'Category',
-        icon: 'pi pi-list-check',
+        icon: 'pi pi-sitemap',
         template: itemRenderer,
         url: '/kocart/category'
     })
     menuItems.push({
         label: 'Manage Stock',
-        icon: 'pi pi-list-check',
+        icon: 'pi pi-cart-plus',
         template: itemRenderer,
         url: '/kocart/stock-management'
     })
@@ -177,7 +177,7 @@ export default function TemplateDemo() {
     if(isAdmin){
         menuItems.push({
             label: 'Sliders',
-            icon: 'pi pi-list-check',
+            icon: 'pi pi-sliders-h',
             template: itemRenderer,
             url: '/kocart/slider'
         })
@@ -185,7 +185,7 @@ export default function TemplateDemo() {
     if(isAdmin){
         menuItems.push({
             label: 'Offers',
-            icon: 'pi pi-list-check',
+            icon: 'pi pi-wallet',
             template: itemRenderer,
             url: '/kocart/offer'
         })
