@@ -29,3 +29,24 @@ export const UPDATE_TICKET_TYPE = gql`mutation UpdateTicketType($updateTicketTyp
     _id
   }
 }`
+
+export const GET_TICKET_LIST = gql`query GetAdminTickets($limit: Float!, $offset: Float!) {
+  getAdminTickets(limit: $limit, offset: $offset) {
+    count
+    tickets {
+      _id
+      created_at
+      description
+      email
+      status
+      subject
+      ticket_type {
+        _id
+        title
+      }
+      user {
+        user_name
+      }
+    }
+  }
+}`
