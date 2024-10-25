@@ -4,6 +4,7 @@ import { baseUrl } from '@/util/urlUtils'
 import { cookies } from 'next/headers'
 
 export async function signinAction(phone:string, password:string) {
+    console.log(phone, password)
     try {
         const res = await fetch(baseUrl, {
             method: 'POST',
@@ -39,7 +40,7 @@ export async function signinAction(phone:string, password:string) {
         })
 
         const data = await res.json()
-        if(!data?.signinSeller?.access_token){
+        if(!data?.data?.signinSeller?.access_token){
             throw new Error("Invalid credentials")
         }
         cookies().set('access_token', data?.data?.signinSeller?.access_token)
