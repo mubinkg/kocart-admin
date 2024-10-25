@@ -39,6 +39,9 @@ export async function signinAction(phone:string, password:string) {
         })
 
         const data = await res.json()
+        if(!data?.signinSeller?.access_token){
+            throw new Error("Invalid credentials")
+        }
         cookies().set('access_token', data?.data?.signinSeller?.access_token)
         return data
     } catch (err) {

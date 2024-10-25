@@ -27,7 +27,7 @@ export default function Home() {
       setLoading(false)
       router.push('/kocart/dashboard')
     } catch (err:any) {
-      const errmsg = (err?.response?.data?.data?.errors[0]?.message) || "Error on login"
+      const errmsg = (err?.response?.data?.data?.errors[0]?.message) || "Invalid credentials"
       Swal.fire({
         title: 'Seller Signin',
         text: errmsg,
