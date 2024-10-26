@@ -34,7 +34,8 @@ export default function AddProduct() {
     const [visibleOtherImage, setVisibleOtherImage] = useState(false)
     const [visibleVideImage, setVisibleVideImage] = useState(false)
 
-    const [isAdmin,setAdmin] = useState()
+    const [isAdmin,setAdmin] = useState(false)
+    console.log(isAdmin)
     const router = useRouter()
 
     const [attributes, setAttributes] = useState<any>([])
@@ -71,6 +72,8 @@ export default function AddProduct() {
             const user = getUser()
             setValue('seller_id',user?._id)
             setAdmin(admin)
+        }else{
+            setAdmin(true)
         }
     },[])
 
