@@ -181,6 +181,12 @@ export default function TemplateDemo() {
         url: '/kocart/product/add-product'
     })
     productItems.items.push({
+        label: 'Bulk Upload',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/product/bulk-upload'
+    })
+    productItems.items.push({
         label: 'Manage Product',
         icon: 'pi pi-align-left',
         template: subItemRenderer,

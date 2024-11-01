@@ -87,7 +87,7 @@ export default function FileDng({fileUploadRef,clear }:any) {
             <Tooltip target=".custom-upload-btn" content="Upload" position="bottom" />
             <Tooltip target=".custom-cancel-btn" content="Clear" position="bottom" />
 
-            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple accept="image/*" maxFileSize={10000000000}
+            <FileUpload ref={fileUploadRef} name="demo[]" url="/api/upload" multiple maxFileSize={10000000000}
                 onUpload={onTemplateUpload} onError={onTemplateClear} onClear={onTemplateClear}
                 headerTemplate={headerTemplate} itemTemplate={itemTemplate} emptyTemplate={emptyTemplate}
                 chooseOptions={chooseOptions} uploadOptions={uploadOptions} cancelOptions={cancelOptions} />

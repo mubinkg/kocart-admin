@@ -227,3 +227,7 @@ export const GET_PRODUCT_DETAILS = gql`query Product($productId: String!) {
     warranty_period
   }
 }`
+
+export const CREATE_BULK_PRODUCT = gql`mutation CreateBulkProduct($bulkProductInput: BulkProductInput!) {
+  createBulkProduct(bulkProductInput: $bulkProductInput)
+}`
