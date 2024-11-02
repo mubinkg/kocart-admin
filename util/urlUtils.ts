@@ -1,5 +1,5 @@
-// const env:any = 'production'
-const env = 'dev'
+const env:any = 'production'
+// const env = 'dev'
 
 export const loginApiUrl = env === 'dev' ? "http://localhost:3001/graphql" : "http://35.208.70.7/seller-signin";
 
