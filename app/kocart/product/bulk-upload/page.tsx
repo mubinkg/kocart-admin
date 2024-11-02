@@ -13,8 +13,8 @@ export default function Page() {
     const fileRef = useRef<any>(null)
     const [clear, setClear] = useState(false)
     const items = [
-        { label: 'Brand' },
-        { label: 'Brand List' }
+        { label: 'Product' },
+        { label: 'Bulk Upload' }
     ];
     const [createBulkProduct, {loading}] = useMutation(CREATE_BULK_PRODUCT, {fetchPolicy: "no-cache"})
     async function createBulkProductHandler(){
