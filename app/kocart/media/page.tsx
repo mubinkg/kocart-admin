@@ -151,6 +151,7 @@ export default function Page() {
                     <Column body={mediaNameRenderer} header="Name" />
                     <Column body={brandImageRenderer} header="Image" />
                     <Column field="extension" header="Extension" />
+                    <Column field="file" header="Url" />
                     <Column field="subDirectory" header="Subdirectory" />
                     <Column body={mediaSizeRenderer} header="Size" />
                     <Column body={mediaActionRenderer} header="Action" />

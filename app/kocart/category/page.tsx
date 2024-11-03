@@ -107,7 +107,7 @@ export default function Category() {
             </Card>
             <Dialog header="Create New Category" visible={visible} style={{ width: '50vw' }} onHide={() => setVisible(false)}>
                 <div className="flex flex-column">
-                    <p className="mb-2 font-semibold">Brand Name</p>
+                    <p className="mb-2 font-semibold">Category Name</p>
                     <InputText value={name} onChange={(e)=>setName(e.target.value)} className="w-full block" id="username" placeholder="Enter brand name" />
                 </div>
                 <div className="flex flex-column">
