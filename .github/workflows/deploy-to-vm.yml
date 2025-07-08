@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no root@34.170.86.152 << 'EOF'
+          ssh -o StrictHostKeyChecking=no deployuser@34.170.86.152 << 'EOF'
             cd /path/to/your/app
             git pull origin main
             npm install
