@@ -80,13 +80,13 @@ export default function RegisterSeller() {
       })
       router.push('/seller-signin')
     } catch (err) {
-      
+
     }
   }
 
   return (
     <div className="flex align-items-center justify-content-center h-screen">
-      <Card className="h-full no-scrollbar" style={{overflowY: 'scroll'}}>
+      <Card className="h-full no-scrollbar" style={{ overflowY: 'scroll' }}>
         <div className="flex items-center flex-column overflow-auto">
           <div className="flex justify-content-center">
             <Image alt="kocart logo" src={logo} width={150} />
@@ -125,7 +125,7 @@ export default function RegisterSeller() {
                 </div>
                 <div className="flex items-center gap-5 mt-3">
                   <label className="w-10rem inline-block">Address Prof</label>
-                  <FileUpload className="w-full" ref={addressProofRef}/>
+                  <FileUpload className="w-full" ref={addressProofRef} />
                 </div>
                 <div className="flex items-center gap-5 mt-3">
                   <label className="w-10rem inline-block">National Identity Card</label>
@@ -156,7 +156,7 @@ export default function RegisterSeller() {
                   <InputText className="w-full" {...register('bank_name')} placeholder="1111111" />
                 </div>
               </div>
-                <Button onClick={()=>handleSubmit(onSubmit)} label="Submit" type="submit" color="primary" disabled={loading}/>
+              <Button onClick={() => handleSubmit(onSubmit)} label="Submit" type="submit" color="primary" disabled={loading} />
             </form>
           </div>
         </div>
