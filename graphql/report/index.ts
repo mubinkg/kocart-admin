@@ -1,24 +1,26 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const SALES_REPORT = gql`query SalesReport($limit: Float!, $offset: Float!) {
+export const SALES_REPORT = gql`
+  query SalesReport($limit: Float!, $offset: Float!) {
     salesReport(limit: $limit, offset: $offset) {
       orders {
+        _id
+        product_variants {
           _id
-          product_variants {
+          product {
             _id
-            product {
+            pro_input_name
+            seller {
               _id
-              pro_input_name
-              seller {
-                _id
-                name
-              }
+              name
             }
           }
-          created_at
-          final_total
-          payment_method
         }
+        created_at
+        final_total
+        payment_method
+      }
       count
     }
-    }`
+  }
+`;

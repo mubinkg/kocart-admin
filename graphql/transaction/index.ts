@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const GET_TRANSACTIONS = gql`query Transactions($limit: Float!, $offset: Float!) {
+export const GET_TRANSACTIONS = gql`
+  query Transactions($limit: Float!, $offset: Float!) {
     transactions(limit: $limit, offset: $offset) {
       count
       transactionList {
@@ -17,4 +18,5 @@ export const GET_TRANSACTIONS = gql`query Transactions($limit: Float!, $offset: 
         }
       }
     }
-  }`
+  }
+`;

@@ -1,12 +1,14 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const LOAD_ATTRIBUTE = gql`query GetAllProductAttribute {
-  getAllProductAttribute {
-    _id
-    name
-    values {
+export const LOAD_ATTRIBUTE = gql`
+  query GetAllProductAttribute {
+    getAllProductAttribute {
       _id
-      valueName
+      name
+      values {
+        _id
+        valueName
+      }
     }
   }
-}`
+`;

@@ -1,24 +1,22 @@
-import AppSidebar from "@/components/layout/Sidebar";
-import Topbar from "@/components/layout/Topbar";
+import AppSidebar from '@/components/layout/Sidebar';
+import Topbar from '@/components/layout/Topbar';
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <div className="grid grid-nogutter">
-            <div className="col-2">
-                <AppSidebar />
-            </div>
-            <div className="col-10">
-                <div>
-                    <Topbar/>
-                </div>
-                <div>
-                    {children}
-                </div>
-            </div>
+  return (
+    <div className="grid-nogutter grid">
+      <div className="col-2">
+        <AppSidebar />
+      </div>
+      <div className="col-10">
+        <div>
+          <Topbar />
         </div>
-    );
+        <div>{children}</div>
+      </div>
+    </div>
+  );
 }

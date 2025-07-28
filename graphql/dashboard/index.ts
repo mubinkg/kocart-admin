@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const DASHBOARD_TOP_CONTENT = gql`query DashboardTopContent {
+export const DASHBOARD_TOP_CONTENT = gql`
+  query DashboardTopContent {
     dashboardTopContent {
       totalProduct
       rating
@@ -8,9 +9,11 @@ export const DASHBOARD_TOP_CONTENT = gql`query DashboardTopContent {
       totalBalance
       totalOrder
     }
-  }`
+  }
+`;
 
-export const SELLER_CATEGORY_WISE_PRODUCT = gql`query Category {
+export const SELLER_CATEGORY_WISE_PRODUCT = gql`
+  query Category {
     sellerCategoryWiseProduct {
       category {
         _id
@@ -18,11 +21,14 @@ export const SELLER_CATEGORY_WISE_PRODUCT = gql`query Category {
       }
       count
     }
-  }`
-
-export const ORDER_OUTLINE = gql`query StatusWiseOrderCount {
-  statusWiseOrderCount {
-    _id
-    statusCount
   }
-}`
+`;
+
+export const ORDER_OUTLINE = gql`
+  query StatusWiseOrderCount {
+    statusWiseOrderCount {
+      _id
+      statusCount
+    }
+  }
+`;

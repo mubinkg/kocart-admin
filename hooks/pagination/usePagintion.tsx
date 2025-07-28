@@ -1,3 +1,1 @@
-export function usePagination(fetchDataHandler:any){
-    
-}
+export function usePagination(fetchDataHandler: any) {}

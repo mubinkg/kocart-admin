@@ -1,16 +1,16 @@
-'use server'
+'use server';
 
-import { baseUrl } from '@/util/urlUtils'
-import { cookies } from 'next/headers'
+import { baseUrl } from '@/util/urlUtils';
+import { cookies } from 'next/headers';
 
 export async function signinAction(phone: string, password: string) {
-    console.log(phone, password, baseUrl)
-    try {
-        const res = await fetch(baseUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query: `mutation SigninSeller($password: String!, $phone: String!) {
+  console.log(phone, password, baseUrl);
+  try {
+    const res = await fetch(baseUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query: `mutation SigninSeller($password: String!, $phone: String!) {
                     signinSeller(password: $password, phone: $phone) {
                       access_token
                       seller {
@@ -32,24 +32,24 @@ export async function signinAction(phone: string, password: string) {
                     }
                   }
                 `,
-                variables: {
-                    password: password,
-                    phone: phone
-                }
-            })
-        })
-        console.log(res)
-        const data = await res.json()
-        if (!data?.data?.signinSeller?.access_token) {
-            throw new Error("Invalid credentials")
-        }
-        cookies().set('access_token', data?.data?.signinSeller?.access_token)
-        return data
-    } catch (err) {
-        throw err
+        variables: {
+          password: password,
+          phone: phone,
+        },
+      }),
+    });
+    console.log(res);
+    const data = await res.json();
+    if (!data?.data?.signinSeller?.access_token) {
+      throw new Error('Invalid credentials');
     }
+    cookies().set('access_token', data?.data?.signinSeller?.access_token);
+    return data;
+  } catch (err) {
+    throw err;
+  }
 }
 
 export async function logoutAction() {
-    cookies().delete('access_token')
+  cookies().delete('access_token');
 }

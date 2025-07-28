@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import { Menu } from 'primereact/menu';
@@ -10,337 +10,352 @@ import { logoutAction } from '@/app/action';
 import { getIsAdmin } from '@/util/storageUtils';
 
 export default function TemplateDemo() {
-    const [isAdmin, setIsAdmin] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false);
 
-    useEffect(()=>{
-        setIsAdmin(getIsAdmin())
-    }, [])
+  useEffect(() => {
+    setIsAdmin(getIsAdmin());
+  }, []);
 
-    const router = useRouter()
-    const itemRenderer = (item: any) => (
-        <div className='p-menuitem-content mb-2'>
-            <Link className="flex align-items-center p-menuitem-link" href={item?.url || "#"}>
-                <i className={item.icon} style={{ fontSize: '1rem', fontWeight: 'bolder' }}></i> 
-                <span className="mx-3 font-semibold">{item.label}</span>
-            </Link>
+  const router = useRouter();
+  const itemRenderer = (item: any) => (
+    <div className="p-menuitem-content mb-2">
+      <Link
+        className="align-items-center p-menuitem-link flex"
+        href={item?.url || '#'}
+      >
+        <i
+          className={item.icon}
+          style={{ fontSize: '1rem', fontWeight: 'bolder' }}
+        ></i>
+        <span className="mx-3 font-semibold">{item.label}</span>
+      </Link>
+    </div>
+  );
+
+  const subItemRenderer = (item: any) => (
+    <div className="p-menuitem-content mb-2 ml-3">
+      <Link
+        className="align-items-center p-menuitem-link flex"
+        href={item?.url || '#'}
+      >
+        <i
+          className={item.icon}
+          style={{ fontSize: '1rem', fontWeight: 'bolder' }}
+        ></i>
+        <span className="mx-3 font-semibold">{item.label}</span>
+      </Link>
+    </div>
+  );
+
+  const signOutRender = (item: any) => (
+    <div className="p-menuitem-content mb-2" onClick={signoutHandler}>
+      <span className="align-items-center p-menuitem-link flex">
+        <i
+          className={item.icon}
+          style={{ fontSize: '1rem', fontWeight: 'bolder' }}
+        ></i>
+        <span className="mx-3 font-semibold">{item.label}</span>
+      </span>
+    </div>
+  );
+
+  const signoutHandler = async () => {
+    try {
+      await logoutAction();
+      router.push('/seller-signin');
+    } catch (err) {
+      Swal.fire({
+        title: 'Sign Out',
+        text: 'Error on signout',
+        icon: 'error',
+      });
+    }
+  };
+
+  let menuItems: MenuItem[] = [];
+  menuItems.push({
+    template: () => {
+      return (
+        <div className="mb-4">
+          <h2 className="my-4 text-center font-bold">Kocart</h2>
+          <hr />
         </div>
-    );
+      );
+    },
+  });
+  menuItems.push({
+    label: 'Dashboard',
+    icon: 'pi pi-th-large',
+    template: itemRenderer,
+    url: '/kocart/dashboard',
+  });
 
-    const subItemRenderer = (item: any) => (
-        <div className='p-menuitem-content mb-2 ml-3'>
-            <Link className="flex align-items-center p-menuitem-link" href={item?.url || "#"}>
-                <i className={item.icon} style={{ fontSize: '1rem', fontWeight: 'bolder' }}></i> 
-                <span className="mx-3 font-semibold">{item.label}</span>
-            </Link>
-        </div>
-    );
+  if (isAdmin) {
+    menuItems.push({
+      label: 'Seller',
+      icon: 'pi pi-users',
+      template: itemRenderer,
+      url: '/kocart/seller',
+    });
+  }
+  menuItems.push({
+    label: 'Brand',
+    icon: 'pi pi-users',
+    template: itemRenderer,
+    url: '/kocart/brand',
+  });
+  menuItems.push({
+    label: 'Category',
+    icon: 'pi pi-sitemap',
+    template: itemRenderer,
+    url: '/kocart/category',
+  });
+  menuItems.push({
+    label: 'Manage Stock',
+    icon: 'pi pi-cart-plus',
+    template: itemRenderer,
+    url: '/kocart/stock-management',
+  });
+  menuItems.push({
+    label: 'Chat',
+    icon: 'pi pi-inbox',
+    template: itemRenderer,
+    url: '/kocart/chat',
+  });
 
-    const signOutRender = (item: any) => (
-        <div className='p-menuitem-content mb-2' onClick={signoutHandler}>
-            <span className="flex align-items-center p-menuitem-link">
-                <i className={item.icon} style={{ fontSize: '1rem', fontWeight: 'bolder' }}></i> 
-                <span className="mx-3 font-semibold">{item.label}</span>
-            </span>
-        </div>
-    );
+  if (isAdmin) {
+    menuItems.push({
+      label: 'Ticket',
+      icon: 'pi pi-list-check',
+      items: [
+        {
+          label: 'Ticket Type',
+          icon: 'pi pi-align-left',
+          template: subItemRenderer,
+          url: '/kocart/ticket-type',
+        },
+        {
+          label: 'Tickets',
+          icon: 'pi pi-align-left',
+          template: subItemRenderer,
+          url: '/kocart/ticket',
+        },
+      ],
+    });
+  }
 
-    const signoutHandler = async ()=>{
-        try{
-            await logoutAction()
-            router.push('/seller-signin')
-        }
-        catch(err){
-            Swal.fire({
-                title:'Sign Out',
-                text: 'Error on signout',
-                icon:'error'
-            })
-        }
-    }
-    
-    let menuItems: MenuItem[] = []
-    menuItems.push({
-        template: () => {
-            return (
-                <div className='mb-4'>
-                    <h2 className='text-center my-4 font-bold'>
-                        Kocart
-                    </h2>
-                    <hr />
-                </div>
-            );
-        }
-    })
-    menuItems.push({
-        label: 'Dashboard',
-        icon: 'pi pi-th-large',
-        template: itemRenderer,
-        url: '/kocart/dashboard'
-    })
-
-    if(isAdmin){
-        menuItems.push({
-            label: 'Seller',
-            icon: 'pi pi-users',
-            template: itemRenderer,
-            url: '/kocart/seller'
-        })
-    }
-    menuItems.push({
-        label: 'Brand',
-        icon: 'pi pi-users',
-        template: itemRenderer,
-        url: '/kocart/brand'
-    })
-    menuItems.push({
-        label: 'Category',
-        icon: 'pi pi-sitemap',
-        template: itemRenderer,
-        url: '/kocart/category'
-    })
-    menuItems.push({
-        label: 'Manage Stock',
-        icon: 'pi pi-cart-plus',
-        template: itemRenderer,
-        url: '/kocart/stock-management'
-    })
-    menuItems.push({
-        label: 'Chat',
-        icon: 'pi pi-inbox',
-        template: itemRenderer,
-        url: '/kocart/chat'
-    })
-
-    if(isAdmin){
-        menuItems.push({
-            label: 'Ticket',
-            icon: 'pi pi-list-check',
-            items: [
-                {
-                    label: 'Ticket Type',
-                    icon: 'pi pi-align-left',
-                    template: subItemRenderer,
-                    url: '/kocart/ticket-type'
-                },
-                {
-                    label: 'Tickets',
-                    icon: 'pi pi-align-left',
-                    template: subItemRenderer,
-                    url: '/kocart/ticket'
-                },
-            ]
-        })
-    }
-
-    menuItems.push({
-        label: 'Order',
-        icon: 'pi pi-list-check',
-        items: [
-            {
-                label: 'Order List',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/order/order-list'
-            },
-        ]
-    })
-    const productItems:any = {
-        label: 'Product',
-        icon: 'pi pi-list-check',
-        items: []
-    }
-    if(!isAdmin){
-        productItems.items.push({
-            label: 'Attribute Sets',
-            icon: 'pi pi-align-left',
-            template: subItemRenderer,
-            url: '/kocart/product/attribute-set'
-        })
-    }
-
-    productItems.items.push({
-        label: 'Attributes',
+  menuItems.push({
+    label: 'Order',
+    icon: 'pi pi-list-check',
+    items: [
+      {
+        label: 'Order List',
         icon: 'pi pi-align-left',
         template: subItemRenderer,
-        url: '/kocart/product/attribute'
-    })
-
-    if(!isAdmin){
-        productItems.items.push({
-            label: 'Attribute Values',
-            icon: 'pi pi-align-left',
-            template: subItemRenderer,
-            url: '/kocart/product/attribute-value'
-        })
-    }
-
+        url: '/kocart/order/order-list',
+      },
+    ],
+  });
+  const productItems: any = {
+    label: 'Product',
+    icon: 'pi pi-list-check',
+    items: [],
+  };
+  if (!isAdmin) {
     productItems.items.push({
-        label: 'Add Product',
+      label: 'Attribute Sets',
+      icon: 'pi pi-align-left',
+      template: subItemRenderer,
+      url: '/kocart/product/attribute-set',
+    });
+  }
+
+  productItems.items.push({
+    label: 'Attributes',
+    icon: 'pi pi-align-left',
+    template: subItemRenderer,
+    url: '/kocart/product/attribute',
+  });
+
+  if (!isAdmin) {
+    productItems.items.push({
+      label: 'Attribute Values',
+      icon: 'pi pi-align-left',
+      template: subItemRenderer,
+      url: '/kocart/product/attribute-value',
+    });
+  }
+
+  productItems.items.push({
+    label: 'Add Product',
+    icon: 'pi pi-align-left',
+    template: subItemRenderer,
+    url: '/kocart/product/add-product',
+  });
+  productItems.items.push({
+    label: 'Bulk Upload',
+    icon: 'pi pi-align-left',
+    template: subItemRenderer,
+    url: '/kocart/product/bulk-upload',
+  });
+  productItems.items.push({
+    label: 'Manage Product',
+    icon: 'pi pi-align-left',
+    template: subItemRenderer,
+    url: '/kocart/product/product-list',
+  });
+  productItems.items.push({
+    label: 'Product FAQ',
+    icon: 'pi pi-align-left',
+    template: subItemRenderer,
+    url: '/kocart/product/faq',
+  });
+
+  menuItems.push(productItems);
+
+  if (isAdmin) {
+    menuItems.push({
+      label: 'Sliders',
+      icon: 'pi pi-sliders-h',
+      template: itemRenderer,
+      url: '/kocart/slider',
+    });
+  }
+  if (isAdmin) {
+    menuItems.push({
+      label: 'Offers',
+      icon: 'pi pi-wallet',
+      template: itemRenderer,
+      url: '/kocart/offer',
+    });
+  }
+
+  menuItems.push({
+    label: 'Media',
+    icon: 'pi pi-images',
+    template: itemRenderer,
+    url: '/kocart/media',
+  });
+
+  const locationItems: MenuItem = {
+    label: 'Location',
+    icon: 'pi pi-list-check',
+    items: [
+      {
+        label: 'City',
         icon: 'pi pi-align-left',
         template: subItemRenderer,
-        url: '/kocart/product/add-product'
-    })
-    productItems.items.push({
-        label: 'Bulk Upload',
+        url: '/kocart/city',
+      },
+      {
+        label: 'Areas',
         icon: 'pi pi-align-left',
         template: subItemRenderer,
-        url: '/kocart/product/bulk-upload'
-    })
-    productItems.items.push({
-        label: 'Manage Product',
+        url: '/kocart/area',
+      },
+      {
+        label: 'Countries',
         icon: 'pi pi-align-left',
         template: subItemRenderer,
-        url: '/kocart/product/product-list'
-    })
-    productItems.items.push({
-        label: 'Product FAQ',
+        url: '/kocart/address',
+      },
+    ],
+  };
+
+  menuItems.push(locationItems);
+
+  const featuredSectionItems: MenuItem = {
+    label: 'Featured Sections',
+    icon: 'pi pi-list-check',
+    items: [
+      {
+        label: 'Manage Sections',
         icon: 'pi pi-align-left',
         template: subItemRenderer,
-        url: '/kocart/product/faq'
-    })
+        url: '/kocart/sections/manage-sections',
+      },
+      {
+        label: 'Section Order',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/sections/sections-order',
+      },
+    ],
+  };
 
-    
-    menuItems.push(productItems)
+  if (isAdmin) {
+    menuItems.push(featuredSectionItems);
+  }
 
-    if(isAdmin){
-        menuItems.push({
-            label: 'Sliders',
-            icon: 'pi pi-sliders-h',
-            template: itemRenderer,
-            url: '/kocart/slider'
-        })
-    }
-    if(isAdmin){
-        menuItems.push({
-            label: 'Offers',
-            icon: 'pi pi-wallet',
-            template: itemRenderer,
-            url: '/kocart/offer'
-        })
-    }
+  const customerItems: MenuItem = {
+    label: 'Customers',
+    icon: 'pi pi-list-check',
+    items: [
+      {
+        label: 'View Customers',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/customers',
+      },
+      {
+        label: 'Addresses',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/address',
+      },
+    ],
+  };
 
-    menuItems.push({
-        label: 'Media',
-        icon: 'pi pi-images',
-        template: itemRenderer,
-        url: '/kocart/media'
-    })
+  if (isAdmin) {
+    menuItems.push(customerItems);
+  }
+  menuItems.push({
+    label: 'Withdrawal Request',
+    icon: 'pi pi-money-bill',
+    template: itemRenderer,
+    url: '/kocart/withdrawal-request',
+  });
 
-    const locationItems:MenuItem = {
-        label: 'Location',
-        icon: 'pi pi-list-check',
-        items: [
-            {
-                label: 'City',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/city'
-            },
-            {
-                label: 'Areas',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/area'
-            },
-            {
-                label: 'Countries',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/address'
-            }
-        ]
-    }
+  menuItems.push({
+    label: 'Transactions',
+    icon: 'pi pi-credit-card',
+    template: itemRenderer,
+    url: '/kocart/transactions',
+  });
 
-    menuItems.push(locationItems)
+  const reportsItems: MenuItem = {
+    label: 'Reports',
+    icon: 'pi pi-list-check',
+    items: [
+      {
+        label: 'Sales Reports',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/report/sales-report',
+      },
+      {
+        label: 'Sale Inventory Reports',
+        icon: 'pi pi-align-left',
+        template: subItemRenderer,
+        url: '/kocart/report/inventory-report',
+      },
+    ],
+  };
 
-    const featuredSectionItems:MenuItem = {
-        label: 'Featured Sections',
-        icon: 'pi pi-list-check',
-        items: [
-            {
-                label: 'Manage Sections',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/sections/manage-sections'
-            },
-            {
-                label: 'Section Order',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/sections/sections-order'
-            }
-        ]
-    }
+  menuItems.push(reportsItems);
 
-    if(isAdmin){
-        menuItems.push(featuredSectionItems)
-    }
+  menuItems.push({
+    label: 'Sign Out',
+    icon: 'pi pi-sign-out',
+    template: signOutRender,
+    url: '#',
+  });
 
-    const customerItems:MenuItem = {
-        label: 'Customers',
-        icon: 'pi pi-list-check',
-        items: [
-            {
-                label: 'View Customers',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/customers'
-            },
-            {
-                label: 'Addresses',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/address'
-            }
-        ]
-    }
-
-    if(isAdmin){
-        menuItems.push(customerItems)
-    }
-    menuItems.push({
-        label: 'Withdrawal Request',
-        icon: 'pi pi-money-bill',
-        template: itemRenderer,
-        url: '/kocart/withdrawal-request'
-    })
-    
-    menuItems.push({
-        label: 'Transactions',
-        icon: 'pi pi-credit-card',
-        template: itemRenderer,
-        url: '/kocart/transactions'
-    })
-
-    const reportsItems:MenuItem = {
-        label: 'Reports',
-        icon: 'pi pi-list-check',
-        items: [
-            {
-                label: 'Sales Reports',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/report/sales-report'
-            },
-            {
-                label: 'Sale Inventory Reports',
-                icon: 'pi pi-align-left',
-                template: subItemRenderer,
-                url: '/kocart/report/inventory-report'
-            }
-        ]
-    }
-
-    menuItems.push(reportsItems)
-
-    menuItems.push({
-        label: 'Sign Out',
-        icon: 'pi pi-sign-out',
-        template: signOutRender,
-        url: '#'
-    })
-
-    return (
-        <Menu model={menuItems} className="w-full"  style={{overflowY:"scroll", maxHeight:"100vh"}}/>
-    )
+  return (
+    <Menu
+      model={menuItems}
+      className="w-full"
+      style={{ overflowY: 'scroll', maxHeight: '100vh' }}
+    />
+  );
 }

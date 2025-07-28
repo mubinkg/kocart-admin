@@ -6,7 +6,7 @@ const nextConfig = {
         source: '/api/:path*',
         destination: 'https://kocart.com/:path*',
       },
-    ]
+    ];
   },
 };
 

@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
-export const ADMIN_CUSTOMER_LIST = gql`query CustomerAdminList($query: String!, $limit: Float!, $offset: Float!) {
+export const ADMIN_CUSTOMER_LIST = gql`
+  query CustomerAdminList($query: String!, $limit: Float!, $offset: Float!) {
     customerAdminList(query: $query, limit: $limit, offset: $offset) {
       count
       customers {
@@ -25,4 +26,5 @@ export const ADMIN_CUSTOMER_LIST = gql`query CustomerAdminList($query: String!, 
         weight
       }
     }
-  }`
+  }
+`;

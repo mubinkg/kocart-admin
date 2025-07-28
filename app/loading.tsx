@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 export default function Loading() {
   return (
@@ -7,5 +7,5 @@ export default function Loading() {
         <h1>Loading</h1>
       </body>
     </html>
-  )
+  );
 }
