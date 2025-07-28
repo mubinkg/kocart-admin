@@ -22,6 +22,7 @@ export default function Home() {
     try {
       setLoading(true)
       const data = await signinAction(phone, password)
+      console.log(data)
       localStorage.setItem('access_token', data?.data?.signinSeller?.access_token)
       localStorage.setItem('user', JSON.stringify(data?.data?.signinSeller?.seller || {}))
       setLoading(false)
