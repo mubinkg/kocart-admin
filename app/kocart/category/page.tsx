@@ -77,7 +77,6 @@ export default function Category() {
 
   const createCategoryHandler = async () => {
     try {
-      console.log(imageRef?.current?.getFiles());
       if (!name && !imageRef?.current?.getFiles()?.length) {
         throw new Error();
       }

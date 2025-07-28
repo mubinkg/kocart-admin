@@ -38,7 +38,6 @@ export default function Page() {
       setName('');
       setVisible(false);
     } catch (err) {
-      console.log(err);
     }
   }
 

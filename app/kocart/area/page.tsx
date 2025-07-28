@@ -77,7 +77,6 @@ export default function Page() {
       setVisible(false);
       reset();
     } catch (err) {
-      console.log(err);
     }
   }
 

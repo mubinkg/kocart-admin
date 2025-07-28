@@ -57,7 +57,6 @@ export default function RegisterSeller() {
     resolver: yupResolver(sellerValidationSchem),
   });
   if (error) {
-    console.log(error?.message);
     Swal.fire({
       title: 'Seller Registration',
       icon: 'error',
@@ -87,7 +86,7 @@ export default function RegisterSeller() {
         },
       });
       router.push('/seller-signin');
-    } catch (err) {}
+    } catch (err) { }
   };
 
   return (
